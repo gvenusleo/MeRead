@@ -20,20 +20,31 @@ class FeedPage extends StatefulWidget {
 class FeedPageState extends State<FeedPage> {
   List<Post> postList = [];
   bool onlyUnread = false;
+  bool onlyFavorite = false;
   Map<String, dynamic> readPageInitData = {};
 
   Future<void> getPostList() async {
-    List<Post> postsList = await postsByFeedId(widget.feed.id!);
+    List<Post> temp = await postsByFeedId(widget.feed.id!);
     setState(() {
-      postList = postsList;
+      postList = temp;
     });
   }
 
   Future<void> getUnreadPostList() async {
-    List<Post> postsList = await unreadPostsByFeedId(widget.feed.id!);
+    List<Post> temp = await unreadPostsByFeedId(widget.feed.id!);
     setState(() {
-      postList = postsList;
+      postList = temp;
       onlyUnread = true;
+      onlyFavorite = false;
+    });
+  }
+
+  Future<void> getFavoritePostList() async {
+    List<Post> temp = await favoritePostsByFeedId(widget.feed.id!);
+    setState(() {
+      postList = temp;
+      onlyFavorite = true;
+      onlyUnread = false;
     });
   }
 
@@ -89,6 +100,22 @@ class FeedPageState extends State<FeedPage> {
                   },
                   child: Text(
                     onlyUnread ? '显示全部' : '只看未读',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+                PopupMenuItem(
+                  onTap: () async {
+                    if (onlyFavorite) {
+                      await getPostList();
+                      setState(() {
+                        onlyFavorite = false;
+                      });
+                    } else {
+                      await getFavoritePostList();
+                    }
+                  },
+                  child: Text(
+                    onlyFavorite ? '显示全部' : '查看收藏',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),

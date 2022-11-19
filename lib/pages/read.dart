@@ -111,6 +111,19 @@ $endAddLinkStr
                   ),
                 ),
                 PopupMenuItem(
+                  onTap: () async {
+                    await changePostFavorite(widget.post.id!);
+                    setState(() {
+                      widget.post.favorite = widget.post.favorite == 0 ? 1 : 0;
+                    });
+                  },
+                  child: Text(
+                    widget.post.favorite == 1 ? '取消收藏' : '收藏文章',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+                const PopupMenuDivider(),
+                PopupMenuItem(
                   onTap: () {
                     Clipboard.setData(ClipboardData(text: widget.post.link));
                   },
@@ -149,7 +162,7 @@ $endAddLinkStr
             forceDark: Theme.of(context).brightness == Brightness.dark
                 ? AndroidForceDark.FORCE_DARK_ON
                 : AndroidForceDark.FORCE_DARK_OFF,
-            // useHybridComposition: true, // 启用混合模式，Android >= 9
+            useHybridComposition: false, // 关闭混合模式，提高性能，避免 WebView 闪烁
           ),
         ),
         onWebViewCreated: (InAppWebViewController controller) {

@@ -344,27 +344,69 @@ Future<void> checkFeedPostsCount(int feedMaxSaveCount) async {
   }
 }
 
+// 改变 Post 的收藏状态
+Future<void> changePostFavorite(int id) async {
+  final Database db = await openDb();
+  final List<Map<String, dynamic>> maps = await db.query(
+    'post',
+    where: "id = ?",
+    whereArgs: [id],
+  );
+  final int favorite = maps[0]['favorite'];
+  await db.update(
+    'post',
+    {'favorite': favorite == 0 ? 1 : 0},
+    where: "id = ?",
+    whereArgs: [id],
+  );
+}
+
 // 查询所有收藏 Post
-// Future<List<Post>> favoritePosts() async {
-//   final Database db = await openDb();
-//   final List<Map<String, dynamic>> maps = await db.query(
-//     'post',
-//     where: "favorite = ?",
-//     whereArgs: [1],
-//     orderBy: 'pubDate DESC',
-//   );
-//   return List.generate(maps.length, (i) {
-//     return Post(
-//       id: maps[i]['id'],
-//       feedId: maps[i]['feedId'],
-//       title: maps[i]['title'],
-//       feedName: maps[i]['feedName'],
-//       link: maps[i]['link'],
-//       content: maps[i]['content'],
-//       pubDate: maps[i]['pubDate'],
-//       read: maps[i]['read'],
-//       favorite: maps[i]['favorite'],
-//       openType: maps[i]['openType'],
-//     );
-//   });
-// }
+Future<List<Post>> favoritePosts() async {
+  final Database db = await openDb();
+  final List<Map<String, dynamic>> maps = await db.query(
+    'post',
+    where: "favorite = ?",
+    whereArgs: [1],
+    orderBy: 'pubDate DESC',
+  );
+  return List.generate(maps.length, (i) {
+    return Post(
+      id: maps[i]['id'],
+      feedId: maps[i]['feedId'],
+      title: maps[i]['title'],
+      feedName: maps[i]['feedName'],
+      link: maps[i]['link'],
+      content: maps[i]['content'],
+      pubDate: maps[i]['pubDate'],
+      read: maps[i]['read'],
+      favorite: maps[i]['favorite'],
+      openType: maps[i]['openType'],
+    );
+  });
+}
+
+// 查询 Feed 下所有收藏 Post
+Future<List<Post>> favoritePostsByFeedId(int feedId) async {
+  final Database db = await openDb();
+  final List<Map<String, dynamic>> maps = await db.query(
+    'post',
+    where: "feedId = ? AND favorite = ?",
+    whereArgs: [feedId, 1],
+    orderBy: 'pubDate DESC',
+  );
+  return List.generate(maps.length, (i) {
+    return Post(
+      id: maps[i]['id'],
+      feedId: maps[i]['feedId'],
+      title: maps[i]['title'],
+      feedName: maps[i]['feedName'],
+      link: maps[i]['link'],
+      content: maps[i]['content'],
+      pubDate: maps[i]['pubDate'],
+      read: maps[i]['read'],
+      favorite: maps[i]['favorite'],
+      openType: maps[i]['openType'],
+    );
+  });
+}

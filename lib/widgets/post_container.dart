@@ -27,11 +27,23 @@ class PostContainer extends StatelessWidget {
               if (post.read == 0)
                 Row(
                   children: [
-                    CircleAvatar(
-                      radius: 6,
-                      backgroundColor: Theme.of(context).colorScheme.primary,
+                    Icon(
+                      Icons.circle,
+                      size: 16,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 4),
+                  ],
+                ),
+              if (post.favorite == 1)
+                Row(
+                  children: [
+                    Icon(
+                      Icons.star_rounded,
+                      size: 16,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(width: 4),
                   ],
                 ),
               Text(

@@ -22,27 +22,38 @@ class HomePageState extends State<HomePage> {
   Map<String, List<Feed>> feedListGroupByCategory = {};
   List<Post> postList = [];
   bool onlyUnread = false;
+  bool onlyFavorite = false;
   Map<String, dynamic> readPageInitData = {};
 
   Future<void> getFeedList() async {
-    Map<String, List<Feed>> feedListGroup = await feedsGroupByCategory();
+    Map<String, List<Feed>> temp = await feedsGroupByCategory();
     setState(() {
-      feedListGroupByCategory = feedListGroup;
+      feedListGroupByCategory = temp;
     });
   }
 
   Future<void> getPostList() async {
-    List<Post> postsList = await posts();
+    List<Post> temp = await posts();
     setState(() {
-      postList = postsList;
+      postList = temp;
     });
   }
 
   Future<void> getUnreadPost() async {
-    List<Post> postsList = await unreadPosts();
+    List<Post> temp = await unreadPosts();
     setState(() {
-      postList = postsList;
+      postList = temp;
       onlyUnread = true;
+      onlyFavorite = false;
+    });
+  }
+
+  Future<void> getFavoritePost() async {
+    List<Post> temp = await favoritePosts();
+    setState(() {
+      postList = temp;
+      onlyFavorite = true;
+      onlyUnread = false;
     });
   }
 
@@ -99,6 +110,22 @@ class HomePageState extends State<HomePage> {
                   },
                   child: Text(
                     onlyUnread ? '显示全部' : '只看未读',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ),
+                PopupMenuItem(
+                  onTap: () async {
+                    if (onlyFavorite) {
+                      await getPostList();
+                      setState(() {
+                        onlyFavorite = false;
+                      });
+                    } else {
+                      await getFavoritePost();
+                    }
+                  },
+                  child: Text(
+                    onlyFavorite ? '显示全部' : '查看收藏',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
