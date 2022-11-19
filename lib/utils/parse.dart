@@ -116,14 +116,14 @@ Future<void> parseAtomPostFuturesItem(AtomItem item, Feed feed) async {
 // 解析所有订阅源，将更新的 Post 存入数据库
 // 参数：订阅源列表
 // 返回：失败的订阅源数量
-Future<int> parseAllFeedContent(List<Feed> feeds) async {
-  List<Future<bool>> futures = [];
-  for (Feed feed in feeds) {
-    futures.add(parseFeedContent(feed));
-  }
-  List<bool> results = await Future.wait(futures);
-  return results.where((element) => element == false).length;
-}
+// Future<int> parseAllFeedContent(List<Feed> feeds) async {
+//   List<Future<bool>> futures = [];
+//   for (Feed feed in feeds) {
+//     futures.add(parseFeedContent(feed));
+//   }
+//   List<bool> results = await Future.wait(futures);
+//   return results.where((element) => element == false).length;
+// }
 
 // 导入 OPML 文件，得到 Feed url 列表
 // 依次解析每个订阅源，得到 Feed 对象，存入数据库

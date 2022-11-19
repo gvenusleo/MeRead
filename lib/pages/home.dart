@@ -87,9 +87,11 @@ class HomePageState extends State<HomePage> {
                   onTap: () async {
                     await markAllPostsAsRead();
                     if (onlyUnread) {
-                      await getUnreadPost();
+                      getUnreadPost();
+                    } else if (onlyFavorite) {
+                      getFavoritePost();
                     } else {
-                      await getPostList();
+                      getPostList();
                     }
                   },
                   child: Text(
@@ -156,7 +158,16 @@ class HomePageState extends State<HomePage> {
                         CupertinoPageRoute(
                           builder: (context) => const SetPage(),
                         ),
-                      );
+                      ).then((value) {
+                        getFeedList();
+                        if (onlyUnread) {
+                          getUnreadPost();
+                        } else if (onlyFavorite) {
+                          getFavoritePost();
+                        } else {
+                          getPostList();
+                        }
+                      });
                     });
                   },
                   child: Text(
@@ -211,7 +222,13 @@ class HomePageState extends State<HomePage> {
                             ),
                           ).then((value) {
                             getFeedList();
-                            getPostList();
+                            if (onlyUnread) {
+                              getUnreadPost();
+                            } else if (onlyFavorite) {
+                              getFavoritePost();
+                            } else {
+                              getPostList();
+                            }
                           });
                         },
                       );
@@ -224,11 +241,21 @@ class HomePageState extends State<HomePage> {
         ),
       ),
       body: RefreshIndicator(
-        // TODO: 刷新过程中，如果有新文章，实时重载 postList，或每隔一段时间重载一次
         onRefresh: () async {
-          await getFeedList();
           List<Feed> feedList = await feeds();
-          int failCount = await parseAllFeedContent(feedList);
+          // int failCount = await parseAllFeedContent(feedList);
+          int failCount = 0;
+          for (Feed feed in feedList) {
+            if (await parseFeedContent(feed)) {
+              if (onlyUnread) {
+                await getUnreadPost();
+              } else if (!onlyFavorite) {
+                await getPostList();
+              }
+            } else {
+              failCount++;
+            }
+          }
           if (failCount > 0) {
             if (!mounted) return;
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -250,15 +277,10 @@ class HomePageState extends State<HomePage> {
           }
           // 保证订阅源的文章数不大于 feedMaxSaveCount
           final int feedMaxSaveCount = await getFeedMaxSaveCount();
-          await checkFeedPostsCount(feedMaxSaveCount);
-          // 刷新文章列表
-          if (onlyUnread) {
-            await getUnreadPost();
-          } else {
-            await getPostList();
-          }
+          checkFeedPostsCount(feedMaxSaveCount);
         },
         child: ListView.separated(
+          cacheExtent: 30, // 预加载
           itemCount: postList.length,
           itemBuilder: (context, index) {
             return GestureDetector(
@@ -283,6 +305,8 @@ class HomePageState extends State<HomePage> {
                     // 返回时刷新文章列表
                     if (onlyUnread) {
                       getUnreadPost();
+                    } else if (onlyFavorite) {
+                      getFavoritePost();
                     } else {
                       getPostList();
                     }

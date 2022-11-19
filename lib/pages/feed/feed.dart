@@ -77,9 +77,11 @@ class FeedPageState extends State<FeedPage> {
                   onTap: () async {
                     await markFeedPostsAsRead(widget.feed.id!);
                     if (onlyUnread) {
-                      await getUnreadPostList();
+                      getUnreadPostList();
+                    } else if (onlyFavorite) {
+                      getFavoritePostList();
                     } else {
-                      await getPostList();
+                      getPostList();
                     }
                   },
                   child: Text(
@@ -138,9 +140,9 @@ class FeedPageState extends State<FeedPage> {
                 ),
                 // 删除订阅源
                 PopupMenuItem(
-                  onTap: () {
+                  onTap: () async {
+                    await deleteFeed(widget.feed.id!);
                     Future.delayed(const Duration(seconds: 0), () {
-                      deleteFeed(widget.feed.id!);
                       Navigator.pop(context);
                     });
                   },
@@ -171,6 +173,8 @@ class FeedPageState extends State<FeedPage> {
           );
           if (onlyUnread) {
             getUnreadPostList();
+          } else if (onlyFavorite) {
+            getFavoritePostList();
           } else {
             getPostList();
           }
@@ -196,6 +200,8 @@ class FeedPageState extends State<FeedPage> {
                   ).then((value) {
                     if (onlyUnread) {
                       getUnreadPostList();
+                    } else if (onlyFavorite) {
+                      getFavoritePostList();
                     } else {
                       getPostList();
                     }
