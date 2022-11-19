@@ -66,7 +66,7 @@ class ReadSetPageState extends State<ReadSetPage> {
                         setState(() {
                           fontSize = fontSize - 1;
                         });
-                        await setFontSize(fontSize - 1);
+                        await setFontSize(fontSize);
                       }
                     },
                   ),
@@ -81,7 +81,7 @@ class ReadSetPageState extends State<ReadSetPage> {
                         setState(() {
                           fontSize = fontSize + 1;
                         });
-                        await setFontSize(fontSize + 1);
+                        await setFontSize(fontSize);
                       }
                     },
                   ),
@@ -104,7 +104,7 @@ class ReadSetPageState extends State<ReadSetPage> {
                         setState(() {
                           lineheight = lineheight - 0.1;
                         });
-                        await setLineheight(lineheight - 0.1);
+                        await setLineheight(lineheight);
                       }
                     },
                   ),
@@ -119,7 +119,7 @@ class ReadSetPageState extends State<ReadSetPage> {
                         setState(() {
                           lineheight = lineheight + 0.1;
                         });
-                        await setLineheight(lineheight + 0.1);
+                        await setLineheight(lineheight);
                       }
                     },
                   ),
@@ -142,7 +142,7 @@ class ReadSetPageState extends State<ReadSetPage> {
                         setState(() {
                           pagePadding = pagePadding - 2;
                         });
-                        await setPagePadding(pagePadding - 2);
+                        await setPagePadding(pagePadding);
                       }
                     },
                   ),
@@ -157,7 +157,7 @@ class ReadSetPageState extends State<ReadSetPage> {
                         setState(() {
                           pagePadding = pagePadding + 2;
                         });
-                        await setPagePadding(pagePadding + 2);
+                        await setPagePadding(pagePadding);
                       }
                     },
                   ),
