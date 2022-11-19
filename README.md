@@ -1,11 +1,22 @@
 <div align='center'>
 <img src='./assets/images/meread_round.png' alt='MeRead' width='100px'/>
 <h1>MeRead - 悦读</h1>
-</p><strong>简洁、易用的 Feed 阅读器，使用 <a href='https://flutter.dev' target='_blank'>Flutter</a> 构建</strong></p>
+
+</p>
+<strong>简洁、易用的 Feed 阅读器，使用 <a href='https://flutter.dev' target='_blank'>Flutter</a> 构建</strong>
+</p>
+
+<p>
+<img alt="GitHub" src="https://img.shields.io/github/license/gvenusleo/meread">
+<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/gvenusleo/meread">
+</p>
+
+<p>
 <img alt="MeRead" src="./assets/images/app1.jpg" width="204">
 <img alt="MeRead" src="./assets/images/app2.jpg" width="204">
 <img alt="MeRead" src="./assets/images/app3.jpg" width="204">
 <img alt="MeRead" src="./assets/images/app4.jpg" width="204">
+</p>
 </div>
 
 ## 说明
