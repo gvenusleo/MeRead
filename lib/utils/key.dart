@@ -1,5 +1,16 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+// 颜色主题
+Future<int> getThemeIndex() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getInt('themeIndex') ?? 2;
+}
+
+Future<void> setThemeIndex(int index) async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setInt('themeIndex', index);
+}
+
 // flomo 接口数据管理
 Future<bool> getUseFlomo() async {
   final prefs = await SharedPreferences.getInstance();

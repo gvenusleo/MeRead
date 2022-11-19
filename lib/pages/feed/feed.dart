@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:meread/widgets/post_container.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:meread/utils/db.dart';
-import 'package:meread/utils/parse.dart';
-import 'package:meread/pages/feed/edit_feed.dart';
-import 'package:meread/pages/read.dart';
-import 'package:meread/models/models.dart';
-import 'package:meread/utils/key.dart';
+import '../../widgets/post_container.dart';
+import '../../utils/db.dart';
+import '../../utils/key.dart';
+import '../../utils/parse.dart';
+import '../../pages/feed/edit_feed.dart';
+import '../../pages/read.dart';
+import '../../models/models.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key, required this.feed});

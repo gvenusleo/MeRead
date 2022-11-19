@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-import 'package:meread/models/models.dart';
+import '../models/models.dart';
 
 // 打开数据库，如果不存在则创建
 Future<Database> openDb() async {

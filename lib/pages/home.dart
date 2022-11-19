@@ -2,15 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:meread/widgets/post_container.dart';
-import 'package:meread/utils/db.dart';
-import 'package:meread/utils/parse.dart';
-import 'package:meread/utils/key.dart';
-import 'package:meread/pages/feed/add_feed.dart';
-import 'package:meread/pages/feed/feed.dart';
-import 'package:meread/pages/read.dart';
-import 'package:meread/pages/setting/set.dart';
-import 'package:meread/models/models.dart';
+import '../../widgets/post_container.dart';
+import '../../utils/db.dart';
+import '../../utils/parse.dart';
+import '../../utils/key.dart';
+import '../../pages/feed/add_feed.dart';
+import '../../pages/feed/feed.dart';
+import '../../pages/read.dart';
+import '../../pages/setting/set.dart';
+import '../../models/models.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

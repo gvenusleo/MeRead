@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:meread/states/state.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'states/state.dart';
 import 'theme/theme.dart';
 import 'pages/home.dart';
 
@@ -43,7 +43,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    context.read<ThemeModel>().getThemeIndex();
+    context.read<ThemeModel>().getTheme();
   }
 
   @override

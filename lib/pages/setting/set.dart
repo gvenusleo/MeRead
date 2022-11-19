@@ -48,7 +48,7 @@ class _SetPageState extends State<SetPage> {
                               Provider.of<ThemeModel>(context).themeIndex,
                           title: const Text('浅色'),
                           onChanged: (int? value) async {
-                            context.read<ThemeModel>().setThemeIndex(value!);
+                            context.read<ThemeModel>().setTheme(value!);
                             if (!mounted) return;
                             Navigator.pop(context);
                           },
@@ -59,7 +59,7 @@ class _SetPageState extends State<SetPage> {
                               Provider.of<ThemeModel>(context).themeIndex,
                           title: const Text('深色'),
                           onChanged: (value) {
-                            context.read<ThemeModel>().setThemeIndex(value!);
+                            context.read<ThemeModel>().setTheme(value!);
                             if (!mounted) return;
                             Navigator.pop(context);
                           },
@@ -70,7 +70,7 @@ class _SetPageState extends State<SetPage> {
                               Provider.of<ThemeModel>(context).themeIndex,
                           title: const Text('跟随系统'),
                           onChanged: (value) {
-                            context.read<ThemeModel>().setThemeIndex(value!);
+                            context.read<ThemeModel>().setTheme(value!);
                             if (!mounted) return;
                             Navigator.pop(context);
                           },

@@ -1,6 +1,7 @@
 import 'package:http/http.dart' as http;
-import 'package:meread/models/models.dart';
-import 'package:meread/utils/db.dart';
+
+import '../models/models.dart';
+import '../utils/db.dart';
 
 Future<bool> send2flomo(
   String text,

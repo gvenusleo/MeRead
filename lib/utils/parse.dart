@@ -6,9 +6,9 @@ import 'package:opml/opml.dart';
 import 'package:webfeed/webfeed.dart';
 import 'package:http/http.dart';
 
-import 'package:meread/utils/db.dart';
-import 'package:meread/models/models.dart';
-import 'package:meread/utils/key.dart';
+import '../utils/db.dart';
+import '../models/models.dart';
+import '../utils/key.dart';
 
 // 解析订阅源
 // 参数：订阅源地址

@@ -3,9 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:share_plus/share_plus.dart';
 
-import 'package:meread/utils/api.dart';
-import 'package:meread/utils/db.dart';
-import 'package:meread/models/models.dart';
+import '../utils/api.dart';
+import '../utils/db.dart';
+import '../models/models.dart';
 
 class ReadPage extends StatefulWidget {
   const ReadPage({super.key, required this.post, required this.initData});
@@ -149,7 +149,7 @@ $endAddLinkStr
             forceDark: Theme.of(context).brightness == Brightness.dark
                 ? AndroidForceDark.FORCE_DARK_ON
                 : AndroidForceDark.FORCE_DARK_OFF,
-            useHybridComposition: true, // 启用混合模式，Android >= 9
+            // useHybridComposition: true, // 启用混合模式，Android >= 9
           ),
         ),
         onWebViewCreated: (InAppWebViewController controller) {
