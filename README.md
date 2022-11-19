@@ -7,8 +7,8 @@
 </p>
 
 <p>
-<img alt="GitHub" src="https://img.shields.io/github/license/gvenusleo/meread">
-<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/gvenusleo/meread">
+<a href="https://github.com/GVenusLeo/MeRead/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/gvenusleo/meread"></a>
+<a href="https://github.com/GVenusLeo/MeRead/releases"><img alt="Release" src="https://img.shields.io/github/v/release/gvenusleo/meread"></a>
 </p>
 
 <p>
