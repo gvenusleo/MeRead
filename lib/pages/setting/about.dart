@@ -54,11 +54,11 @@ class AboutPage extends StatelessWidget {
                 OutlinedButton(
                   onPressed: () async {
                     await launchUrl(
-                      Uri.parse("https://blog.liuyu.xin"),
+                      Uri.parse("https://github.com/gvenusleo/meread"),
                       mode: LaunchMode.externalApplication,
                     );
                   },
-                  child: const Text('开源相关'),
+                  child: const Text('开源地址'),
                 ),
               ],
             ),
