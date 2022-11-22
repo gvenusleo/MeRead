@@ -46,13 +46,9 @@ class ReadPageState extends State<ReadPage> {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
-@font-face {
-  font-family: "思源宋体 CN VF Regular";src: url("//at.alicdn.com/wf/webfont/xRg1LrpJJqRG/NcyIkiys-fIhDYN9CfTGP.woff2") format("woff2"),
-  url("//at.alicdn.com/wf/webfont/xRg1LrpJJqRG/HlKvAPDfdiGakP4_MJfib.woff") format("woff");
-  font-display: swap;
-}
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap');
 body {
-  font-family: "思源宋体 CN VF Regular", serif;
+  font-family: "Noto Serif SC", serif;
   font-size: ${widget.initData['fontSize']}px;
   line-height: ${widget.initData['lineheight']};
   color: #$textColor;
@@ -90,6 +86,9 @@ ${widget.initData['customCss']}
 ${widget.post.content}
 $endAddLinkStr
 </body>
+<style>
+${widget.initData['customCss']}
+</style>
 </html>
 ''';
     return Scaffold(

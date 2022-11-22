@@ -222,7 +222,6 @@ class ReadSetPageState extends State<ReadSetPage> {
               ),
             ),
             ListTile(
-              // TODO: 目前已知，自定义字体无法在正常显示
               contentPadding: const EdgeInsets.all(0),
               title: const Text('自定义 CSS'),
               trailing: const Icon(Icons.chevron_right),
