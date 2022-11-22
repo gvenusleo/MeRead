@@ -52,13 +52,13 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'MeRead',
       localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [
-        Locale('en', ''),
-        Locale('zh', ''),
+        Locale('en', 'US'),
+        Locale('zh', 'CN'),
       ],
       theme: lightTheme,
       darkTheme: darkTheme,

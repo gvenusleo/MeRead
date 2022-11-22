@@ -31,7 +31,6 @@ class _SetPageState extends State<SetPage> {
           ListTile(
             title: const Text(
               '颜色主题',
-              style: TextStyle(fontWeight: FontWeight.w700),
             ),
             trailing: const Icon(Icons.chevron_right),
             onTap: () async {
@@ -85,7 +84,6 @@ class _SetPageState extends State<SetPage> {
           ListTile(
             title: const Text(
               '阅读页面',
-              style: TextStyle(fontWeight: FontWeight.w700),
             ),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
@@ -100,7 +98,6 @@ class _SetPageState extends State<SetPage> {
           ListTile(
             title: const Text(
               '解析设置',
-              style: TextStyle(fontWeight: FontWeight.w700),
             ),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
@@ -115,7 +112,6 @@ class _SetPageState extends State<SetPage> {
           ListTile(
             title: const Text(
               '接口配置',
-              style: TextStyle(fontWeight: FontWeight.w700),
             ),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
@@ -130,7 +126,6 @@ class _SetPageState extends State<SetPage> {
           ListTile(
             title: const Text(
               '关于应用',
-              style: TextStyle(fontWeight: FontWeight.w700),
             ),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
