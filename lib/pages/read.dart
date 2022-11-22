@@ -82,6 +82,7 @@ h1 {
   font-weight: 700;
   margin: 0 0 0.5em 0;
 }
+${widget.initData['customCss']}
 </style>
 </head>
 <body>

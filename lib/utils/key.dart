@@ -157,5 +157,17 @@ Future<Map<String, dynamic>> getAllReadPageInitData() async {
     'flomoTag': prefs.getString('flomoTag') ?? '',
     'useCategoryAsTag': prefs.getBool('useCategoryAsTag') ?? false,
     'savePostLink': prefs.getBool('savePostLink') ?? false,
+    'customCss': prefs.getString('customCss') ?? '',
   };
+}
+
+// 阅读页面自定义 CSS 数据管理
+Future<String> getCustomCss() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString('customCss') ?? '';
+}
+
+Future<void> setCustomCss(String css) async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setString('customCss', css);
 }

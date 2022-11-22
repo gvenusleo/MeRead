@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:meread/utils/key.dart';
+import '../../utils/key.dart';
+import 'custom_css.dart';
 
 class ReadSetPage extends StatefulWidget {
   const ReadSetPage({Key? key}) : super(key: key);
@@ -218,6 +220,20 @@ class ReadSetPageState extends State<ReadSetPage> {
                   await setEndAddLink(value);
                 },
               ),
+            ),
+            ListTile(
+              // TODO: 目前已知，自定义字体无法在正常显示
+              contentPadding: const EdgeInsets.all(0),
+              title: const Text('自定义 CSS'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => const CustomCssPage(),
+                  ),
+                );
+              },
             ),
           ],
         ),
