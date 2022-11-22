@@ -56,10 +56,14 @@ Future<bool> parseFeedContent(Feed feed) async {
   try {
     final response = await get(Uri.parse(feed.url));
     final postXmlString = utf8.decode(response.bodyBytes);
+    final String? feedLastUpdated = await getFeedLatestPostPubDate(feed.id!);
     try {
       RssFeed rssFeed = RssFeed.parse(postXmlString);
       List<Future> futures = [];
       for (RssItem item in rssFeed.items!) {
+        if (feedLastUpdated == item.pubDate.toString()) {
+          break;
+        }
         futures.add(parseRSSPostFuturesItem(item, feed));
       }
       await Future.wait(futures);
@@ -68,6 +72,9 @@ Future<bool> parseFeedContent(Feed feed) async {
       AtomFeed atomFeed = AtomFeed.parse(postXmlString);
       List<Future> futures = [];
       for (AtomItem item in atomFeed.items!) {
+        if (feedLastUpdated == item.updated.toString()) {
+          break;
+        }
         futures.add(parseAtomPostFuturesItem(item, feed));
       }
       await Future.wait(futures);
@@ -79,38 +86,34 @@ Future<bool> parseFeedContent(Feed feed) async {
 }
 
 Future<void> parseRSSPostFuturesItem(RssItem item, Feed feed) async {
-  if (await postExist(item.link!)) {
-    String title = item.title!.trim();
-    Post post = Post(
-      title: title,
-      feedId: feed.id!,
-      feedName: feed.name,
-      link: item.link!,
-      content: item.description!,
-      pubDate: item.pubDate!.toString(),
-      read: 0,
-      favorite: 0,
-      openType: feed.openType,
-    );
-    await insertPost(post);
-  }
+  String title = item.title!.trim();
+  Post post = Post(
+    title: title,
+    feedId: feed.id!,
+    feedName: feed.name,
+    link: item.link!,
+    content: item.description!,
+    pubDate: item.pubDate!.toString(),
+    read: 0,
+    favorite: 0,
+    openType: feed.openType,
+  );
+  await insertPost(post);
 }
 
 Future<void> parseAtomPostFuturesItem(AtomItem item, Feed feed) async {
-  if (await postExist(item.links![0].href!)) {
-    Post post = Post(
-      title: item.title!,
-      feedId: feed.id!,
-      feedName: feed.name,
-      link: item.links![0].href!,
-      content: item.content!,
-      pubDate: item.updated!.toString(),
-      read: 0,
-      favorite: 0,
-      openType: feed.openType,
-    );
-    await insertPost(post);
-  }
+  Post post = Post(
+    title: item.title!,
+    feedId: feed.id!,
+    feedName: feed.name,
+    link: item.links![0].href!,
+    content: item.content!,
+    pubDate: item.updated!.toString(),
+    read: 0,
+    favorite: 0,
+    openType: feed.openType,
+  );
+  await insertPost(post);
 }
 
 // 解析所有订阅源，将更新的 Post 存入数据库

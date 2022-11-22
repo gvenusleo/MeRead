@@ -228,15 +228,15 @@ Future<List<Post>> unreadPostsByFeedId(int feedId) async {
 }
 
 // 根据 link 查询 Post 是否存在
-Future<bool> postExist(String link) async {
-  final Database db = await openDb();
-  final List<Map<String, dynamic>> maps = await db.query(
-    'post',
-    where: "link = ?",
-    whereArgs: [link],
-  );
-  return maps.isEmpty;
-}
+// Future<bool> postExist(String link) async {
+//   final Database db = await openDb();
+//   final List<Map<String, dynamic>> maps = await db.query(
+//     'post',
+//     where: "link = ?",
+//     whereArgs: [link],
+//   );
+//   return maps.isEmpty;
+// }
 
 // 查询 Feed 下的所有 Post，按照发布时间倒序
 Future<List<Post>> postsByFeedId(int feedId) async {
@@ -409,4 +409,20 @@ Future<List<Post>> favoritePostsByFeedId(int feedId) async {
       openType: maps[i]['openType'],
     );
   });
+}
+
+// 获取 Feed 下最新的 Post 的 pubDate
+Future<String?> getFeedLatestPostPubDate(int feedId) async {
+  final Database db = await openDb();
+  final List<Map<String, dynamic>> maps = await db.query(
+    'post',
+    where: "feedId = ?",
+    whereArgs: [feedId],
+    orderBy: 'pubDate DESC',
+    limit: 1,
+  );
+  if (maps.isEmpty) {
+    return null;
+  }
+  return maps[0]['pubDate'];
 }
