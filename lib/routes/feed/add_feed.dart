@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 import '../../utils/db.dart';
 import '../../utils/parse.dart';
-import '../../pages/feed/edit_feed.dart';
+import '../../routes/feed/edit_feed.dart';
 import '../../models/models.dart';
 
 class AddFeedPage extends StatefulWidget {

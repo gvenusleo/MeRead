@@ -7,7 +7,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'states/state.dart';
 import 'theme/theme.dart';
-import 'pages/home.dart';
+import 'routes/home.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -6,8 +6,8 @@ import '../../widgets/post_container.dart';
 import '../../utils/db.dart';
 import '../../utils/key.dart';
 import '../../utils/parse.dart';
-import '../../pages/feed/edit_feed.dart';
-import '../../pages/read.dart';
+import '../../routes/feed/edit_feed.dart';
+import '../../routes/read.dart';
 import '../../models/models.dart';
 
 class FeedPage extends StatefulWidget {

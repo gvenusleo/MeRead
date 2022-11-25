@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:meread/pages/setting/about.dart';
-import 'package:meread/pages/setting/api_set.dart';
-import 'package:meread/pages/setting/parse_set.dart';
-import 'package:meread/pages/setting/read_set.dart';
+import 'package:meread/routes/setting/about.dart';
+import 'package:meread/routes/setting/api_set.dart';
+import 'package:meread/routes/setting/parse_set.dart';
+import 'package:meread/routes/setting/read_set.dart';
 import 'package:meread/states/state.dart';
 
 class SetPage extends StatefulWidget {

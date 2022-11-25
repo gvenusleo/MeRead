@@ -6,10 +6,10 @@ import '../../widgets/post_container.dart';
 import '../../utils/db.dart';
 import '../../utils/parse.dart';
 import '../../utils/key.dart';
-import '../../pages/feed/add_feed.dart';
-import '../../pages/feed/feed.dart';
-import '../../pages/read.dart';
-import '../../pages/setting/set.dart';
+import '../../routes/feed/add_feed.dart';
+import '../../routes/feed/feed.dart';
+import '../../routes/read.dart';
+import '../../routes/setting/set.dart';
 import '../../models/models.dart';
 
 class HomePage extends StatefulWidget {
