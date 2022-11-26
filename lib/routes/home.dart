@@ -277,7 +277,7 @@ class HomePageState extends State<HomePage> {
           }
           // 保证订阅源的文章数不大于 feedMaxSaveCount
           final int feedMaxSaveCount = await getFeedMaxSaveCount();
-          checkFeedPostsCount(feedMaxSaveCount);
+          checkPostCount(feedMaxSaveCount);
         },
         child: ListView.separated(
           cacheExtent: 30, // 预加载

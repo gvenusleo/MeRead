@@ -161,6 +161,13 @@ class FeedPageState extends State<FeedPage> {
       body: RefreshIndicator(
         onRefresh: () async {
           bool parseFeed = await parseFeedContent(widget.feed);
+          if (onlyUnread) {
+            getUnreadPostList();
+          } else if (onlyFavorite) {
+            getFavoritePostList();
+          } else {
+            getPostList();
+          }
           if (!mounted) return;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -171,13 +178,9 @@ class FeedPageState extends State<FeedPage> {
               duration: const Duration(seconds: 1),
             ),
           );
-          if (onlyUnread) {
-            getUnreadPostList();
-          } else if (onlyFavorite) {
-            getFavoritePostList();
-          } else {
-            getPostList();
-          }
+          // 保证订阅源文章数不大于 feedMaxSaveCount
+          final int feedMaxSaveCount = await getFeedMaxSaveCount();
+          checkPostCountByFeed(widget.feed.id!, feedMaxSaveCount);
         },
         child: ListView.separated(
           itemCount: postList.length,

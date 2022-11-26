@@ -319,7 +319,7 @@ Future<void> updateFeedPostsOpenType(int feedId, int openType) async {
 // 查询所有 Feed 下的所有 Post
 // 如果数量超过 feedMaxSaveCount
 // 则删除最早的 Post，使得数量等于 feedMaxSaveCount
-Future<void> checkFeedPostsCount(int feedMaxSaveCount) async {
+Future<void> checkPostCount(int feedMaxSaveCount) async {
   final Database db = await openDb();
   final List<Map<String, dynamic>> maps = await db.query('feed');
   for (var i = 0; i < maps.length; i++) {
@@ -341,6 +341,30 @@ Future<void> checkFeedPostsCount(int feedMaxSaveCount) async {
         where: "id IN (${ids.join(',')})",
       );
     }
+  }
+}
+
+// 查询单一 Feed 下的所有 Post
+// 如果数量超过 feedMaxSaveCount
+// 则删除最早的 Post，使得数量等于 feedMaxSaveCount
+Future<void> checkPostCountByFeed(int feedId, int feedMaxSaveCount) async {
+  final Database db = await openDb();
+  final List<Map<String, dynamic>> postMaps = await db.query(
+    'post',
+    where: "feedId = ?",
+    whereArgs: [feedId],
+    orderBy: 'pubDate ASC',
+  );
+  if (postMaps.length > feedMaxSaveCount) {
+    final int deleteCount = postMaps.length - feedMaxSaveCount;
+    final List<int> ids = [];
+    for (var j = 0; j < deleteCount; j++) {
+      ids.add(postMaps[j]['id']);
+    }
+    await db.delete(
+      'post',
+      where: "id IN (${ids.join(',')})",
+    );
   }
 }
 
