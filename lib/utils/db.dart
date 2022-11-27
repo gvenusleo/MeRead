@@ -4,6 +4,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../models/models.dart';
+import 'key.dart';
 
 // 打开数据库，如果不存在则创建
 Future<Database> openDb() async {
@@ -147,11 +148,28 @@ Future<int> feedOpenType(int id) async {
 // 将 Post 插入数据库
 Future<void> insertPost(Post post) async {
   final Database db = await openDb();
-  await db.insert(
-    'post',
-    post.toMap(),
-    conflictAlgorithm: ConflictAlgorithm.replace,
-  );
+  bool allowDup = await getAllowDuplicate();
+  if (allowDup) {
+    await db.insert(
+      'post',
+      post.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  } else {
+    // 根据 link 判断是否重复，如果重复则不插入
+    final List<Map<String, dynamic>> maps = await db.query(
+      'post',
+      where: "link = ?",
+      whereArgs: [post.link],
+    );
+    if (maps.isEmpty) {
+      await db.insert(
+        'post',
+        post.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    }
+  }
 }
 
 // 查询所有 Post，按照发布时间倒序

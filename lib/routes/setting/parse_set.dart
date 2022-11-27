@@ -20,15 +20,18 @@ class ParseSetPageState extends State<ParseSetPage> {
       TextEditingController();
   int defaultOpenType = 0;
   int feedMaxSaveCount = 50;
+  bool allowDuplicate = false;
 
   Future<void> initData() async {
     final String defaultCategory = await getDefaultCategory();
     final int openType = await getDefaultOpenType();
     final int maxSaveCount = await getFeedMaxSaveCount();
+    final bool allowDup = await getAllowDuplicate();
     setState(() {
       _defaultCategoryController.text = defaultCategory;
       defaultOpenType = openType;
       feedMaxSaveCount = maxSaveCount;
+      allowDuplicate = allowDup;
     });
   }
 
@@ -141,6 +144,19 @@ class ParseSetPageState extends State<ParseSetPage> {
                     });
                     await setFeedMaxSaveCount(value);
                   }
+                },
+              ),
+            ),
+            ListTile(
+              contentPadding: const EdgeInsets.all(0),
+              title: const Text('允许文章重复'),
+              trailing: Switch(
+                value: allowDuplicate,
+                onChanged: (bool value) async {
+                  setState(() {
+                    allowDuplicate = value;
+                  });
+                  await setAllowDuplicate(value);
                 },
               ),
             ),

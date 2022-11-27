@@ -93,6 +93,16 @@ Future<void> setFeedMaxSaveCount(int count) async {
   prefs.setInt('feedMaxSaveCount', count);
 }
 
+Future<bool> getAllowDuplicate() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('allowDuplicate') ?? false;
+}
+
+Future<void> setAllowDuplicate(bool allow) async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setBool('allowDuplicate', allow);
+}
+
 // 阅读页面数据管理
 Future<int> getFontSize() async {
   final prefs = await SharedPreferences.getInstance();
