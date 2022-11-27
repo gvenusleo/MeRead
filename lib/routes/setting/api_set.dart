@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:meread/utils/key.dart';
+import '../../utils/key.dart';
 
 class ApiSetPage extends StatefulWidget {
   const ApiSetPage({Key? key}) : super(key: key);
