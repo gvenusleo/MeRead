@@ -9,7 +9,7 @@
 <p>
 <a href="https://github.com/GVenusLeo/MeRead/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/gvenusleo/meread"></a>
 <a href="https://github.com/GVenusLeo/MeRead/releases"><img alt="Release" src="https://img.shields.io/github/v/release/gvenusleo/meread"></a>
-<a href="https://github.com/GVenusLeo/MeRead"><img alt="Support" src="https://img.shields.io/badge/support-android-green"></a>
+<a href="https://github.com/GVenusLeo/MeRead"><img alt="Support" src="https://img.shields.io/badge/platform-android-green"></a>
 </p>
 
 <p>
