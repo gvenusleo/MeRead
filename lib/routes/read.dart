@@ -23,13 +23,6 @@ class ReadPageState extends State<ReadPage> {
   int lastScrollY = 0;
 
   @override
-  void setAppbarHeight(double height) {
-    setState(() {
-      appbarHeight = height;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final String textColor = Theme.of(context)
         .colorScheme
