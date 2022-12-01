@@ -70,6 +70,10 @@ img {
   max-width: 100%;
   height: auto;
 }
+iframe {
+  max-width: 100%;
+  height: auto;
+}
 a {
   color: #$textColor;
   text-decoration: none;
