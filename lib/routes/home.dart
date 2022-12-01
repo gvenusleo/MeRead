@@ -69,6 +69,7 @@ class HomePageState extends State<HomePage> {
     super.initState();
     getFeedList();
     getPostList();
+    getReadPageInitData();
   }
 
   @override
@@ -294,7 +295,6 @@ class HomePageState extends State<HomePage> {
                   );
                 } else {
                   // 应用内打开：阅读器 or 标签页
-                  getReadPageInitData();
                   Navigator.push(
                     context,
                     CupertinoPageRoute(
