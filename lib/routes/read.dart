@@ -188,9 +188,10 @@ ${widget.initData['customCss']}
               });
             }
           } else if (y < lastScrollY) {
-            if (appbarHeight == 0) {
+            if (appbarHeight < 56) {
+              double tem = appbarHeight + (lastScrollY - y).toDouble() / 10.0;
               setState(() {
-                appbarHeight = 56;
+                appbarHeight = tem <= 56 ? tem : 56;
               });
             }
           }
