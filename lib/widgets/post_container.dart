@@ -21,44 +21,33 @@ class PostContainer extends StatelessWidget {
             post.title,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
-          const SizedBox(height: 2),
-          Row(
+          const SizedBox(height: 4),
+          Wrap(
+            spacing: 8,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               if (post.read == 0)
-                Row(
-                  children: [
-                    Icon(
-                      Icons.circle,
-                      size: 16,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    const SizedBox(width: 4),
-                  ],
+                Icon(
+                  Icons.circle,
+                  size: 16,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               if (post.favorite == 1)
-                Row(
-                  children: [
-                    Icon(
-                      Icons.star_rounded,
-                      size: 16,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    const SizedBox(width: 4),
-                  ],
+                Icon(
+                  Icons.star_rounded,
+                  size: 16,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               Text(
                 post.feedName,
-                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodySmall,
               ),
-              const SizedBox(width: 8),
               Text(
                 post.pubDate.substring(0, 16),
-                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodySmall,
-              ),
+              )
             ],
           )
         ],
