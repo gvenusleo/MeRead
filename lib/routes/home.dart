@@ -168,6 +168,7 @@ class HomePageState extends State<HomePage> {
                         } else {
                           getPostList();
                         }
+                        getReadPageInitData();
                       });
                     });
                   },
