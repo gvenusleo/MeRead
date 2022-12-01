@@ -19,6 +19,16 @@ class ReadPage extends StatefulWidget {
 class ReadPageState extends State<ReadPage> {
   late InAppWebViewController webViewController;
 
+  double appbarHeight = 56.0;
+  int lastScrollY = 0;
+
+  @override
+  void setAppbarHeight(double height) {
+    setState(() {
+      appbarHeight = height;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final String textColor = Theme.of(context)
@@ -99,6 +109,7 @@ ${widget.initData['customCss']}
 ''';
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: appbarHeight,
         title: Text(
           widget.post.feedName,
           style: const TextStyle(fontWeight: FontWeight.w700),
@@ -173,6 +184,24 @@ ${widget.initData['customCss']}
         ),
         onWebViewCreated: (InAppWebViewController controller) {
           webViewController = controller;
+        },
+        // 向下滑动时，隐藏 AppBar，向上滑动时，显示 AppBar
+        onScrollChanged: (InAppWebViewController controller, int x, int y) {
+          if (y > lastScrollY) {
+            if (appbarHeight > 0) {
+              double tem = appbarHeight - (y - lastScrollY).toDouble() / 10.0;
+              setState(() {
+                appbarHeight = tem >= 0 ? tem : 0;
+              });
+            }
+          } else if (y < lastScrollY) {
+            if (appbarHeight == 0) {
+              setState(() {
+                appbarHeight = 56;
+              });
+            }
+          }
+          lastScrollY = y;
         },
         contextMenu: ContextMenu(
           options: ContextMenuOptions(
