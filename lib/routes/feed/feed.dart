@@ -130,7 +130,15 @@ class FeedPageState extends State<FeedPage> {
                         CupertinoPageRoute(
                           builder: (context) => EditFeedPage(feed: widget.feed),
                         ),
-                      );
+                      ).then((value) {
+                        if (onlyUnread) {
+                          getUnreadPostList();
+                        } else if (onlyFavorite) {
+                          getFavoritePostList();
+                        } else {
+                          getPostList();
+                        }
+                      });
                     });
                   },
                   child: Text(

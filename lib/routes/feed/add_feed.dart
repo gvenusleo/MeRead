@@ -116,7 +116,7 @@ class _AddFeedPageState extends State<AddFeedPage> {
                                         builder: (context) =>
                                             EditFeedPage(feed: feed),
                                       ),
-                                    );
+                                    ).then((value) => Navigator.pop(context));
                                   }),
                             );
                           });

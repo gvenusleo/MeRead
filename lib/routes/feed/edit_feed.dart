@@ -156,7 +156,6 @@ class EditFeedPageState extends State<EditFeedPage> {
 
                     if (!mounted) return;
                     Navigator.pop(context);
-                    Navigator.pop(context);
                   },
                   child: const Text('保存'),
                 ),
