@@ -170,14 +170,12 @@ ${widget.initData['customCss']}
             ? URLRequest(url: Uri.parse(widget.post.link))
             : null,
         initialOptions: InAppWebViewGroupOptions(
-          android: AndroidInAppWebViewOptions(
-            // 根据 App 主题设置 WebView 背景色
-            forceDark: Theme.of(context).brightness == Brightness.dark
-                ? AndroidForceDark.FORCE_DARK_ON
-                : AndroidForceDark.FORCE_DARK_OFF,
-            useHybridComposition: false, // 关闭混合模式，提高性能，避免 WebView 闪烁
-          ),
-        ),
+            android: AndroidInAppWebViewOptions(
+              useHybridComposition: false, // 关闭混合模式，提高性能，避免 WebView 闪烁
+            ),
+            crossPlatform: InAppWebViewOptions(
+              transparentBackground: true,
+            )),
         onWebViewCreated: (InAppWebViewController controller) {
           webViewController = controller;
         },
