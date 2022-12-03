@@ -198,37 +198,6 @@ ${widget.initData['customCss']}
           }
           lastScrollY = y;
         },
-        contextMenu: ContextMenu(
-          options: ContextMenuOptions(
-            hideDefaultSystemContextMenuItems: true,
-          ),
-          menuItems: [
-            ContextMenuItem(
-              androidId: 1,
-              iosId: '1',
-              title: '复制',
-              action: () {
-                webViewController.getSelectedText().then((String? text) {
-                  if (text != null) {
-                    Clipboard.setData(ClipboardData(text: text));
-                  }
-                });
-              },
-            ),
-            ContextMenuItem(
-              androidId: 2,
-              iosId: '2',
-              title: '分享',
-              action: () {
-                webViewController.getSelectedText().then((String? text) {
-                  if (text != null) {
-                    Share.share(text);
-                  }
-                });
-              },
-            ),
-          ],
-        ),
       ),
     );
   }
