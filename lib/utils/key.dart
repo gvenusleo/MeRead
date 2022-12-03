@@ -11,57 +11,6 @@ Future<void> setThemeIndex(int index) async {
   prefs.setInt('themeIndex', index);
 }
 
-// flomo 接口数据管理
-Future<bool> getUseFlomo() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('useFlomo') ?? false;
-}
-
-Future<void> setUseFlomo(bool use) async {
-  final prefs = await SharedPreferences.getInstance();
-  prefs.setBool('useFlomo', use);
-}
-
-Future<String> getFlomoApiKey() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString('flomoApiKey') ?? '';
-}
-
-Future<void> setFlomoApiKey(String apiKey) async {
-  final prefs = await SharedPreferences.getInstance();
-  prefs.setString('flomoApiKey', apiKey);
-}
-
-Future<String> getFlomoTag() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString('flomoTag') ?? '';
-}
-
-Future<void> setFlomoTag(String tag) async {
-  final prefs = await SharedPreferences.getInstance();
-  prefs.setString('flomoTag', tag);
-}
-
-Future<bool> getUseCategoryAsTag() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('useCategoryAsTag') ?? false;
-}
-
-Future<void> setUseCategoryAsTag(bool use) async {
-  final prefs = await SharedPreferences.getInstance();
-  prefs.setBool('useCategoryAsTag', use);
-}
-
-Future<bool> getSavePostLink() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('savePostLink') ?? false;
-}
-
-Future<void> setSavePostLink(bool save) async {
-  final prefs = await SharedPreferences.getInstance();
-  prefs.setBool('savePostLink', save);
-}
-
 // 订阅源解析数据管理
 Future<String> getDefaultCategory() async {
   final prefs = await SharedPreferences.getInstance();
@@ -162,11 +111,6 @@ Future<Map<String, dynamic>> getAllReadPageInitData() async {
     'pagePadding': prefs.getInt('pagePadding') ?? 18,
     'textAlign': prefs.getString('textAlign') ?? 'justify',
     'endAddLink': prefs.getBool('endAddLink') ?? false,
-    'useFlomo': prefs.getBool('useFlomo') ?? false,
-    'flomoApiKey': prefs.getString('flomoApiKey') ?? '',
-    'flomoTag': prefs.getString('flomoTag') ?? '',
-    'useCategoryAsTag': prefs.getBool('useCategoryAsTag') ?? false,
-    'savePostLink': prefs.getBool('savePostLink') ?? false,
     'customCss': prefs.getString('customCss') ?? '',
   };
 }

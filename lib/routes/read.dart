@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../utils/api.dart';
 import '../utils/db.dart';
 import '../models/models.dart';
 
@@ -230,47 +229,6 @@ ${widget.initData['customCss']}
                 });
               },
             ),
-            if (widget.initData['useFlomo'])
-              ContextMenuItem(
-                androidId: 0,
-                iosId: '0',
-                title: '发送至 flomo',
-                action: () async {
-                  webViewController
-                      .getSelectedText()
-                      .then((String? text) async {
-                    if (text != null) {
-                      final bool result = await send2flomo(
-                        text,
-                        widget.initData,
-                        widget.post,
-                      );
-                      Future.delayed(
-                        const Duration(milliseconds: 500),
-                        () {
-                          if (result) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content:
-                                    Text('发送成功', textAlign: TextAlign.center),
-                                duration: Duration(seconds: 1),
-                              ),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content:
-                                    Text('发送失败', textAlign: TextAlign.center),
-                                duration: Duration(seconds: 1),
-                              ),
-                            );
-                          }
-                        },
-                      );
-                    }
-                  });
-                },
-              ),
           ],
         ),
       ),

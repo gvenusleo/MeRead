@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../routes/setting/about.dart';
-import '../../routes/setting/api_set.dart';
 import '../../routes/setting/parse_set.dart';
 import '../../routes/setting/read_set.dart';
 import '../../states/state.dart';
@@ -105,20 +104,6 @@ class _SetPageState extends State<SetPage> {
                 context,
                 CupertinoPageRoute(
                   builder: (context) => const ParseSetPage(),
-                ),
-              );
-            },
-          ),
-          ListTile(
-            title: const Text(
-              '接口配置',
-            ),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              Navigator.push(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => const ApiSetPage(),
                 ),
               );
             },
