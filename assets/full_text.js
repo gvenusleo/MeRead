@@ -2297,7 +2297,7 @@ module.exports = Readability;
 }
 // 解析当前页面
 const article = new Readability(document).parse();
-// 替换页面内容
-document.body.innerHTML = article.content;
+// 替换整个 html 为解析后的内容
+document.documentElement.innerHTML = article.content;
 // 页面开始出添加 h1 标题
 document.body.insertAdjacentHTML('afterbegin', `<h1>${article.title}</h1>`);

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:html/parser.dart';
 import 'package:opml/opml.dart';
 import 'package:webfeed/webfeed.dart';
 import 'package:http/http.dart';
@@ -165,16 +164,4 @@ Future<String> exportOpml() async {
     body: body,
   );
   return opml.toXmlString(pretty: true);
-}
-
-// 通过 link 抓取网页内容，返回网页 body 标签
-Future<String> fetchPageBody(String link) async {
-  try {
-    final response = await get(Uri.parse(link));
-    final document = parse(response.body);
-    final body = document.getElementsByTagName('body');
-    return body[0].innerHtml;
-  } catch (e) {
-    return '';
-  }
 }

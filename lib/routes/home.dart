@@ -303,9 +303,10 @@ class HomePageState extends State<HomePage> {
                     context,
                     CupertinoPageRoute(
                       builder: (context) => ReadPage(
-                          post: postList[index],
-                          initData: readPageInitData,
-                          fullText: fullText),
+                        post: postList[index],
+                        initData: readPageInitData,
+                        fullText: fullText,
+                      ),
                     ),
                   ).then((value) {
                     // 返回时刷新文章列表

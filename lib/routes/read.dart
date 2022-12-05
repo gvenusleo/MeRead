@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -9,11 +7,12 @@ import '../utils/db.dart';
 import '../models/models.dart';
 
 class ReadPage extends StatefulWidget {
-  const ReadPage(
-      {super.key,
-      required this.post,
-      required this.initData,
-      required this.fullText});
+  const ReadPage({
+    super.key,
+    required this.post,
+    required this.initData,
+    required this.fullText,
+  });
   final Post post;
   final Map<String, dynamic> initData;
   final bool fullText;
@@ -23,8 +22,6 @@ class ReadPage extends StatefulWidget {
 }
 
 class ReadPageState extends State<ReadPage> {
-  late InAppWebViewController webViewController;
-
   double appbarHeight = 56.0;
   int lastScrollY = 0;
 
@@ -183,20 +180,19 @@ ${widget.initData['customCss']}
         onLoadStop: (controller, url) async {
           if (widget.fullText) {
             await controller.injectJavascriptFileFromAsset(
-                assetFilePath: 'assets/fullcontent.js');
+              assetFilePath: 'assets/full_text.js',
+            );
             await controller.injectCSSCode(source: cssStr);
           }
         },
         initialOptions: InAppWebViewGroupOptions(
-            android: AndroidInAppWebViewOptions(
-              useHybridComposition: false, // 关闭混合模式，提高性能，避免 WebView 闪烁
-            ),
-            crossPlatform: InAppWebViewOptions(
-              transparentBackground: true,
-            )),
-        onWebViewCreated: (InAppWebViewController controller) {
-          webViewController = controller;
-        },
+          android: AndroidInAppWebViewOptions(
+            useHybridComposition: false, // 关闭混合模式，提高性能，避免 WebView 闪烁
+          ),
+          crossPlatform: InAppWebViewOptions(
+            transparentBackground: true,
+          ),
+        ),
         // 向下滑动时，隐藏 AppBar，向上滑动时，显示 AppBar
         onScrollChanged: (InAppWebViewController controller, int x, int y) {
           if (y > lastScrollY) {
