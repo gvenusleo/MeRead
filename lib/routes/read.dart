@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -7,9 +9,14 @@ import '../utils/db.dart';
 import '../models/models.dart';
 
 class ReadPage extends StatefulWidget {
-  const ReadPage({super.key, required this.post, required this.initData});
+  const ReadPage(
+      {super.key,
+      required this.post,
+      required this.initData,
+      required this.fullText});
   final Post post;
   final Map<String, dynamic> initData;
+  final bool fullText;
 
   @override
   ReadPageState createState() => ReadPageState();
@@ -37,17 +44,10 @@ class ReadPageState extends State<ReadPage> {
     // 如果 widget.post.link 以 http:// 开头，则强制使用 https://
     widget.post.link =
         widget.post.link.replaceFirst(RegExp(r'^http://'), 'https://');
-
-    final String endAddLinkStr = widget.initData['endAddLink']
+    final String? endAddLinkStr = widget.initData['endAddLink']
         ? "<p><a href='${widget.post.link}'>→ 阅读原文</a></p>"
-        : '';
-    final String contentHtml = '''
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<style>
+        : null;
+    final String cssStr = '''
 /* CDN 服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
 @font-face {
   font-family: "思源宋体 CN VF Regular";
@@ -61,8 +61,10 @@ body {
   line-height: ${widget.initData['lineheight']};
   color: #$textColor;
   background-color: #$backgroundColor;
+  width: auto;
+  height: auto;
   margin: 0;
-  padding: 12px ${widget.initData['pagePadding']}px;
+  padding: 12px ${widget.initData['pagePadding']}px !important;
   text-align: ${widget.initData['textAlign']};
 }
 img {
@@ -91,6 +93,15 @@ h1 {
   margin: 0 0 0.5em 0;
 }
 ${widget.initData['customCss']}
+''';
+    final String contentHtml = '''
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+$cssStr
 </style>
 </head>
 <body>
@@ -163,12 +174,19 @@ ${widget.initData['customCss']}
         ],
       ),
       body: InAppWebView(
-        initialData: widget.post.openType == 0
+        initialData: widget.post.openType == 0 && !widget.fullText
             ? InAppWebViewInitialData(data: contentHtml)
             : null,
-        initialUrlRequest: widget.post.openType == 1
+        initialUrlRequest: widget.post.openType == 1 || widget.fullText
             ? URLRequest(url: Uri.parse(widget.post.link))
             : null,
+        onLoadStop: (controller, url) async {
+          if (widget.fullText) {
+            await controller.injectJavascriptFileFromAsset(
+                assetFilePath: 'assets/fullcontent.js');
+            await controller.injectCSSCode(source: cssStr);
+          }
+        },
         initialOptions: InAppWebViewGroupOptions(
             android: AndroidInAppWebViewOptions(
               useHybridComposition: false, // 关闭混合模式，提高性能，避免 WebView 闪烁

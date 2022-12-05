@@ -30,6 +30,7 @@ class _SetPageState extends State<SetPage> {
       TextEditingController();
   int defaultOpenType = 0;
   int feedMaxSaveCount = 50;
+  bool fullContent = false;
   bool allowDuplicate = false;
 
   Future<void> initData() async {
@@ -41,6 +42,7 @@ class _SetPageState extends State<SetPage> {
     final String defaultCategory = await getDefaultCategory();
     final int openType = await getDefaultOpenType();
     final int maxSaveCount = await getFeedMaxSaveCount();
+    final bool full = await getFullText();
     final bool allowDup = await getAllowDuplicate();
     setState(() {
       fontSize = size;
@@ -51,6 +53,7 @@ class _SetPageState extends State<SetPage> {
       _defaultCategoryController.text = defaultCategory;
       defaultOpenType = openType;
       feedMaxSaveCount = maxSaveCount;
+      fullContent = full;
       allowDuplicate = allowDup;
     });
   }
@@ -364,6 +367,18 @@ class _SetPageState extends State<SetPage> {
                   });
                   await setFeedMaxSaveCount(value);
                 }
+              },
+            ),
+          ),
+          ListTile(
+            title: const Text('默认获取全文'),
+            trailing: Switch(
+              value: fullContent,
+              onChanged: (bool value) async {
+                setState(() {
+                  fullContent = value;
+                });
+                await setFullText(value);
               },
             ),
           ),

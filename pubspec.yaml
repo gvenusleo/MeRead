@@ -50,6 +50,7 @@ dependencies:
   opml: ^0.3.0 # OPML 解析
   url_launcher: ^6.1.6 # 打开链接
   path_provider: ^2.0.11 # 路径
+  html: ^0.15.1 # HTML 解析
 
 flutter_icons:
   android: true
@@ -97,6 +98,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/images/meread.png
+    - assets/fullcontent.js
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

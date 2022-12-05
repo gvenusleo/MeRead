@@ -145,6 +145,17 @@ Future<int> feedOpenType(int id) async {
   return maps[0]['openType'];
 }
 
+// 根据 id 查询 Feed 的 fullText
+Future<int> feedFullText(int id) async {
+  final Database db = await openDb();
+  final List<Map<String, dynamic>> maps = await db.query(
+    'feed',
+    where: "id = ?",
+    whereArgs: [id],
+  );
+  return maps[0]['fullText'];
+}
+
 // 将 Post 插入数据库
 Future<void> insertPost(Post post) async {
   final Database db = await openDb();

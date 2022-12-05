@@ -74,18 +74,18 @@ class EditFeedPageState extends State<EditFeedPage> {
             ),
           ),
           const Divider(),
-          // TODO：获取全文
-          // ListTile(
-          //   title: const Text('是否获取全文'),
-          //   trailing: Switch(
-          //     value: widget.feed.fullText == 0 ? false : true,
-          //     onChanged: (bool value) {
-          //       setState(() {
-          //         widget.feed.fullText = value ? 1 : 0;
-          //       });
-          //     },
-          //   ),
-          // ),
+          // 获取全文
+          ListTile(
+            title: const Text('是否获取全文'),
+            trailing: Switch(
+              value: widget.feed.fullText == 0 ? false : true,
+              onChanged: (bool value) {
+                setState(() {
+                  widget.feed.fullText = value ? 1 : 0;
+                });
+              },
+            ),
+          ),
           // 文章打开方式
           ListTile(
             title: const Text('文章打开方式'),

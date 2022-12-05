@@ -42,6 +42,16 @@ Future<void> setFeedMaxSaveCount(int count) async {
   prefs.setInt('feedMaxSaveCount', count);
 }
 
+Future<bool> getFullText() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('fullContent') ?? false;
+}
+
+Future<void> setFullText(bool fullContent) async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setBool('fullContent', fullContent);
+}
+
 Future<bool> getAllowDuplicate() async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.getBool('allowDuplicate') ?? false;

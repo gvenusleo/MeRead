@@ -206,7 +206,10 @@ class FeedPageState extends State<FeedPage> {
                     context,
                     CupertinoPageRoute(
                       builder: (context) => ReadPage(
-                          post: postList[index], initData: readPageInitData),
+                        post: postList[index],
+                        initData: readPageInitData,
+                        fullText: widget.feed.fullText == 1,
+                      ),
                     ),
                   ).then((value) {
                     if (onlyUnread) {

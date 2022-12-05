@@ -4,7 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../widgets/post_container.dart';
 import '../../utils/db.dart';
-import '../../utils/parse.dart';
+import '../utils/parse.dart';
 import '../../utils/key.dart';
 import '../../routes/feed/add_feed.dart';
 import '../../routes/feed/feed.dart';
@@ -296,11 +296,16 @@ class HomePageState extends State<HomePage> {
                   );
                 } else {
                   // 应用内打开：阅读器 or 标签页
+                  final bool fullText =
+                      await feedFullText(postList[index].feedId) == 1;
+                  if (!mounted) return;
                   Navigator.push(
                     context,
                     CupertinoPageRoute(
                       builder: (context) => ReadPage(
-                          post: postList[index], initData: readPageInitData),
+                          post: postList[index],
+                          initData: readPageInitData,
+                          fullText: fullText),
                     ),
                   ).then((value) {
                     // 返回时刷新文章列表
