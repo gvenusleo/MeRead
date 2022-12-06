@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -83,8 +85,13 @@ h1 {
   font-weight: 700;
   margin: 0 0 0.5em 0;
 }
-${widget.initData['customCss']}
 ''';
+    const String loadingCss = '''
+html {
+  display: none;
+}
+''';
+    final initCss = widget.fullText ? loadingCss : cssStr;
     late String bodyHtml;
     late String jsCode;
 
@@ -112,7 +119,7 @@ $cssStr
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
-$cssStr
+$initCss
 </style>
 </head>
 <body>
@@ -233,8 +240,11 @@ ${widget.initData['customCss']}
             if (snapshot.hasData) {
               return snapshot.data!;
             } else {
-              return const Center(
-                child: CircularProgressIndicator(),
+              return Center(
+                child: Text(
+                  '正在获取全文……',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               );
             }
           },
