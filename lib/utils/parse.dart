@@ -164,15 +164,3 @@ Future<String> exportOpml() async {
   );
   return opml.toXmlString(pretty: true);
 }
-
-// 通过 link 爬取网页 body 标签
-Future<String> crawlBody(String link) async {
-  try {
-    final response = await get(Uri.parse(link));
-    final document = parse(response.bodyBytes);
-    final body = document.body;
-    return body!.innerHtml;
-  } catch (e) {
-    return '';
-  }
-}

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:meread/utils/parse.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../utils/db.dart';
@@ -25,21 +24,22 @@ class ReadPage extends StatefulWidget {
 class ReadPageState extends State<ReadPage> {
   double appBarHeight = 56.0; // AppBar 高度
   int lastScrollY = 0; // 上次滚动位置
+  int _index = 0; // 堆叠索引
 
-  Future<InAppWebView> getFullText() async {
-    final String textColor = Theme.of(context) // 文本颜色
+  @override
+  Widget build(BuildContext context) {
+    final String textColor = Theme.of(context)
         .colorScheme
         .primary
         .value
         .toRadixString(16)
         .substring(2);
-    final String backgroundColor = Theme.of(context) // 背景颜色
+    final String backgroundColor = Theme.of(context)
         .scaffoldBackgroundColor
         .value
         .toRadixString(16)
         .substring(2);
     final String cssStr = '''
-/* CDN 服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
 @font-face {
   font-family: "思源宋体 CN VF Regular";
   src: url("//at.alicdn.com/wf/webfont/xRg1LrpJJqRG/T_MtMXsOAonqR5tTR7L4p.woff2") format("woff2"),
@@ -95,38 +95,8 @@ pre {
   white-space: pre-wrap;
   word-break: break-all;
 }
+${widget.initData['customCss']}
 ''';
-    const String loadingCss = '''
-html {
-  display: none;
-}
-''';
-    final initCss = widget.fullText ? loadingCss : cssStr;
-    late String bodyHtml;
-    late String jsCode;
-
-    if (widget.fullText) {
-      // 强制使用 https
-      widget.post.link =
-          widget.post.link.replaceFirst(RegExp(r'^http://'), 'https://');
-      // 去除链接末尾参数
-      if (widget.post.link.contains('?')) {
-        widget.post.link = widget.post.link
-            .substring(0, widget.post.link.indexOf(RegExp(r'\?')));
-      }
-      bodyHtml = await crawlBody(widget.post.link);
-      String jsTem = await rootBundle.loadString('assets/full_text.js');
-      String addJs = '''
-document.body.insertAdjacentHTML('afterbegin', `<h1>${widget.post.title}</h1>`);
-document.head.insertAdjacentHTML('afterbegin', `<style>
-$cssStr
-</style>`);
-''';
-      jsCode = jsTem + addJs;
-    } else {
-      bodyHtml = widget.post.content;
-      jsCode = '';
-    }
     final String contentHtml = '''
 <!DOCTYPE html>
 <html>
@@ -134,60 +104,21 @@ $cssStr
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
-$initCss
+$cssStr
 </style>
 </head>
 <body>
 <h1>${widget.post.title}</h1>
-$bodyHtml
+${widget.post.content}
 </body>
-<script type="module">
-$jsCode
-</script>
-<style>
-${widget.initData['customCss']}
-</style>
 </html>
 ''';
-    return InAppWebView(
-      initialData: widget.post.openType == 0 || widget.fullText
-          ? InAppWebViewInitialData(data: contentHtml)
-          : null,
-      initialUrlRequest: widget.post.openType == 1
-          ? URLRequest(url: Uri.parse(widget.post.link))
-          : null,
-      initialOptions: InAppWebViewGroupOptions(
-        android: AndroidInAppWebViewOptions(
-          useHybridComposition: false, // 关闭混合模式，提高性能，避免 WebView 闪烁
-        ),
-        crossPlatform: InAppWebViewOptions(
-          transparentBackground: true,
-        ),
-      ),
-      // 向下滑动时，隐藏 AppBar，向上滑动时，显示 AppBar
-      onScrollChanged: (InAppWebViewController controller, int x, int y) {
-        if (y > lastScrollY) {
-          if (appBarHeight > 0) {
-            double tem = appBarHeight - (y - lastScrollY).toDouble() / 10.0;
-            setState(() {
-              appBarHeight = tem >= 0 ? tem : 0;
-            });
-          }
-        } else if (y < lastScrollY) {
-          if (appBarHeight < 56) {
-            double tem = appBarHeight + (lastScrollY - y).toDouble() / 10.0;
-            setState(() {
-              appBarHeight = tem <= 56 ? tem : 56;
-            });
-          }
-        }
-        lastScrollY = y;
-      },
-    );
-  }
+    if (widget.fullText) {
+      // 强制使用 https
+      widget.post.link =
+          widget.post.link.replaceFirst(RegExp(r'^http://'), 'https://');
+    }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: appBarHeight,
@@ -247,20 +178,74 @@ ${widget.initData['customCss']}
           ),
         ],
       ),
-      body: FutureBuilder(
-        future: getFullText(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return snapshot.data!;
-          } else {
-            return Center(
-              child: Text(
-                '正在获取全文……',
-                style: Theme.of(context).textTheme.bodyMedium,
+      body: IndexedStack(
+        index: _index,
+        children: [
+          Center(
+            child: widget.post.openType == 0
+                ? widget.fullText
+                    ? Text(
+                        "正在获取全文……",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      )
+                    : Text(
+                        "加载中……",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      )
+                : Text(
+                    "加载中……",
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+          ),
+          InAppWebView(
+            initialData: widget.post.openType == 0 && !widget.fullText
+                ? InAppWebViewInitialData(data: contentHtml)
+                : null,
+            initialUrlRequest: widget.post.openType == 1 || widget.fullText
+                ? URLRequest(url: Uri.parse(widget.post.link))
+                : null,
+            initialOptions: InAppWebViewGroupOptions(
+              android: AndroidInAppWebViewOptions(
+                useHybridComposition: false, // 关闭混合模式，提高性能，避免 WebView 闪烁
               ),
-            );
-          }
-        },
+              crossPlatform: InAppWebViewOptions(
+                transparentBackground: true,
+              ),
+            ),
+            onLoadStop: (controller, url) async {
+              if (widget.fullText && widget.post.openType == 0) {
+                await controller.injectJavascriptFileFromAsset(
+                    assetFilePath: 'assets/full_text.js');
+                await controller.injectCSSCode(source: cssStr);
+                await Future.delayed(const Duration(milliseconds: 100));
+              }
+              setState(() {
+                _index = 1;
+              });
+            },
+            // 向下滑动时，隐藏 AppBar，向上滑动时，显示 AppBar
+            onScrollChanged: (InAppWebViewController controller, int x, int y) {
+              if (y > lastScrollY) {
+                if (appBarHeight > 0) {
+                  double tem =
+                      appBarHeight - (y - lastScrollY).toDouble() / 10.0;
+                  setState(() {
+                    appBarHeight = tem >= 0 ? tem : 0;
+                  });
+                }
+              } else if (y < lastScrollY) {
+                if (appBarHeight < 56) {
+                  double tem =
+                      appBarHeight + (lastScrollY - y).toDouble() / 10.0;
+                  setState(() {
+                    appBarHeight = tem <= 56 ? tem : 56;
+                  });
+                }
+              }
+              lastScrollY = y;
+            },
+          )
+        ],
       ),
     );
   }
