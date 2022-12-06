@@ -24,7 +24,17 @@ class ReadPage extends StatefulWidget {
 class ReadPageState extends State<ReadPage> {
   double appBarHeight = 56.0; // AppBar 高度
   int lastScrollY = 0; // 上次滚动位置
-  int _index = 0; // 堆叠索引
+  int _index = 1; // 堆叠索引
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.fullText && widget.post.read != 2 && widget.post.openType == 0) {
+      setState(() {
+        _index = 0;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -184,20 +194,10 @@ ${widget.post.content}
         index: _index,
         children: [
           Center(
-            child: widget.post.openType == 0
-                ? widget.fullText && widget.post.read != 2
-                    ? Text(
-                        "正在获取全文……",
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      )
-                    : Text(
-                        "正在加载……",
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      )
-                : Text(
-                    "正在加载……",
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
+            child: Text(
+              "正在获取全文……",
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
           ),
           InAppWebView(
             initialData: !(widget.post.openType == 1 ||
@@ -237,10 +237,6 @@ ${widget.post.content}
                   setState(() {
                     _index = 1;
                   });
-                });
-              } else {
-                setState(() {
-                  _index = 1;
                 });
               }
             },
