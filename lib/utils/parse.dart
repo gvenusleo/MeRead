@@ -169,7 +169,7 @@ Future<String> exportOpml() async {
 Future<String> crawlBody(String link) async {
   try {
     final response = await get(Uri.parse(link));
-    final document = parse(response.body);
+    final document = parse(response.bodyBytes);
     final body = document.body;
     return body!.innerHtml;
   } catch (e) {
