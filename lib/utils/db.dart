@@ -231,6 +231,17 @@ Future<List<Post>> unreadPosts() async {
   });
 }
 
+// 修改 Post
+Future<void> updatePost(Post post) async {
+  final db = await openDb();
+  await db.update(
+    'post',
+    post.toMap(),
+    where: "id = ?",
+    whereArgs: [post.id],
+  );
+}
+
 // 查询 Feed 下所有未读 Post
 Future<List<Post>> unreadPostsByFeedId(int feedId) async {
   final Database db = await openDb();
@@ -255,17 +266,6 @@ Future<List<Post>> unreadPostsByFeedId(int feedId) async {
     );
   });
 }
-
-// 根据 link 查询 Post 是否存在
-// Future<bool> postExist(String link) async {
-//   final Database db = await openDb();
-//   final List<Map<String, dynamic>> maps = await db.query(
-//     'post',
-//     where: "link = ?",
-//     whereArgs: [link],
-//   );
-//   return maps.isEmpty;
-// }
 
 // 查询 Feed 下的所有 Post，按照发布时间倒序
 Future<List<Post>> postsByFeedId(int feedId) async {
@@ -303,12 +303,14 @@ Future<void> markFeedPostsAsRead(int feedId) async {
   );
 }
 
-// 将所有 Post 标记为已读
+// 将所有 Post.read = 1，如果 Post.read = 2 则不修改
 Future<void> markAllPostsAsRead() async {
   final db = await openDb();
   await db.update(
     'post',
     {'read': 1},
+    where: "read = ?",
+    whereArgs: [0],
   );
 }
 

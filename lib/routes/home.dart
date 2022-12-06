@@ -320,7 +320,9 @@ class HomePageState extends State<HomePage> {
                   });
                 }
                 // 标记文章为已读
-                markPostAsRead(postList[index].id!);
+                if (postList[index].read == 0) {
+                  markPostAsRead(postList[index].id!);
+                }
               },
               child: PostContainer(post: postList[index]),
             );

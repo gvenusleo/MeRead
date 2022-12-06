@@ -39,6 +39,8 @@ class ReadPageState extends State<ReadPage> {
         .value
         .toRadixString(16)
         .substring(2);
+    final titleStr =
+        widget.post.read == 2 ? '' : '<h1>${widget.post.title}</h1>';
     final String cssStr = '''
 @font-face {
   font-family: "思源宋体 CN VF Regular";
@@ -108,7 +110,7 @@ $cssStr
 </style>
 </head>
 <body>
-<h1>${widget.post.title}</h1>
+$titleStr
 ${widget.post.content}
 </body>
 </html>
@@ -183,25 +185,31 @@ ${widget.post.content}
         children: [
           Center(
             child: widget.post.openType == 0
-                ? widget.fullText
+                ? widget.fullText && widget.post.read != 2
                     ? Text(
                         "正在获取全文……",
                         style: Theme.of(context).textTheme.bodyMedium,
                       )
                     : Text(
-                        "加载中……",
+                        "正在加载……",
                         style: Theme.of(context).textTheme.bodyMedium,
                       )
                 : Text(
-                    "加载中……",
+                    "正在加载……",
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
           ),
           InAppWebView(
-            initialData: widget.post.openType == 0 && !widget.fullText
+            initialData: !(widget.post.openType == 1 ||
+                    (widget.fullText &&
+                        widget.post.openType == 0 &&
+                        widget.post.read != 2))
                 ? InAppWebViewInitialData(data: contentHtml)
                 : null,
-            initialUrlRequest: widget.post.openType == 1 || widget.fullText
+            initialUrlRequest: widget.post.openType == 1 ||
+                    (widget.fullText &&
+                        widget.post.openType == 0 &&
+                        widget.post.read != 2)
                 ? URLRequest(url: Uri.parse(widget.post.link))
                 : null,
             initialOptions: InAppWebViewGroupOptions(
@@ -213,15 +221,28 @@ ${widget.post.content}
               ),
             ),
             onLoadStop: (controller, url) async {
-              if (widget.fullText && widget.post.openType == 0) {
+              if (widget.fullText &&
+                  widget.post.openType == 0 &&
+                  widget.post.read != 2) {
                 await controller.injectJavascriptFileFromAsset(
                     assetFilePath: 'assets/full_text.js');
                 await controller.injectCSSCode(source: cssStr);
-                await Future.delayed(const Duration(milliseconds: 100));
+                final String? newContent = await controller.getHtml();
+                if (newContent != null) {
+                  widget.post.content = newContent;
+                  widget.post.read = 2;
+                  updatePost(widget.post);
+                }
+                Future.delayed(const Duration(milliseconds: 100), () {
+                  setState(() {
+                    _index = 1;
+                  });
+                });
+              } else {
+                setState(() {
+                  _index = 1;
+                });
               }
-              setState(() {
-                _index = 1;
-              });
             },
             // 向下滑动时，隐藏 AppBar，向上滑动时，显示 AppBar
             onScrollChanged: (InAppWebViewController controller, int x, int y) {
