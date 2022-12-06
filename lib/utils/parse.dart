@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:html/parser.dart';
 import 'package:opml/opml.dart';
 import 'package:webfeed/webfeed.dart';
 import 'package:http/http.dart';
