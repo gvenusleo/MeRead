@@ -25,7 +25,6 @@ class _SetPageState extends State<SetPage> {
   double lineheight = 1.5;
   int pagePadding = 18;
   String textAlign = 'justify';
-  bool endAddLink = false;
   final TextEditingController _defaultCategoryController =
       TextEditingController();
   int defaultOpenType = 0;
@@ -38,7 +37,6 @@ class _SetPageState extends State<SetPage> {
     final double height = await getLineheight();
     final int padding = await getPagePadding();
     final String align = await getTextAlign();
-    final bool link = await getEndAddLink();
     final String defaultCategory = await getDefaultCategory();
     final int openType = await getDefaultOpenType();
     final int maxSaveCount = await getFeedMaxSaveCount();
@@ -49,7 +47,6 @@ class _SetPageState extends State<SetPage> {
       lineheight = height;
       pagePadding = padding;
       textAlign = align;
-      endAddLink = link;
       _defaultCategoryController.text = defaultCategory;
       defaultOpenType = openType;
       feedMaxSaveCount = maxSaveCount;
@@ -249,18 +246,6 @@ class _SetPageState extends State<SetPage> {
                   textAlign = value!;
                 });
                 await setTextAlign(value!);
-              },
-            ),
-          ),
-          ListTile(
-            title: const Text('文章末尾显示原文链接'),
-            trailing: Switch(
-              value: endAddLink,
-              onChanged: (bool value) async {
-                setState(() {
-                  endAddLink = value;
-                });
-                await setEndAddLink(value);
               },
             ),
           ),

@@ -38,9 +38,6 @@ class ReadPageState extends State<ReadPage> {
         .value
         .toRadixString(16)
         .substring(2);
-    final String? endAddLinkStr = widget.initData['endAddLink']
-        ? "<p><a href='${widget.post.link}'>→ 阅读原文</a></p>"
-        : null;
     final String cssStr = '''
 /* CDN 服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
 @font-face {
@@ -121,7 +118,6 @@ $cssStr
 <body>
 <h1>${widget.post.title}</h1>
 $bodyHtml
-$endAddLinkStr
 </body>
 <script type="module">
 $jsCode

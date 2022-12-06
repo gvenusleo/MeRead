@@ -103,16 +103,6 @@ Future<void> setTextAlign(String align) async {
   prefs.setString('textAlign', align);
 }
 
-Future<bool> getEndAddLink() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('endAddLink') ?? false;
-}
-
-Future<void> setEndAddLink(bool end) async {
-  final prefs = await SharedPreferences.getInstance();
-  prefs.setBool('endAddLink', end);
-}
-
 Future<Map<String, dynamic>> getAllReadPageInitData() async {
   final prefs = await SharedPreferences.getInstance();
   return {
@@ -120,7 +110,6 @@ Future<Map<String, dynamic>> getAllReadPageInitData() async {
     'lineheight': prefs.getDouble('lineheight') ?? 1.5,
     'pagePadding': prefs.getInt('pagePadding') ?? 18,
     'textAlign': prefs.getString('textAlign') ?? 'justify',
-    'endAddLink': prefs.getBool('endAddLink') ?? false,
     'customCss': prefs.getString('customCss') ?? '',
   };
 }
