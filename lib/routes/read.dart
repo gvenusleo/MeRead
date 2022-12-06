@@ -24,16 +24,16 @@ class ReadPage extends StatefulWidget {
 
 class ReadPageState extends State<ReadPage> {
   double appBarHeight = 56.0; // AppBar 高度
-  int lastScrollY = 0;
+  int lastScrollY = 0; // 上次滚动位置
 
   Future<InAppWebView> getFullText() async {
-    final String textColor = Theme.of(context)
+    final String textColor = Theme.of(context) // 文本颜色
         .colorScheme
         .primary
         .value
         .toRadixString(16)
         .substring(2);
-    final String backgroundColor = Theme.of(context)
+    final String backgroundColor = Theme.of(context) // 背景颜色
         .scaffoldBackgroundColor
         .value
         .toRadixString(16)
@@ -55,6 +55,7 @@ body {
   width: auto;
   height: auto;
   margin: 0;
+  word-wrap: break-word;
   padding: 12px ${widget.initData['pagePadding']}px !important;
   text-align: ${widget.initData['textAlign']};
 }
@@ -94,8 +95,14 @@ html {
     late String jsCode;
 
     if (widget.fullText) {
+      // 强制使用 https
       widget.post.link =
           widget.post.link.replaceFirst(RegExp(r'^http://'), 'https://');
+      // 去除链接末尾参数
+      if (widget.post.link.contains('?')) {
+        widget.post.link = widget.post.link
+            .substring(0, widget.post.link.indexOf(RegExp(r'\?')));
+      }
       bodyHtml = await crawlBody(widget.post.link);
       String jsTem = await rootBundle.loadString('assets/full_text.js');
       String addJs = '''
@@ -131,7 +138,7 @@ ${widget.initData['customCss']}
 </style>
 </html>
 ''';
-    final InAppWebView webView = InAppWebView(
+    return InAppWebView(
       initialData: widget.post.openType == 0 || widget.fullText
           ? InAppWebViewInitialData(data: contentHtml)
           : null,
@@ -166,7 +173,6 @@ ${widget.initData['customCss']}
         lastScrollY = y;
       },
     );
-    return webView;
   }
 
   @override
