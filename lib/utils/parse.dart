@@ -9,7 +9,6 @@ import 'package:http/http.dart';
 
 import '../utils/db.dart';
 import '../models/models.dart';
-import '../utils/key.dart';
 
 // 解析订阅源
 // 参数：订阅源地址
@@ -19,7 +18,6 @@ Future<Feed?> parseFeed(String url,
     [String? categoryName, String? feedName]) async {
   categoryName ??= '默认分类';
   int defaultOpenType = 0;
-  bool fullText = false;
   try {
     final response = await get(Uri.parse(url));
     final postXmlString = utf8.decode(response.bodyBytes);
@@ -31,7 +29,7 @@ Future<Feed?> parseFeed(String url,
         url: url,
         description: rssFeed.description!,
         category: categoryName,
-        fullText: fullText ? 1 : 0,
+        fullText: 0,
         openType: defaultOpenType,
       );
     } catch (e) {
