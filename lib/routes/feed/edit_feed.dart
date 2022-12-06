@@ -34,7 +34,7 @@ class EditFeedPageState extends State<EditFeedPage> {
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
       ),
-      body: Column(
+      body: ListView(
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),

@@ -59,6 +59,18 @@ body {
   padding: 12px ${widget.initData['pagePadding']}px !important;
   text-align: ${widget.initData['textAlign']};
 }
+h1 {
+  font-size: 1.5em;
+  font-weight: 700;
+}
+h2 {
+  font-size: 1.25em;
+  font-weight: 700;
+}
+h3,h4,h5,h6 {
+  font-size: 1.0em;
+  font-weight: 700;
+}
 img {
   max-width: 100%;
   height: auto;
@@ -79,10 +91,9 @@ blockquote {
   padding: 0 0 0 16px;
   border-left: 4px solid #9e9e9e;
 }
-h1 {
-  font-size: 1.5em;
-  font-weight: 700;
-  margin: 0 0 0.5em 0;
+pre {
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 ''';
     const String loadingCss = '''
