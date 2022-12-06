@@ -12,26 +12,6 @@ Future<void> setThemeIndex(int index) async {
 }
 
 // 订阅源解析数据管理
-Future<String> getDefaultCategory() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString('defaultCategory') ?? '默认分类';
-}
-
-Future<void> setDefalutCategory(String category) async {
-  final prefs = await SharedPreferences.getInstance();
-  prefs.setString('defaultCategory', category);
-}
-
-Future<int> getDefaultOpenType() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getInt('defaultOpenType') ?? 0;
-}
-
-Future<void> setDefaultOpenType(int type) async {
-  final prefs = await SharedPreferences.getInstance();
-  prefs.setInt('defaultOpenType', type);
-}
-
 Future<int> getFeedMaxSaveCount() async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.getInt('feedMaxSaveCount') ?? 50;
@@ -40,16 +20,6 @@ Future<int> getFeedMaxSaveCount() async {
 Future<void> setFeedMaxSaveCount(int count) async {
   final prefs = await SharedPreferences.getInstance();
   prefs.setInt('feedMaxSaveCount', count);
-}
-
-Future<bool> getFullText() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('fullContent') ?? false;
-}
-
-Future<void> setFullText(bool fullContent) async {
-  final prefs = await SharedPreferences.getInstance();
-  prefs.setBool('fullContent', fullContent);
 }
 
 Future<bool> getAllowDuplicate() async {

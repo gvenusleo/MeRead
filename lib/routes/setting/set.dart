@@ -25,11 +25,7 @@ class _SetPageState extends State<SetPage> {
   double lineheight = 1.5;
   int pagePadding = 18;
   String textAlign = 'justify';
-  final TextEditingController _defaultCategoryController =
-      TextEditingController();
-  int defaultOpenType = 0;
   int feedMaxSaveCount = 50;
-  bool fullContent = false;
   bool allowDuplicate = false;
 
   Future<void> initData() async {
@@ -37,20 +33,14 @@ class _SetPageState extends State<SetPage> {
     final double height = await getLineheight();
     final int padding = await getPagePadding();
     final String align = await getTextAlign();
-    final String defaultCategory = await getDefaultCategory();
-    final int openType = await getDefaultOpenType();
     final int maxSaveCount = await getFeedMaxSaveCount();
-    final bool full = await getFullText();
     final bool allowDup = await getAllowDuplicate();
     setState(() {
       fontSize = size;
       lineheight = height;
       pagePadding = padding;
       textAlign = align;
-      _defaultCategoryController.text = defaultCategory;
-      defaultOpenType = openType;
       feedMaxSaveCount = maxSaveCount;
-      fullContent = full;
       allowDuplicate = allowDup;
     });
   }
@@ -262,47 +252,7 @@ class _SetPageState extends State<SetPage> {
             },
           ),
           const Divider(),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextFormField(
-              controller: _defaultCategoryController,
-              style: TextStyle(
-                color: Theme.of(context).textTheme.headlineSmall!.color,
-              ),
-              decoration: const InputDecoration(
-                labelText: '订阅源默认分类名',
-              ),
-              onFieldSubmitted: (String value) async {
-                await setDefalutCategory(value);
-              },
-            ),
-          ),
-          ListTile(
-            title: const Text('文章默认打开方式'),
-            trailing: DropdownButton(
-              value: defaultOpenType,
-              items: const [
-                DropdownMenuItem(
-                  value: 0,
-                  child: Text('阅读器'),
-                ),
-                DropdownMenuItem(
-                  value: 1,
-                  child: Text('内置标签页'),
-                ),
-                DropdownMenuItem(
-                  value: 2,
-                  child: Text('系统浏览器'),
-                ),
-              ],
-              onChanged: (int? value) async {
-                setState(() {
-                  defaultOpenType = value!;
-                });
-                await setDefaultOpenType(value!);
-              },
-            ),
-          ),
+
           ListTile(
             title: const Text('每个订阅源最大保存数'),
             trailing: DropdownButton<int>(
@@ -355,18 +305,7 @@ class _SetPageState extends State<SetPage> {
               },
             ),
           ),
-          ListTile(
-            title: const Text('默认获取全文'),
-            trailing: Switch(
-              value: fullContent,
-              onChanged: (bool value) async {
-                setState(() {
-                  fullContent = value;
-                });
-                await setFullText(value);
-              },
-            ),
-          ),
+
           ListTile(
             title: const Text('允许文章重复'),
             trailing: Switch(

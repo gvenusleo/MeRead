@@ -17,9 +17,9 @@ import '../utils/key.dart';
 // 注意：同时考虑 RSS 和 Atom 格式
 Future<Feed?> parseFeed(String url,
     [String? categoryName, String? feedName]) async {
-  categoryName ??= await getDefaultCategory();
-  int defaultOpenType = await getDefaultOpenType();
-  bool fullText = await getFullText();
+  categoryName ??= '默认分类';
+  int defaultOpenType = 0;
+  bool fullText = false;
   try {
     final response = await get(Uri.parse(url));
     final postXmlString = utf8.decode(response.bodyBytes);
