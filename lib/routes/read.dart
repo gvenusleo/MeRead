@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:meread/utils/parse.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../utils/db.dart';
@@ -25,8 +26,7 @@ class ReadPageState extends State<ReadPage> {
   double appbarHeight = 56.0;
   int lastScrollY = 0;
 
-  @override
-  Widget build(BuildContext context) {
+  Future<InAppWebView> getFullText() async {
     final String textColor = Theme.of(context)
         .colorScheme
         .primary
@@ -38,9 +38,6 @@ class ReadPageState extends State<ReadPage> {
         .value
         .toRadixString(16)
         .substring(2);
-    // 如果 widget.post.link 以 http:// 开头，则强制使用 https://
-    widget.post.link =
-        widget.post.link.replaceFirst(RegExp(r'^http://'), 'https://');
     final String? endAddLinkStr = widget.initData['endAddLink']
         ? "<p><a href='${widget.post.link}'>→ 阅读原文</a></p>"
         : null;
@@ -91,6 +88,26 @@ h1 {
 }
 ${widget.initData['customCss']}
 ''';
+    late String bodyHtml;
+    late String jsCode;
+
+    if (widget.fullText) {
+      // 如果 widget.post.link 以 http:// 开头，则强制使用 https://
+      widget.post.link =
+          widget.post.link.replaceFirst(RegExp(r'^http://'), 'https://');
+      bodyHtml = await crawlBody(widget.post.link);
+      String jsTem = await rootBundle.loadString('assets/full_text.js');
+      String addJs = '''
+document.body.insertAdjacentHTML('afterbegin', `<h1>${widget.post.title}</h1>`);
+document.head.insertAdjacentHTML('afterbegin', `<style>
+$cssStr
+</style>`);
+''';
+      jsCode = jsTem + addJs;
+    } else {
+      bodyHtml = widget.post.content;
+      jsCode = '';
+    }
     final String contentHtml = '''
 <!DOCTYPE html>
 <html>
@@ -103,116 +120,128 @@ $cssStr
 </head>
 <body>
 <h1>${widget.post.title}</h1>
-${widget.post.content}
+$bodyHtml
 $endAddLinkStr
 </body>
+<script type="module">
+$jsCode
+</script>
 <style>
 ${widget.initData['customCss']}
 </style>
 </html>
 ''';
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: appbarHeight,
-        title: Text(
-          widget.post.feedName,
-          style: const TextStyle(fontWeight: FontWeight.w700),
+    final InAppWebView webView = InAppWebView(
+      initialData: widget.post.openType == 0 || widget.fullText
+          ? InAppWebViewInitialData(data: contentHtml)
+          : null,
+      initialUrlRequest: widget.post.openType == 1
+          ? URLRequest(url: Uri.parse(widget.post.link))
+          : null,
+      initialOptions: InAppWebViewGroupOptions(
+        android: AndroidInAppWebViewOptions(
+          useHybridComposition: false, // 关闭混合模式，提高性能，避免 WebView 闪烁
         ),
-        actions: [
-          PopupMenuButton(
-            itemBuilder: (BuildContext context) {
-              return <PopupMenuEntry>[
-                PopupMenuItem(
-                  onTap: () async {
-                    await markPostAsUnread(widget.post.id!);
-                  },
-                  child: Text(
-                    '标记未读',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
-                PopupMenuItem(
-                  onTap: () async {
-                    await changePostFavorite(widget.post.id!);
-                    setState(() {
-                      widget.post.favorite = widget.post.favorite == 0 ? 1 : 0;
-                    });
-                  },
-                  child: Text(
-                    widget.post.favorite == 1 ? '取消收藏' : '收藏文章',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
-                const PopupMenuDivider(),
-                PopupMenuItem(
-                  onTap: () {
-                    Clipboard.setData(ClipboardData(text: widget.post.link));
-                  },
-                  child: Text(
-                    '复制链接',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
-                PopupMenuItem(
-                  onTap: () {
-                    Share.share(
-                      widget.post.link,
-                      subject: widget.post.title,
-                    );
-                  },
-                  child: Text(
-                    '分享文章',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
-              ];
-            },
-          ),
-        ],
-      ),
-      body: InAppWebView(
-        initialData: widget.post.openType == 0 && !widget.fullText
-            ? InAppWebViewInitialData(data: contentHtml)
-            : null,
-        initialUrlRequest: widget.post.openType == 1 || widget.fullText
-            ? URLRequest(url: Uri.parse(widget.post.link))
-            : null,
-        onLoadStop: (controller, url) async {
-          if (widget.fullText) {
-            await controller.injectJavascriptFileFromAsset(
-              assetFilePath: 'assets/full_text.js',
-            );
-            await controller.injectCSSCode(source: cssStr);
-          }
-        },
-        initialOptions: InAppWebViewGroupOptions(
-          android: AndroidInAppWebViewOptions(
-            useHybridComposition: false, // 关闭混合模式，提高性能，避免 WebView 闪烁
-          ),
-          crossPlatform: InAppWebViewOptions(
-            transparentBackground: true,
-          ),
+        crossPlatform: InAppWebViewOptions(
+          transparentBackground: true,
         ),
-        // 向下滑动时，隐藏 AppBar，向上滑动时，显示 AppBar
-        onScrollChanged: (InAppWebViewController controller, int x, int y) {
-          if (y > lastScrollY) {
-            if (appbarHeight > 0) {
-              double tem = appbarHeight - (y - lastScrollY).toDouble() / 10.0;
-              setState(() {
-                appbarHeight = tem >= 0 ? tem : 0;
-              });
-            }
-          } else if (y < lastScrollY) {
-            if (appbarHeight < 56) {
-              double tem = appbarHeight + (lastScrollY - y).toDouble() / 10.0;
-              setState(() {
-                appbarHeight = tem <= 56 ? tem : 56;
-              });
-            }
-          }
-          lastScrollY = y;
-        },
       ),
+      // 向下滑动时，隐藏 AppBar，向上滑动时，显示 AppBar
+      onScrollChanged: (InAppWebViewController controller, int x, int y) {
+        if (y > lastScrollY) {
+          if (appbarHeight > 0) {
+            double tem = appbarHeight - (y - lastScrollY).toDouble() / 10.0;
+            setState(() {
+              appbarHeight = tem >= 0 ? tem : 0;
+            });
+          }
+        } else if (y < lastScrollY) {
+          if (appbarHeight < 56) {
+            double tem = appbarHeight + (lastScrollY - y).toDouble() / 10.0;
+            setState(() {
+              appbarHeight = tem <= 56 ? tem : 56;
+            });
+          }
+        }
+        lastScrollY = y;
+      },
     );
+    return webView;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          toolbarHeight: appbarHeight,
+          title: Text(
+            widget.post.feedName,
+            style: const TextStyle(fontWeight: FontWeight.w700),
+          ),
+          actions: [
+            PopupMenuButton(
+              itemBuilder: (BuildContext context) {
+                return <PopupMenuEntry>[
+                  PopupMenuItem(
+                    onTap: () async {
+                      await markPostAsUnread(widget.post.id!);
+                    },
+                    child: Text(
+                      '标记未读',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                  PopupMenuItem(
+                    onTap: () async {
+                      await changePostFavorite(widget.post.id!);
+                      setState(() {
+                        widget.post.favorite =
+                            widget.post.favorite == 0 ? 1 : 0;
+                      });
+                    },
+                    child: Text(
+                      widget.post.favorite == 1 ? '取消收藏' : '收藏文章',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                  const PopupMenuDivider(),
+                  PopupMenuItem(
+                    onTap: () {
+                      Clipboard.setData(ClipboardData(text: widget.post.link));
+                    },
+                    child: Text(
+                      '复制链接',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                  PopupMenuItem(
+                    onTap: () {
+                      Share.share(
+                        widget.post.link,
+                        subject: widget.post.title,
+                      );
+                    },
+                    child: Text(
+                      '分享文章',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                ];
+              },
+            ),
+          ],
+        ),
+        body: FutureBuilder(
+          future: getFullText(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return snapshot.data!;
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        ));
   }
 }

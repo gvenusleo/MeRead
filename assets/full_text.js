@@ -2299,5 +2299,3 @@ module.exports = Readability;
 const article = new Readability(document).parse();
 // 替换整个 html 为解析后的内容
 document.documentElement.innerHTML = article.content;
-// 页面开始出添加 h1 标题
-document.body.insertAdjacentHTML('afterbegin', `<h1>${article.title}</h1>`);
