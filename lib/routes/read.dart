@@ -125,12 +125,6 @@ ${widget.post.content}
 </body>
 </html>
 ''';
-    if (widget.fullText) {
-      // 强制使用 https
-      widget.post.link =
-          widget.post.link.replaceFirst(RegExp(r'^http://'), 'https://');
-    }
-
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: appBarHeight,
@@ -210,7 +204,12 @@ ${widget.post.content}
                     (widget.fullText &&
                         widget.post.openType == 0 &&
                         widget.post.read != 2)
-                ? URLRequest(url: Uri.parse(widget.post.link))
+                ? URLRequest(
+                    url: Uri.parse(
+                      widget.post.link
+                          .replaceFirst(RegExp(r'^http://'), 'https://'),
+                    ),
+                  )
                 : null,
             initialOptions: InAppWebViewGroupOptions(
               android: AndroidInAppWebViewOptions(
@@ -227,17 +226,21 @@ ${widget.post.content}
                 await controller.injectJavascriptFileFromAsset(
                     assetFilePath: 'assets/full_text.js');
                 await controller.injectCSSCode(source: cssStr);
-                final String? newContent = await controller.getHtml();
-                if (newContent != null) {
-                  widget.post.content = newContent;
-                  widget.post.read = 2;
-                  updatePost(widget.post);
-                }
                 Future.delayed(const Duration(milliseconds: 100), () {
                   setState(() {
                     _index = 1;
                   });
                 });
+                final String? newContent = await controller.getHtml();
+                if (newContent != null) {
+                  // 删除 newContent 中 style 标签和 script 标签
+                  final String newContentWithoutScriptAndStyle = newContent
+                      .replaceAll(RegExp(r'<script>[\s\S]*?</script>'), '')
+                      .replaceAll(RegExp(r'<style>[\s\S]*?</style>'), '');
+                  widget.post.content = newContentWithoutScriptAndStyle;
+                  widget.post.read = 2;
+                  updatePost(widget.post);
+                }
               }
             },
             // 向下滑动时，隐藏 AppBar，向上滑动时，显示 AppBar
