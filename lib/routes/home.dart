@@ -260,7 +260,7 @@ class HomePageState extends State<HomePage> {
         onRefresh: () async {
           List<Feed> feedList = await feeds();
           int failCount = 0;
-          Future.wait(
+          await Future.wait(
             feedList.map(
               (e) => parseFeedContent(e).then(
                 (value) async {
@@ -270,6 +270,7 @@ class HomePageState extends State<HomePage> {
                     } else if (!onlyFavorite) {
                       await getPostList();
                     }
+                    await getUnreadCount();
                   } else {
                     failCount++;
                   }
@@ -300,7 +301,6 @@ class HomePageState extends State<HomePage> {
               ),
             );
           }
-          getUnreadCount();
           // 保证订阅源的文章数不大于 feedMaxSaveCount
           final int feedMaxSaveCount = await getFeedMaxSaveCount();
           checkPostCount(feedMaxSaveCount);

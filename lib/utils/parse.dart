@@ -123,20 +123,28 @@ Future<int> parseOpml(FilePickerResult result) async {
   final String opmlString = await opmlFile.readAsString();
   int failCount = 0;
   final opml = OpmlDocument.parse(opmlString);
-  Future.wait(opml.body.map((category) async {
-    final String? categoryName = category.title;
-    await Future.wait(category.children!.map((feed) async {
-      if (!await feedExist(feed.xmlUrl!)) {
-        Feed? feedObj =
-            await parseFeed(feed.xmlUrl!, categoryName, feed.title!);
-        if (feedObj != null) {
-          await insertFeed(feedObj);
-        } else {
-          failCount++;
-        }
-      }
-    }));
-  }));
+  await Future.wait(
+    opml.body.map(
+      (category) async {
+        final String? categoryName = category.title;
+        await Future.wait(
+          category.children!.map(
+            (feed) async {
+              if (!await feedExist(feed.xmlUrl!)) {
+                Feed? feedObj =
+                    await parseFeed(feed.xmlUrl!, categoryName, feed.title!);
+                if (feedObj != null) {
+                  await insertFeed(feedObj);
+                } else {
+                  failCount++;
+                }
+              }
+            },
+          ),
+        );
+      },
+    ),
+  );
   return failCount;
 }
 
