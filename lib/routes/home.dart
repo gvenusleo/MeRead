@@ -222,7 +222,9 @@ class HomePageState extends State<HomePage> {
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           trailing: Text(
-                            unreadCount[feed.id].toString(),
+                            unreadCount[feed.id] == null
+                                ? ''
+                                : unreadCount[feed.id].toString(),
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           onTap: () {
@@ -298,6 +300,7 @@ class HomePageState extends State<HomePage> {
               ),
             );
           }
+          getUnreadCount();
           // 保证订阅源的文章数不大于 feedMaxSaveCount
           final int feedMaxSaveCount = await getFeedMaxSaveCount();
           checkPostCount(feedMaxSaveCount);
