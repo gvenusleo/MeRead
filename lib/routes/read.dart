@@ -107,6 +107,13 @@ pre {
   white-space: pre-wrap;
   word-break: break-all;
 }
+table {
+  width: 100%;
+  table-layout: fixed;
+}
+table td {
+  padding: 0 8px;
+}
 ${widget.initData['customCss']}
 ''';
     final String contentHtml = '''
