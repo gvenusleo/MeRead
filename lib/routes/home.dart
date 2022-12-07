@@ -24,6 +24,7 @@ class HomePageState extends State<HomePage> {
   bool onlyUnread = false;
   bool onlyFavorite = false;
   Map<String, dynamic> readPageInitData = {};
+  Map<int, int> unreadCount = {};
 
   Future<void> getFeedList() async {
     Map<String, List<Feed>> temp = await feedsGroupByCategory();
@@ -64,11 +65,19 @@ class HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> getUnreadCount() async {
+    final Map<int, int> temp = await unreadPostCount();
+    setState(() {
+      unreadCount = temp;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     getFeedList();
     getPostList();
+    getUnreadCount();
     getReadPageInitData();
   }
 
@@ -185,57 +194,58 @@ class HomePageState extends State<HomePage> {
         ],
       ),
       drawer: Drawer(
-        // TODO: 订阅源显示未读文章数
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         child: SafeArea(
           child: ListView.builder(
             itemCount: feedListGroupByCategory.length,
             itemBuilder: (BuildContext context, int index) {
-              // 可折叠的订阅源列表
               return ExpansionTile(
+                controlAffinity: ListTileControlAffinity.leading,
                 title: Text(
                   feedListGroupByCategory.keys.toList()[index],
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 children: [
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount:
-                        feedListGroupByCategory.values.toList()[index].length,
-                    itemBuilder: (BuildContext context, int index2) {
-                      return ListTile(
-                        contentPadding: const EdgeInsets.fromLTRB(32, 0, 0, 0),
-                        dense: true,
-                        title: Text(
-                          feedListGroupByCategory.values
-                              .toList()[index][index2]
-                              .name,
-                          style: Theme.of(context).textTheme.bodyMedium,
+                  Column(
+                    children: [
+                      for (Feed feed
+                          in feedListGroupByCategory.values.toList()[index])
+                        ListTile(
+                          dense: true,
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(70, 0, 10, 0),
+                          title: Text(
+                            feed.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          trailing: Text(
+                            unreadCount[feed.id].toString(),
+                          ),
+                          onTap: () {
+                            if (!mounted) return;
+                            Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => FeedPage(feed: feed),
+                              ),
+                            ).then((value) {
+                              getFeedList();
+                              getUnreadCount();
+                              if (onlyUnread) {
+                                getUnreadPost();
+                              } else if (onlyFavorite) {
+                                getFavoritePost();
+                              } else {
+                                getPostList();
+                              }
+                            });
+                          },
                         ),
-                        onTap: () {
-                          if (!mounted) return;
-                          Navigator.pop(context);
-                          Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                              builder: (context) => FeedPage(
-                                  feed: feedListGroupByCategory.values
-                                      .toList()[index][index2]),
-                            ),
-                          ).then((value) {
-                            getFeedList();
-                            if (onlyUnread) {
-                              getUnreadPost();
-                            } else if (onlyFavorite) {
-                              getFavoritePost();
-                            } else {
-                              getPostList();
-                            }
-                          });
-                        },
-                      );
-                    },
-                  ),
+                    ],
+                  )
                 ],
               );
             },

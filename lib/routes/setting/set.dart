@@ -86,7 +86,7 @@ class _SetPageState extends State<SetPage> {
               },
             ),
           ),
-          const Divider(),
+          const Divider(thickness: 1),
           ListTile(
             title: const Text('字体大小'),
             trailing: Row(
@@ -251,8 +251,7 @@ class _SetPageState extends State<SetPage> {
               );
             },
           ),
-          const Divider(),
-
+          const Divider(thickness: 1),
           ListTile(
             title: const Text('每个订阅源最大保存数'),
             trailing: DropdownButton<int>(
@@ -305,7 +304,6 @@ class _SetPageState extends State<SetPage> {
               },
             ),
           ),
-
           ListTile(
             title: const Text('允许文章重复'),
             trailing: Switch(
@@ -318,7 +316,7 @@ class _SetPageState extends State<SetPage> {
               },
             ),
           ),
-          const Divider(),
+          const Divider(thickness: 1),
           ListTile(
             title: const Text('导入 OPML'),
             trailing: const Icon(Icons.chevron_right),
@@ -369,7 +367,7 @@ class _SetPageState extends State<SetPage> {
               await file.delete();
             },
           ),
-          const Divider(),
+          const Divider(thickness: 1),
           ListTile(
             title: const Text(
               '关于应用',

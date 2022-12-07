@@ -481,3 +481,20 @@ Future<String?> getFeedLatestPostPubDate(int feedId) async {
   }
   return maps[0]['pubDate'];
 }
+
+// 查询所有 Feed 未读 Post 数量，返回一个 Map
+Future<Map<int, int>> unreadPostCount() async {
+  final Database db = await openDb();
+  final List<Map<String, dynamic>> maps = await db.query('feed');
+  final Map<int, int> unreadPostCount = {};
+  for (var i = 0; i < maps.length; i++) {
+    final int feedId = maps[i]['id'];
+    final List<Map<String, dynamic>> postMaps = await db.query(
+      'post',
+      where: "feedId = ? AND read = ?",
+      whereArgs: [feedId, 0],
+    );
+    unreadPostCount[feedId] = postMaps.length;
+  }
+  return unreadPostCount;
+}
