@@ -103,6 +103,7 @@ class HomePageState extends State<HomePage> {
                     } else {
                       getPostList();
                     }
+                    getUnreadCount();
                   },
                   child: Text(
                     '全标已读',
@@ -200,7 +201,7 @@ class HomePageState extends State<HomePage> {
             itemCount: feedListGroupByCategory.length,
             itemBuilder: (BuildContext context, int index) {
               return ExpansionTile(
-                controlAffinity: ListTileControlAffinity.leading,
+                controlAffinity: ListTileControlAffinity.platform,
                 title: Text(
                   feedListGroupByCategory.keys.toList()[index],
                   style: Theme.of(context).textTheme.bodyMedium,
@@ -213,7 +214,7 @@ class HomePageState extends State<HomePage> {
                         ListTile(
                           dense: true,
                           contentPadding:
-                              const EdgeInsets.fromLTRB(70, 0, 10, 0),
+                              const EdgeInsets.fromLTRB(40, 0, 20, 0),
                           title: Text(
                             feed.name,
                             maxLines: 1,
@@ -222,6 +223,7 @@ class HomePageState extends State<HomePage> {
                           ),
                           trailing: Text(
                             unreadCount[feed.id].toString(),
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           onTap: () {
                             if (!mounted) return;
@@ -336,6 +338,7 @@ class HomePageState extends State<HomePage> {
                     } else {
                       getPostList();
                     }
+                    getUnreadCount();
                   });
                 }
                 // 标记文章为已读
