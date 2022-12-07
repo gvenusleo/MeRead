@@ -149,10 +149,37 @@ class FeedPageState extends State<FeedPage> {
                 // 删除订阅源
                 PopupMenuItem(
                   onTap: () async {
-                    await deleteFeed(widget.feed.id!);
-                    Future.delayed(const Duration(seconds: 0), () {
-                      Navigator.pop(context);
-                    });
+                    await Future.delayed(const Duration(seconds: 0));
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('删除订阅'),
+                          content: const Text('确定要删除该订阅吗？'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('取消'),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                await deleteFeed(widget.feed.id!);
+                                if (!mounted) return;
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                              },
+                              child: const Text('确定'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                    // await deleteFeed(widget.feed.id!);
+                    // Future.delayed(const Duration(seconds: 0), () {
+                    //   Navigator.pop(context);
+                    // });
                   },
                   child: Text(
                     '删除订阅',
