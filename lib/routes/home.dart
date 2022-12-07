@@ -245,37 +245,46 @@ class HomePageState extends State<HomePage> {
       body: RefreshIndicator(
         onRefresh: () async {
           List<Feed> feedList = await feeds();
-          // int failCount = await parseAllFeedContent(feedList);
           int failCount = 0;
-          for (Feed feed in feedList) {
-            if (await parseFeedContent(feed)) {
-              if (onlyUnread) {
-                await getUnreadPost();
-              } else if (!onlyFavorite) {
-                await getPostList();
-              }
-            } else {
-              failCount++;
-            }
-          }
+          Future.wait(
+            feedList.map(
+              (e) => parseFeedContent(e).then(
+                (value) async {
+                  if (value) {
+                    if (onlyUnread) {
+                      await getUnreadPost();
+                    } else if (!onlyFavorite) {
+                      await getPostList();
+                    }
+                  } else {
+                    failCount++;
+                  }
+                },
+              ),
+            ),
+          );
           if (failCount > 0) {
             if (!mounted) return;
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(
-                '更新失败 $failCount 个订阅源',
-                textAlign: TextAlign.center,
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  '更新失败 $failCount 个订阅源',
+                  textAlign: TextAlign.center,
+                ),
+                duration: const Duration(seconds: 1),
               ),
-              duration: const Duration(seconds: 1),
-            ));
+            );
           } else {
             if (!mounted) return;
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text(
-                '更新成功',
-                textAlign: TextAlign.center,
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  '更新成功',
+                  textAlign: TextAlign.center,
+                ),
+                duration: Duration(seconds: 1),
               ),
-              duration: Duration(seconds: 1),
-            ));
+            );
           }
           // 保证订阅源的文章数不大于 feedMaxSaveCount
           final int feedMaxSaveCount = await getFeedMaxSaveCount();
