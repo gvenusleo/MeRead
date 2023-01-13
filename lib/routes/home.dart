@@ -72,6 +72,55 @@ class HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> refresh() async {
+    List<Feed> feedList = await feeds();
+    int failCount = 0;
+    await Future.wait(
+      feedList.map(
+        (e) => parseFeedContent(e).then(
+          (value) async {
+            if (value) {
+              if (onlyUnread) {
+                await getUnreadPost();
+              } else if (!onlyFavorite) {
+                await getPostList();
+              }
+              await getUnreadCount();
+            } else {
+              failCount++;
+            }
+          },
+        ),
+      ),
+    );
+    if (failCount > 0) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '更新失败 $failCount 个订阅源',
+            textAlign: TextAlign.center,
+          ),
+          duration: const Duration(seconds: 1),
+        ),
+      );
+    } else {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            '更新成功',
+            textAlign: TextAlign.center,
+          ),
+          duration: Duration(seconds: 1),
+        ),
+      );
+    }
+    // 保证订阅源的文章数不大于 feedMaxSaveCount
+    final int feedMaxSaveCount = await getFeedMaxSaveCount();
+    checkPostCount(feedMaxSaveCount);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -257,54 +306,7 @@ class HomePageState extends State<HomePage> {
         ),
       ),
       body: RefreshIndicator(
-        onRefresh: () async {
-          List<Feed> feedList = await feeds();
-          int failCount = 0;
-          await Future.wait(
-            feedList.map(
-              (e) => parseFeedContent(e).then(
-                (value) async {
-                  if (value) {
-                    if (onlyUnread) {
-                      await getUnreadPost();
-                    } else if (!onlyFavorite) {
-                      await getPostList();
-                    }
-                    await getUnreadCount();
-                  } else {
-                    failCount++;
-                  }
-                },
-              ),
-            ),
-          );
-          if (failCount > 0) {
-            if (!mounted) return;
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  '更新失败 $failCount 个订阅源',
-                  textAlign: TextAlign.center,
-                ),
-                duration: const Duration(seconds: 1),
-              ),
-            );
-          } else {
-            if (!mounted) return;
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  '更新成功',
-                  textAlign: TextAlign.center,
-                ),
-                duration: Duration(seconds: 1),
-              ),
-            );
-          }
-          // 保证订阅源的文章数不大于 feedMaxSaveCount
-          final int feedMaxSaveCount = await getFeedMaxSaveCount();
-          checkPostCount(feedMaxSaveCount);
-        },
+        onRefresh: refresh,
         child: ListView.separated(
           cacheExtent: 30, // 预加载
           itemCount: postList.length,

@@ -73,6 +73,16 @@ Future<void> setTextAlign(String align) async {
   prefs.setString('textAlign', align);
 }
 
+Future<String> getCustomCss() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString('customCss') ?? '';
+}
+
+Future<void> setCustomCss(String css) async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setString('customCss', css);
+}
+
 Future<Map<String, dynamic>> getAllReadPageInitData() async {
   final prefs = await SharedPreferences.getInstance();
   return {
@@ -82,15 +92,4 @@ Future<Map<String, dynamic>> getAllReadPageInitData() async {
     'textAlign': prefs.getString('textAlign') ?? 'justify',
     'customCss': prefs.getString('customCss') ?? '',
   };
-}
-
-// 阅读页面自定义 CSS 数据管理
-Future<String> getCustomCss() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString('customCss') ?? '';
-}
-
-Future<void> setCustomCss(String css) async {
-  final prefs = await SharedPreferences.getInstance();
-  prefs.setString('customCss', css);
 }
