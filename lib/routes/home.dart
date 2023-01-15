@@ -34,10 +34,16 @@ class HomePageState extends State<HomePage> {
   }
 
   Future<void> getPostList() async {
-    List<Post> temp = await posts();
-    setState(() {
-      postList = temp;
-    });
+    if (onlyUnread) {
+      await getUnreadPost();
+    } else if (onlyFavorite) {
+      await getFavoritePost();
+    } else {
+      List<Post> temp = await posts();
+      setState(() {
+        postList = temp;
+      });
+    }
   }
 
   Future<void> getUnreadPost() async {

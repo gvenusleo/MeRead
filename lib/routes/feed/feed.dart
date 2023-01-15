@@ -24,10 +24,16 @@ class FeedPageState extends State<FeedPage> {
   Map<String, dynamic> readPageInitData = {};
 
   Future<void> getPostList() async {
-    List<Post> temp = await postsByFeedId(widget.feed.id!);
-    setState(() {
-      postList = temp;
-    });
+    if (onlyUnread) {
+      await getUnreadPostList();
+    } else if (onlyFavorite) {
+      getFavoritePostList();
+    } else {
+      List<Post> temp = await postsByFeedId(widget.feed.id!);
+      setState(() {
+        postList = temp;
+      });
+    }
   }
 
   Future<void> getUnreadPostList() async {
