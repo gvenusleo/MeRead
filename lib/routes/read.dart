@@ -114,6 +114,12 @@ table {
 table td {
   padding: 0 8px;
 }
+
+table, th, td {
+  border: 1px solid #$textColor;
+  border-collapse: collapse;
+}
+
 ${widget.initData['customCss']}
 ''';
     final String contentHtml = '''
