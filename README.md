@@ -13,10 +13,10 @@
 </p>
 
 <p>
-<img alt="MeRead" src="./assets/images/app1.png" width="204">
-<img alt="MeRead" src="./assets/images/app2.png" width="204">
-<img alt="MeRead" src="./assets/images/app3.png" width="204">
-<img alt="MeRead" src="./assets/images/app4.png" width="204">
+<img alt="MeRead" src="./assets/images/app1.jpg" width="204">
+<img alt="MeRead" src="./assets/images/app2.jpg" width="204">
+<img alt="MeRead" src="./assets/images/app3.jpg" width="204">
+<img alt="MeRead" src="./assets/images/app4.jpg" width="204">
 </p>
 </div>
 
