@@ -34,8 +34,6 @@ class FeedPageState extends State<FeedPage> {
     List<Post> temp = await unreadPostsByFeedId(widget.feed.id!);
     setState(() {
       postList = temp;
-      onlyUnread = true;
-      onlyFavorite = false;
     });
   }
 
@@ -43,8 +41,6 @@ class FeedPageState extends State<FeedPage> {
     List<Post> temp = await favoritePostsByFeedId(widget.feed.id!);
     setState(() {
       postList = temp;
-      onlyFavorite = true;
-      onlyUnread = false;
     });
   }
 
@@ -55,9 +51,19 @@ class FeedPageState extends State<FeedPage> {
     });
   }
 
+  Future getInitState() async {
+    bool onlyUnreadTem = await getOnlyUnread();
+    bool onlyFavoriteTem = await getOnlyFavorite();
+    setState(() {
+      onlyUnread = onlyUnreadTem;
+      onlyFavorite = onlyFavoriteTem;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    getInitState();
     getPostList();
   }
 
@@ -69,8 +75,52 @@ class FeedPageState extends State<FeedPage> {
           widget.feed.name,
           style: const TextStyle(fontWeight: FontWeight.w700),
         ),
+        centerTitle: false,
         actions: [
+          IconButton(
+            onPressed: () async {
+              if (onlyUnread) {
+                await getPostList();
+                setState(() {
+                  onlyUnread = false;
+                });
+              } else {
+                await getUnreadPostList();
+                setState(() {
+                  onlyUnread = true;
+                  onlyFavorite = false;
+                });
+              }
+              await setOnlyUnread(onlyUnread);
+              await setOnlyFavorite(onlyFavorite);
+            },
+            icon: onlyUnread
+                ? const Icon(Icons.radio_button_checked)
+                : const Icon(Icons.radio_button_unchecked),
+          ),
+          IconButton(
+            onPressed: () async {
+              if (onlyFavorite) {
+                await getPostList();
+                setState(() {
+                  onlyFavorite = false;
+                });
+              } else {
+                await getFavoritePostList();
+                setState(() {
+                  onlyFavorite = true;
+                  onlyUnread = false;
+                });
+              }
+              await setOnlyUnread(onlyUnread);
+              await setOnlyFavorite(onlyFavorite);
+            },
+            icon: onlyFavorite
+                ? const Icon(Icons.bookmark)
+                : const Icon(Icons.bookmark_border_outlined),
+          ),
           PopupMenuButton(
+            position: PopupMenuPosition.under,
             itemBuilder: (BuildContext context) {
               return <PopupMenuEntry>[
                 PopupMenuItem(
@@ -89,39 +139,6 @@ class FeedPageState extends State<FeedPage> {
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
-                PopupMenuItem(
-                  onTap: () async {
-                    if (onlyUnread) {
-                      await getPostList();
-                      setState(() {
-                        onlyUnread = false;
-                      });
-                    } else {
-                      await getUnreadPostList();
-                    }
-                  },
-                  child: Text(
-                    onlyUnread ? '显示全部' : '只看未读',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
-                PopupMenuItem(
-                  onTap: () async {
-                    if (onlyFavorite) {
-                      await getPostList();
-                      setState(() {
-                        onlyFavorite = false;
-                      });
-                    } else {
-                      await getFavoritePostList();
-                    }
-                  },
-                  child: Text(
-                    onlyFavorite ? '显示全部' : '查看收藏',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
-                const PopupMenuDivider(),
                 PopupMenuItem(
                   onTap: () {
                     Future.delayed(const Duration(seconds: 0), () {
@@ -146,6 +163,7 @@ class FeedPageState extends State<FeedPage> {
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
+                const PopupMenuDivider(),
                 // 删除订阅源
                 PopupMenuItem(
                   onTap: () async {

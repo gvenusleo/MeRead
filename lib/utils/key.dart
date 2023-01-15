@@ -93,3 +93,25 @@ Future<Map<String, dynamic>> getAllReadPageInitData() async {
     'customCss': prefs.getString('customCss') ?? '',
   };
 }
+
+// 是否只读模式
+Future<bool> getOnlyUnread() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('isOnlyRead') ?? false;
+}
+
+Future<void> setOnlyUnread(bool isOnlyRead) async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setBool('isOnlyRead', isOnlyRead);
+}
+
+// 是否收藏模式
+Future<bool> getOnlyFavorite() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('isOnlyFavorite') ?? false;
+}
+
+Future<void> setOnlyFavorite(bool isOnlyFavorite) async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setBool('isOnlyFavorite', isOnlyFavorite);
+}

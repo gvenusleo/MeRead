@@ -44,8 +44,6 @@ class HomePageState extends State<HomePage> {
     List<Post> temp = await unreadPosts();
     setState(() {
       postList = temp;
-      onlyUnread = true;
-      onlyFavorite = false;
     });
   }
 
@@ -53,8 +51,6 @@ class HomePageState extends State<HomePage> {
     List<Post> temp = await favoritePosts();
     setState(() {
       postList = temp;
-      onlyFavorite = true;
-      onlyUnread = false;
     });
   }
 
@@ -121,9 +117,19 @@ class HomePageState extends State<HomePage> {
     checkPostCount(feedMaxSaveCount);
   }
 
+  Future getInitState() async {
+    bool onlyUnreadTem = await getOnlyUnread();
+    bool onlyFavoriteTem = await getOnlyFavorite();
+    setState(() {
+      onlyUnread = onlyUnreadTem;
+      onlyFavorite = onlyFavoriteTem;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    getInitState();
     getFeedList();
     getPostList();
     getUnreadCount();
@@ -138,8 +144,52 @@ class HomePageState extends State<HomePage> {
           '悦读',
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
+        centerTitle: false,
         actions: [
+          IconButton(
+            onPressed: () async {
+              if (onlyUnread) {
+                await getPostList();
+                setState(() {
+                  onlyUnread = false;
+                });
+              } else {
+                await getUnreadPost();
+                setState(() {
+                  onlyUnread = true;
+                  onlyFavorite = false;
+                });
+              }
+              await setOnlyUnread(onlyUnread);
+              await setOnlyFavorite(onlyFavorite);
+            },
+            icon: onlyUnread
+                ? const Icon(Icons.radio_button_checked)
+                : const Icon(Icons.radio_button_unchecked),
+          ),
+          IconButton(
+            onPressed: () async {
+              if (onlyFavorite) {
+                await getPostList();
+                setState(() {
+                  onlyFavorite = false;
+                });
+              } else {
+                await getFavoritePost();
+                setState(() {
+                  onlyFavorite = true;
+                  onlyUnread = false;
+                });
+              }
+              await setOnlyUnread(onlyUnread);
+              await setOnlyFavorite(onlyFavorite);
+            },
+            icon: onlyFavorite
+                ? const Icon(Icons.bookmark)
+                : const Icon(Icons.bookmark_border_outlined),
+          ),
           PopupMenuButton(
+            position: PopupMenuPosition.under,
             itemBuilder: (BuildContext context) {
               return <PopupMenuEntry>[
                 PopupMenuItem(
@@ -159,39 +209,6 @@ class HomePageState extends State<HomePage> {
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
-                PopupMenuItem(
-                  onTap: () async {
-                    if (onlyUnread) {
-                      await getPostList();
-                      setState(() {
-                        onlyUnread = false;
-                      });
-                    } else {
-                      await getUnreadPost();
-                    }
-                  },
-                  child: Text(
-                    onlyUnread ? '显示全部' : '只看未读',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
-                PopupMenuItem(
-                  onTap: () async {
-                    if (onlyFavorite) {
-                      await getPostList();
-                      setState(() {
-                        onlyFavorite = false;
-                      });
-                    } else {
-                      await getFavoritePost();
-                    }
-                  },
-                  child: Text(
-                    onlyFavorite ? '显示全部' : '查看收藏',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
-                const PopupMenuDivider(),
                 PopupMenuItem(
                   onTap: () {
                     // 打开订阅源添加页面，返回时刷新订阅源列表
