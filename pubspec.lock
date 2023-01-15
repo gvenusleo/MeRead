@@ -42,7 +42,7 @@ packages:
       name: checked_yaml
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   cli_util:
     dependency: transitive
     description:
@@ -119,7 +119,7 @@ packages:
       name: file_picker
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "5.2.3"
+    version: "5.2.5"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -131,7 +131,7 @@ packages:
       name: flutter_inappwebview
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "5.7.2+1"
+    version: "5.7.2+3"
   flutter_launcher_icons:
     dependency: "direct main"
     description:
@@ -251,7 +251,7 @@ packages:
       name: mime
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.4"
   nested:
     dependency: transitive
     description:
@@ -307,7 +307,7 @@ packages:
       name: path_provider_macos
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.0.6"
+    version: "2.0.7"
   path_provider_platform_interface:
     dependency: transitive
     description:
@@ -363,7 +363,7 @@ packages:
       name: provider
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "6.0.4"
+    version: "6.0.5"
   share_plus:
     dependency: "direct main"
     description:
@@ -384,7 +384,7 @@ packages:
       name: shared_preferences
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.0.15"
+    version: "2.0.16"
   shared_preferences_android:
     dependency: transitive
     description:
@@ -392,10 +392,10 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.14"
-  shared_preferences_ios:
+  shared_preferences_foundation:
     dependency: transitive
     description:
-      name: shared_preferences_ios
+      name: shared_preferences_foundation
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.1"
@@ -405,14 +405,7 @@ packages:
       name: shared_preferences_linux
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.1.1"
-  shared_preferences_macos:
-    dependency: transitive
-    description:
-      name: shared_preferences_macos
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "2.0.4"
+    version: "2.1.2"
   shared_preferences_platform_interface:
     dependency: transitive
     description:
@@ -433,7 +426,7 @@ packages:
       name: shared_preferences_windows
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.1.1"
+    version: "2.1.2"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -452,14 +445,14 @@ packages:
       name: sqflite
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.2.1"
+    version: "2.2.3"
   sqflite_common:
     dependency: transitive
     description:
       name: sqflite_common
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.4.0+2"
+    version: "2.4.1"
   stack_trace:
     dependency: transitive
     description:
@@ -487,7 +480,7 @@ packages:
       name: synchronized
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "3.0.0+3"
+    version: "3.0.1"
   term_glyph:
     dependency: transitive
     description:
@@ -592,14 +585,14 @@ packages:
       name: win32
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "3.1.2"
+    version: "3.1.3"
   xdg_directories:
     dependency: transitive
     description:
       name: xdg_directories
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.2.0+2"
+    version: "0.2.0+3"
   xml:
     dependency: transitive
     description:
