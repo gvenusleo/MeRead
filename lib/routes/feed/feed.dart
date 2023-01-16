@@ -24,16 +24,10 @@ class FeedPageState extends State<FeedPage> {
   Map<String, dynamic> readPageInitData = {};
 
   Future<void> getPostList() async {
-    if (onlyUnread) {
-      await getUnreadPostList();
-    } else if (onlyFavorite) {
-      getFavoritePostList();
-    } else {
-      List<Post> temp = await postsByFeedId(widget.feed.id!);
-      setState(() {
-        postList = temp;
-      });
-    }
+    List<Post> temp = await postsByFeedId(widget.feed.id!);
+    setState(() {
+      postList = temp;
+    });
   }
 
   Future<void> getUnreadPostList() async {
@@ -57,19 +51,9 @@ class FeedPageState extends State<FeedPage> {
     });
   }
 
-  Future getInitState() async {
-    bool onlyUnreadTem = await getOnlyUnread();
-    bool onlyFavoriteTem = await getOnlyFavorite();
-    setState(() {
-      onlyUnread = onlyUnreadTem;
-      onlyFavorite = onlyFavoriteTem;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    getInitState();
     getPostList();
   }
 
@@ -97,8 +81,6 @@ class FeedPageState extends State<FeedPage> {
                   onlyFavorite = false;
                 });
               }
-              await setOnlyUnread(onlyUnread);
-              await setOnlyFavorite(onlyFavorite);
             },
             icon: onlyUnread
                 ? const Icon(Icons.radio_button_checked)
@@ -118,8 +100,6 @@ class FeedPageState extends State<FeedPage> {
                   onlyUnread = false;
                 });
               }
-              await setOnlyUnread(onlyUnread);
-              await setOnlyFavorite(onlyFavorite);
             },
             icon: onlyFavorite
                 ? const Icon(Icons.bookmark)

@@ -34,16 +34,10 @@ class HomePageState extends State<HomePage> {
   }
 
   Future<void> getPostList() async {
-    if (onlyUnread) {
-      await getUnreadPost();
-    } else if (onlyFavorite) {
-      await getFavoritePost();
-    } else {
-      List<Post> temp = await posts();
-      setState(() {
-        postList = temp;
-      });
-    }
+    List<Post> temp = await posts();
+    setState(() {
+      postList = temp;
+    });
   }
 
   Future<void> getUnreadPost() async {
@@ -123,19 +117,9 @@ class HomePageState extends State<HomePage> {
     checkPostCount(feedMaxSaveCount);
   }
 
-  Future getInitState() async {
-    bool onlyUnreadTem = await getOnlyUnread();
-    bool onlyFavoriteTem = await getOnlyFavorite();
-    setState(() {
-      onlyUnread = onlyUnreadTem;
-      onlyFavorite = onlyFavoriteTem;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    getInitState();
     getFeedList();
     getPostList();
     getUnreadCount();
@@ -166,8 +150,6 @@ class HomePageState extends State<HomePage> {
                   onlyFavorite = false;
                 });
               }
-              await setOnlyUnread(onlyUnread);
-              await setOnlyFavorite(onlyFavorite);
             },
             icon: onlyUnread
                 ? const Icon(Icons.radio_button_checked)
@@ -187,8 +169,6 @@ class HomePageState extends State<HomePage> {
                   onlyUnread = false;
                 });
               }
-              await setOnlyUnread(onlyUnread);
-              await setOnlyFavorite(onlyFavorite);
             },
             icon: onlyFavorite
                 ? const Icon(Icons.bookmark)
