@@ -33,7 +33,7 @@ class AboutPage extends StatelessWidget {
             const SizedBox(height: 8),
             const Center(
               child: Text(
-                'V 0.2.2',
+                'V 0.2.3',
                 style: TextStyle(fontSize: 18),
               ),
             ),
@@ -64,7 +64,7 @@ class AboutPage extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             const Text(
-              '© 2022 悦读. All rights reserved.',
+              '© 2022 - 2023 悦读. All rights reserved.',
               style: TextStyle(fontSize: 14),
             ),
             const SizedBox(height: 16),
