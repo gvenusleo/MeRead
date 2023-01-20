@@ -147,6 +147,7 @@ ${widget.post.content}
         ),
         actions: [
           PopupMenuButton(
+            position: PopupMenuPosition.under,
             itemBuilder: (BuildContext context) {
               return <PopupMenuEntry>[
                 PopupMenuItem(

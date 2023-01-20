@@ -91,6 +91,9 @@ ThemeData lightTheme = ThemeData(
   radioTheme: RadioThemeData(
     fillColor: MaterialStateProperty.all(Colors.black),
   ),
+  popupMenuTheme: const PopupMenuThemeData(
+    elevation: 1,
+  ),
 );
 
 Color darkThemeColor = const Color.fromRGBO(220, 220, 220, 1);
@@ -184,5 +187,8 @@ ThemeData darkTheme = ThemeData(
   ),
   radioTheme: RadioThemeData(
     fillColor: MaterialStateProperty.all(darkThemeColor),
+  ),
+  popupMenuTheme: const PopupMenuThemeData(
+    elevation: 1,
   ),
 );

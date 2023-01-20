@@ -66,6 +66,7 @@ class _SetPageState extends State<SetPage> {
           ListTile(
             title: const Text('颜色主题'),
             trailing: DropdownButton(
+              elevation: 1,
               value: Provider.of<ThemeModel>(context).themeIndex,
               items: const [
                 DropdownMenuItem(
@@ -201,6 +202,7 @@ class _SetPageState extends State<SetPage> {
           ListTile(
             title: const Text('文字对齐'),
             trailing: DropdownButton(
+              elevation: 1,
               value: textAlign,
               items: [
                 DropdownMenuItem(
@@ -256,6 +258,7 @@ class _SetPageState extends State<SetPage> {
             title: const Text('每个订阅源最大保存数'),
             trailing: DropdownButton<int>(
               value: feedMaxSaveCount,
+              elevation: 1,
               items: [
                 DropdownMenuItem(
                   value: 50,
