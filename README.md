@@ -1,5 +1,5 @@
 <div align='center'>
-<img src='./assets/images/meread.png' alt='MeRead' width='100px' style='border-radius:24px'/>
+<img src='./assets/images/meread_round.png' alt='MeRead' width='100px'/>
 <h1>MeRead - 悦读</h1>
 
 </p>
