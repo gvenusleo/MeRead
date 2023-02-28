@@ -1,5 +1,5 @@
 <div align='center'>
-<img src='./assets/images/meread.png' alt='MeRead' width='100px'/>
+<img src='./assets/images/meread.png' alt='MeRead' width='100px' style='border-radius:24px'/>
 <h1>MeRead - 悦读</h1>
 
 </p>
@@ -30,6 +30,7 @@
 - [x] 三种阅读模式：阅读器、应用内标签页、系统浏览器
 - [x] 未读筛选、文章收藏、订阅源分组
 - [x] 适配深色模式
+- [x] 适配 Material You
 - [ ] 多语言支持
 
 ## License
