@@ -108,9 +108,6 @@ flutter:
     - family: NotoSerifSC
       fonts:
         - asset: assets/fonts/NotoSerifSC-Medium.otf
-          weight: 500
-        - asset: assets/fonts/NotoSerifSC-Bold.otf
-          weight: 700
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

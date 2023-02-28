@@ -27,45 +27,63 @@ class HomePageState extends State<HomePage> {
   Map<int, int> unreadCount = {};
 
   Future<void> getFeedList() async {
-    Map<String, List<Feed>> temp = await feedsGroupByCategory();
-    setState(() {
-      feedListGroupByCategory = temp;
-    });
+    await feedsGroupByCategory().then(
+      (value) => setState(
+        () {
+          feedListGroupByCategory = value;
+        },
+      ),
+    );
   }
 
   Future<void> getPostList() async {
-    List<Post> temp = await posts();
-    setState(() {
-      postList = temp;
-    });
+    await posts().then(
+      (value) => setState(
+        () {
+          postList = value;
+        },
+      ),
+    );
   }
 
   Future<void> getUnreadPost() async {
-    List<Post> temp = await unreadPosts();
-    setState(() {
-      postList = temp;
-    });
+    await unreadPosts().then(
+      (value) => setState(
+        () {
+          postList = value;
+        },
+      ),
+    );
   }
 
   Future<void> getFavoritePost() async {
-    List<Post> temp = await favoritePosts();
-    setState(() {
-      postList = temp;
-    });
+    await favoritePosts().then(
+      (value) => setState(
+        () {
+          postList = value;
+        },
+      ),
+    );
   }
 
   Future<void> getReadPageInitData() async {
-    final Map<String, dynamic> temp = await getAllReadPageInitData();
-    setState(() {
-      readPageInitData = temp;
-    });
+    await getAllReadPageInitData().then(
+      (value) => setState(
+        () {
+          readPageInitData = value;
+        },
+      ),
+    );
   }
 
   Future<void> getUnreadCount() async {
-    final Map<int, int> temp = await unreadPostCount();
-    setState(() {
-      unreadCount = temp;
-    });
+    await unreadPostCount().then(
+      (value) => setState(
+        () {
+          unreadCount = value;
+        },
+      ),
+    );
   }
 
   Future<void> refresh() async {
@@ -93,22 +111,20 @@ class HomePageState extends State<HomePage> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            '更新失败 $failCount 个订阅源',
-            textAlign: TextAlign.center,
-          ),
-          duration: const Duration(seconds: 1),
+          content: Text('更新失败 $failCount 个订阅源'),
+          behavior: SnackBarBehavior.floating,
+          showCloseIcon: true,
+          duration: const Duration(seconds: 2),
         ),
       );
     } else {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text(
-            '更新成功',
-            textAlign: TextAlign.center,
-          ),
-          duration: Duration(seconds: 1),
+          content: Text('更新成功'),
+          behavior: SnackBarBehavior.floating,
+          showCloseIcon: true,
+          duration: Duration(seconds: 2),
         ),
       );
     }
@@ -130,10 +146,7 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          '悦读',
-          style: TextStyle(fontWeight: FontWeight.w700),
-        ),
+        title: const Text('悦读'),
         centerTitle: false,
         actions: [
           IconButton(
@@ -190,10 +203,7 @@ class HomePageState extends State<HomePage> {
                     }
                     getUnreadCount();
                   },
-                  child: Text(
-                    '全标已读',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
+                  child: const Text('全标已读'),
                 ),
                 PopupMenuItem(
                   onTap: () {
@@ -207,10 +217,7 @@ class HomePageState extends State<HomePage> {
                       ).then((value) => getFeedList());
                     });
                   },
-                  child: Text(
-                    '添加订阅',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
+                  child: const Text('添加订阅'),
                 ),
                 const PopupMenuDivider(),
                 PopupMenuItem(
@@ -234,26 +241,21 @@ class HomePageState extends State<HomePage> {
                       });
                     });
                   },
-                  child: Text(
-                    '设置',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
+                  child: const Text('设置'),
                 ),
               ];
             },
-            elevation: 1,
-            color: Theme.of(context).scaffoldBackgroundColor,
           ),
         ],
       ),
+      drawerEdgeDragWidth: MediaQuery.of(context).size.width * 0.4,
       drawer: Drawer(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         child: SafeArea(
           child: ListView.builder(
+            padding: const EdgeInsets.only(top: 12, bottom: 12),
             itemCount: feedListGroupByCategory.length,
             itemBuilder: (BuildContext context, int index) {
               return ExpansionTile(
-                controlAffinity: ListTileControlAffinity.platform,
                 title: Text(
                   feedListGroupByCategory.keys.toList()[index],
                   style: Theme.of(context).textTheme.bodyMedium,
@@ -271,13 +273,11 @@ class HomePageState extends State<HomePage> {
                             feed.name,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           trailing: Text(
                             unreadCount[feed.id] == null
                                 ? ''
                                 : unreadCount[feed.id].toString(),
-                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           onTap: () {
                             if (!mounted) return;
@@ -313,6 +313,7 @@ class HomePageState extends State<HomePage> {
         child: ListView.separated(
           cacheExtent: 30, // 预加载
           itemCount: postList.length,
+          padding: const EdgeInsets.fromLTRB(8, 8, 8, 24),
           itemBuilder: (context, index) {
             return GestureDetector(
               // 根据 openType 打开文章
@@ -358,9 +359,7 @@ class HomePageState extends State<HomePage> {
             );
           },
           separatorBuilder: (context, index) {
-            return const Divider(
-              thickness: 1,
-            );
+            return const SizedBox(height: 4);
           },
         ),
       ),

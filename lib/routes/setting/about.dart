@@ -8,10 +8,7 @@ class AboutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          '关于',
-          style: TextStyle(fontWeight: FontWeight.w700),
-        ),
+        title: const Text('关于'),
       ),
       body: SafeArea(
         child: Column(
@@ -21,23 +18,22 @@ class AboutPage extends StatelessWidget {
               child: CircleAvatar(
                 radius: 50,
                 backgroundImage: AssetImage('assets/images/meread.png'),
-                backgroundColor: Colors.transparent,
               ),
             ),
             const Center(
               child: Text(
                 '悦读 App',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+                style: TextStyle(fontSize: 20),
               ),
             ),
             const SizedBox(height: 8),
             const Center(
               child: Text(
                 'V 0.2.3',
-                style: TextStyle(fontSize: 18),
+                style: TextStyle(fontSize: 16),
               ),
             ),
-            const Expanded(child: SizedBox()),
+            const Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -67,7 +63,7 @@ class AboutPage extends StatelessWidget {
               '© 2022 - 2023 悦读. All rights reserved.',
               style: TextStyle(fontSize: 14),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
           ],
         ),
       ),

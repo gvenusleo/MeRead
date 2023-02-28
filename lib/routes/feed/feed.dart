@@ -24,31 +24,43 @@ class FeedPageState extends State<FeedPage> {
   Map<String, dynamic> readPageInitData = {};
 
   Future<void> getPostList() async {
-    List<Post> temp = await postsByFeedId(widget.feed.id!);
-    setState(() {
-      postList = temp;
-    });
+    await postsByFeedId(widget.feed.id!).then(
+      (value) => setState(
+        () {
+          postList = value;
+        },
+      ),
+    );
   }
 
   Future<void> getUnreadPostList() async {
-    List<Post> temp = await unreadPostsByFeedId(widget.feed.id!);
-    setState(() {
-      postList = temp;
-    });
+    unreadPostsByFeedId(widget.feed.id!).then(
+      (value) => setState(
+        () {
+          postList = value;
+        },
+      ),
+    );
   }
 
   Future<void> getFavoritePostList() async {
-    List<Post> temp = await favoritePostsByFeedId(widget.feed.id!);
-    setState(() {
-      postList = temp;
-    });
+    await favoritePostsByFeedId(widget.feed.id!).then(
+      (value) => setState(
+        () {
+          postList = value;
+        },
+      ),
+    );
   }
 
   Future<void> getReadPageInitData() async {
-    final Map<String, dynamic> temp = await getAllReadPageInitData();
-    setState(() {
-      readPageInitData = temp;
-    });
+    await getAllReadPageInitData().then(
+      (value) => setState(
+        () {
+          readPageInitData = value;
+        },
+      ),
+    );
   }
 
   @override
@@ -61,11 +73,7 @@ class FeedPageState extends State<FeedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.feed.name,
-          style: const TextStyle(fontWeight: FontWeight.w700),
-        ),
-        centerTitle: false,
+        title: Text(widget.feed.name),
         actions: [
           IconButton(
             onPressed: () async {
@@ -120,10 +128,7 @@ class FeedPageState extends State<FeedPage> {
                       getPostList();
                     }
                   },
-                  child: Text(
-                    '全标已读',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
+                  child: const Text('全标已读'),
                 ),
                 PopupMenuItem(
                   onTap: () {
@@ -144,16 +149,14 @@ class FeedPageState extends State<FeedPage> {
                       });
                     });
                   },
-                  child: Text(
-                    '编辑订阅',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
+                  child: const Text('编辑订阅'),
                 ),
                 const PopupMenuDivider(),
                 // 删除订阅源
                 PopupMenuItem(
                   onTap: () async {
                     await Future.delayed(const Duration(seconds: 0));
+                    if (!mounted) return;
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -180,20 +183,11 @@ class FeedPageState extends State<FeedPage> {
                         );
                       },
                     );
-                    // await deleteFeed(widget.feed.id!);
-                    // Future.delayed(const Duration(seconds: 0), () {
-                    //   Navigator.pop(context);
-                    // });
                   },
-                  child: Text(
-                    '删除订阅',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
+                  child: const Text('删除订阅'),
                 ),
               ];
             },
-            elevation: 1,
-            color: Theme.of(context).scaffoldBackgroundColor,
           ),
         ],
       ),
@@ -212,9 +206,10 @@ class FeedPageState extends State<FeedPage> {
             SnackBar(
               content: Text(
                 parseFeed ? '更新成功' : '更新失败',
-                textAlign: TextAlign.center,
               ),
-              duration: const Duration(seconds: 1),
+              showCloseIcon: true,
+              behavior: SnackBarBehavior.floating,
+              duration: const Duration(seconds: 2),
             ),
           );
           // 保证订阅源文章数不大于 feedMaxSaveCount
@@ -222,7 +217,9 @@ class FeedPageState extends State<FeedPage> {
           checkPostCountByFeed(widget.feed.id!, feedMaxSaveCount);
         },
         child: ListView.separated(
+          cacheExtent: 30, // 预加载
           itemCount: postList.length,
+          padding: const EdgeInsets.fromLTRB(8, 8, 8, 24),
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () async {
@@ -261,9 +258,7 @@ class FeedPageState extends State<FeedPage> {
             );
           },
           separatorBuilder: (context, index) {
-            return const Divider(
-              thickness: 1,
-            );
+            return const SizedBox(height: 4);
           },
         ),
       ),

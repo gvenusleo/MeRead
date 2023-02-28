@@ -55,195 +55,261 @@ class _SetPageState extends State<SetPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          '设置',
-          style: TextStyle(fontWeight: FontWeight.w700),
-        ),
+        title: const Text('设置'),
       ),
       body: ListView(
+        padding: const EdgeInsets.only(bottom: 48),
         children: [
-          // TODO：语言设置
+          Padding(
+            padding: const EdgeInsets.fromLTRB(18, 18, 18, 12),
+            child: Text(
+              '主题外观',
+              style: TextStyle(
+                fontSize: 14,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ),
           ListTile(
+            leading: const Icon(Icons.dark_mode_outlined),
+            iconColor: Theme.of(context).textTheme.bodyLarge!.color,
             title: const Text('颜色主题'),
-            trailing: DropdownButton(
-              elevation: 1,
-              value: Provider.of<ThemeModel>(context).themeIndex,
-              items: const [
-                DropdownMenuItem(
-                  value: 0,
-                  child: Text('浅色'),
-                ),
-                DropdownMenuItem(
-                  value: 1,
-                  child: Text('深色'),
-                ),
-                DropdownMenuItem(
-                  value: 2,
-                  child: Text('跟随系统'),
-                ),
-              ],
-              onChanged: (int? value) {
-                context.read<ThemeModel>().setTheme(value!);
-              },
+            subtitle: Text(
+              Provider.of<ThemeModel>(context).themeIndex == 0
+                  ? '浅色模式'
+                  : Provider.of<ThemeModel>(context).themeIndex == 1
+                      ? '深色模式'
+                      : '跟随系统',
             ),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('选择颜色主题'),
+                  contentPadding: const EdgeInsets.only(top: 12, bottom: 24),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      RadioListTile(
+                        value: 0,
+                        groupValue: Provider.of<ThemeModel>(context).themeIndex,
+                        onChanged: (int? value) {
+                          context.read<ThemeModel>().setTheme(value!);
+                          Navigator.pop(context);
+                        },
+                        title: const Text('浅色模式'),
+                      ),
+                      RadioListTile(
+                        value: 1,
+                        groupValue: Provider.of<ThemeModel>(context).themeIndex,
+                        onChanged: (int? value) {
+                          context.read<ThemeModel>().setTheme(value!);
+                          Navigator.pop(context);
+                        },
+                        title: const Text('深色模式'),
+                      ),
+                      RadioListTile(
+                        value: 2,
+                        groupValue: Provider.of<ThemeModel>(context).themeIndex,
+                        onChanged: (int? value) {
+                          context.read<ThemeModel>().setTheme(value!);
+                          Navigator.pop(context);
+                        },
+                        title: const Text('跟随系统'),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
-          const Divider(thickness: 1),
           ListTile(
+            leading: const Icon(Icons.text_increase_outlined),
+            iconColor: Theme.of(context).textTheme.bodyLarge!.color,
             title: const Text('字体大小'),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.remove,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  onPressed: () async {
-                    if (fontSize > 14) {
-                      setState(() {
-                        fontSize = fontSize - 1;
-                      });
-                      await setFontSize(fontSize);
-                    }
+            subtitle: Text(fontSize.toString()),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => StatefulBuilder(
+                  builder: (context, setFontSizeState) {
+                    return AlertDialog(
+                      title: const Text('选择字体大小'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Slider(
+                            value: fontSize.toDouble(),
+                            min: 14,
+                            max: 24,
+                            divisions: 10,
+                            label: fontSize.toString(),
+                            onChanged: (double value) async {
+                              setFontSizeState(() {
+                                fontSize = value.toInt();
+                              });
+                              setState(() {
+                                fontSize = value.toInt();
+                              });
+                              await setFontSize(fontSize);
+                            },
+                          ),
+                        ],
+                      ),
+                    );
                   },
                 ),
-                Text(fontSize.toString()),
-                IconButton(
-                  icon: Icon(
-                    Icons.add,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  onPressed: () async {
-                    if (fontSize < 24) {
-                      setState(() {
-                        fontSize = fontSize + 1;
-                      });
-                      await setFontSize(fontSize);
-                    }
-                  },
-                ),
-              ],
-            ),
+              );
+            },
           ),
           ListTile(
+            leading: const Icon(Icons.vertical_distribute_outlined),
+            iconColor: Theme.of(context).textTheme.bodyLarge!.color,
             title: const Text('行间距'),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.remove,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  onPressed: () async {
-                    if (lineheight > 1.0) {
-                      setState(() {
-                        lineheight = lineheight - 0.1;
-                      });
-                      await setLineheight(lineheight);
-                    }
+            subtitle: Text(lineheight.toStringAsFixed(1)),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => StatefulBuilder(
+                  builder: (context, setLineheightState) {
+                    return AlertDialog(
+                      title: const Text('选择行间距'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Slider(
+                            value: lineheight,
+                            min: 1.0,
+                            max: 3.0,
+                            divisions: 20,
+                            label: lineheight.toStringAsFixed(1),
+                            onChanged: (double value) async {
+                              setLineheightState(() {
+                                lineheight = value;
+                              });
+                              setState(() {
+                                lineheight = value;
+                              });
+                              await setLineheight(lineheight);
+                            },
+                          ),
+                        ],
+                      ),
+                    );
                   },
                 ),
-                Text(lineheight.toStringAsFixed(1)),
-                IconButton(
-                  icon: Icon(
-                    Icons.add,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  onPressed: () async {
-                    if (lineheight < 3.0) {
-                      setState(() {
-                        lineheight = lineheight + 0.1;
-                      });
-                      await setLineheight(lineheight);
-                    }
-                  },
-                ),
-              ],
-            ),
+              );
+            },
           ),
           ListTile(
+            leading: const Icon(Icons.space_bar_outlined),
+            iconColor: Theme.of(context).textTheme.bodyLarge!.color,
             title: const Text('页面边距'),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.remove,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  onPressed: () async {
-                    if (pagePadding > 0) {
-                      setState(() {
-                        pagePadding = pagePadding - 2;
-                      });
-                      await setPagePadding(pagePadding);
-                    }
+            subtitle: Text(pagePadding.toString()),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => StatefulBuilder(
+                  builder: (context, setPagePaddingState) {
+                    return AlertDialog(
+                      title: const Text('选择页面边距'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Slider(
+                            value: pagePadding.toDouble(),
+                            min: 0,
+                            max: 36,
+                            divisions: 18,
+                            label: pagePadding.toString(),
+                            onChanged: (double value) async {
+                              setPagePaddingState(() {
+                                pagePadding = value.toInt();
+                              });
+                              setState(() {
+                                pagePadding = value.toInt();
+                              });
+                              await setPagePadding(pagePadding);
+                            },
+                          ),
+                        ],
+                      ),
+                    );
                   },
                 ),
-                Text(pagePadding.toString()),
-                IconButton(
-                  icon: Icon(
-                    Icons.add,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  onPressed: () async {
-                    if (pagePadding < 36) {
-                      setState(() {
-                        pagePadding = pagePadding + 2;
-                      });
-                      await setPagePadding(pagePadding);
-                    }
-                  },
-                ),
-              ],
-            ),
+              );
+            },
           ),
           ListTile(
+            leading: const Icon(Icons.format_align_left_outlined),
+            iconColor: Theme.of(context).textTheme.bodyLarge!.color,
             title: const Text('文字对齐'),
-            trailing: DropdownButton(
-              elevation: 1,
-              value: textAlign,
-              items: [
-                DropdownMenuItem(
-                  value: 'left',
-                  child: Text(
-                    '左对齐',
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.headlineSmall!.color,
-                    ),
-                  ),
-                ),
-                DropdownMenuItem(
-                  value: 'right',
-                  child: Text(
-                    '右对齐',
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.headlineSmall!.color,
-                    ),
-                  ),
-                ),
-                DropdownMenuItem(
-                  value: 'justify',
-                  child: Text(
-                    '两端对齐',
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.headlineSmall!.color,
-                    ),
-                  ),
-                ),
-              ],
-              onChanged: (value) async {
-                setState(() {
-                  textAlign = value!;
-                });
-                await setTextAlign(value!);
-              },
+            subtitle: Text(
+              textAlign == 'left'
+                  ? '左对齐'
+                  : textAlign == 'right'
+                      ? '右对齐'
+                      : '两端对齐',
             ),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('选择文字对齐方式'),
+                  contentPadding: const EdgeInsets.only(top: 12, bottom: 24),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      RadioListTile(
+                        value: 'left',
+                        groupValue: textAlign,
+                        onChanged: (String? value) async {
+                          setState(() {
+                            textAlign = value!;
+                          });
+                          await setTextAlign(textAlign);
+                          if (!mounted) return;
+                          Navigator.pop(context);
+                        },
+                        title: const Text('左对齐'),
+                      ),
+                      RadioListTile(
+                        value: 'right',
+                        groupValue: textAlign,
+                        onChanged: (String? value) async {
+                          setState(() {
+                            textAlign = value!;
+                          });
+                          await setTextAlign(textAlign);
+                          if (!mounted) return;
+                          Navigator.pop(context);
+                        },
+                        title: const Text('右对齐'),
+                      ),
+                      RadioListTile(
+                        value: 'justify',
+                        groupValue: textAlign,
+                        onChanged: (String? value) async {
+                          setState(() {
+                            textAlign = value!;
+                          });
+                          await setTextAlign(textAlign);
+                          if (!mounted) return;
+                          Navigator.pop(context);
+                        },
+                        title: const Text('两端对齐'),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
           ListTile(
+            leading: const Icon(Icons.code_outlined),
+            iconColor: Theme.of(context).textTheme.bodyLarge!.color,
             title: const Text('自定义 CSS'),
-            trailing: const Icon(Icons.chevron_right),
+            subtitle: const Text('自定义阅读页面 CSS 样式'),
             onTap: () {
               Navigator.push(
                 context,
@@ -253,76 +319,123 @@ class _SetPageState extends State<SetPage> {
               );
             },
           ),
-          const Divider(thickness: 1),
-          ListTile(
-            title: const Text('每个订阅源最大保存数'),
-            trailing: DropdownButton<int>(
-              value: feedMaxSaveCount,
-              elevation: 1,
-              items: [
-                DropdownMenuItem(
-                  value: 50,
-                  child: Text(
-                    '50',
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.headlineSmall!.color,
-                    ),
-                  ),
-                ),
-                DropdownMenuItem(
-                  value: 100,
-                  child: Text(
-                    '100',
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.headlineSmall!.color,
-                    ),
-                  ),
-                ),
-                DropdownMenuItem(
-                  value: 300,
-                  child: Text(
-                    '300',
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.headlineSmall!.color,
-                    ),
-                  ),
-                ),
-                DropdownMenuItem(
-                  value: 500,
-                  child: Text(
-                    '500',
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.headlineSmall!.color,
-                    ),
-                  ),
-                ),
-              ],
-              onChanged: (int? value) async {
-                if (value != null) {
-                  setState(() {
-                    feedMaxSaveCount = value;
-                  });
-                  await setFeedMaxSaveCount(value);
-                }
-              },
+          Padding(
+            padding: const EdgeInsets.fromLTRB(18, 18, 18, 12),
+            child: Text(
+              '数据管理',
+              style: TextStyle(
+                fontSize: 14,
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
           ),
           ListTile(
+            leading: const Icon(Icons.article_outlined),
+            iconColor: Theme.of(context).textTheme.bodyLarge!.color,
+            title: const Text('订阅源文章最大保存数量'),
+            subtitle: Text(
+              feedMaxSaveCount.toString(),
+            ),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => StatefulBuilder(
+                  builder: (context, setFeedMaxSaveCountState) {
+                    return AlertDialog(
+                      contentPadding:
+                          const EdgeInsets.only(top: 12, bottom: 24),
+                      title: const Text('选择订阅源文章最大保存数量'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          RadioListTile(
+                            value: 50,
+                            groupValue: feedMaxSaveCount,
+                            onChanged: (int? value) async {
+                              setFeedMaxSaveCountState(() {
+                                feedMaxSaveCount = value!;
+                              });
+                              setState(() {
+                                feedMaxSaveCount = value!;
+                              });
+                              await setFeedMaxSaveCount(feedMaxSaveCount);
+                              if (!mounted) return;
+                              Navigator.pop(context);
+                            },
+                            title: const Text('50'),
+                          ),
+                          RadioListTile(
+                            value: 100,
+                            groupValue: feedMaxSaveCount,
+                            onChanged: (int? value) async {
+                              setFeedMaxSaveCountState(() {
+                                feedMaxSaveCount = value!;
+                              });
+                              setState(() {
+                                feedMaxSaveCount = value!;
+                              });
+                              await setFeedMaxSaveCount(feedMaxSaveCount);
+                              if (!mounted) return;
+                              Navigator.pop(context);
+                            },
+                            title: const Text('100'),
+                          ),
+                          RadioListTile(
+                            value: 500,
+                            groupValue: feedMaxSaveCount,
+                            onChanged: (int? value) async {
+                              setFeedMaxSaveCountState(() {
+                                feedMaxSaveCount = value!;
+                              });
+                              setState(() {
+                                feedMaxSaveCount = value!;
+                              });
+                              await setFeedMaxSaveCount(feedMaxSaveCount);
+                              if (!mounted) return;
+                              Navigator.pop(context);
+                            },
+                            title: const Text('500'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+          // ListTile(
+          //   title: const Text('允许文章重复'),
+          //   trailing: Switch(
+          //     value: allowDuplicate,
+          //     onChanged: (bool value) async {
+          //       setState(() {
+          //         allowDuplicate = value;
+          //       });
+          //       await setAllowDuplicate(value);
+          //     },
+          //   ),
+          // ),
+          SwitchListTile(
+            secondary: Icon(
+              Icons.copy_outlined,
+              color: Theme.of(context).textTheme.bodyLarge!.color,
+            ),
             title: const Text('允许文章重复'),
-            trailing: Switch(
-              value: allowDuplicate,
-              onChanged: (bool value) async {
-                setState(() {
-                  allowDuplicate = value;
-                });
-                await setAllowDuplicate(value);
-              },
-            ),
+            subtitle: const Text('开启后将不剔除重复文章'),
+            value: allowDuplicate,
+            onChanged: (bool value) async {
+              setState(() {
+                allowDuplicate = value;
+              });
+              await setAllowDuplicate(value);
+            },
           ),
-          const Divider(thickness: 1),
           ListTile(
+            leading: const Icon(Icons.file_download_outlined),
+            iconColor: Theme.of(context).textTheme.bodyLarge!.color,
             title: const Text('导入 OPML'),
-            trailing: const Icon(Icons.chevron_right),
+            subtitle: const Text('将订阅源导出为 OPML 文件'),
             onTap: () async {
               // 打开文件选择器
               final result = await FilePicker.platform.pickFiles(
@@ -333,11 +446,10 @@ class _SetPageState extends State<SetPage> {
                 if (!mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text(
-                      '开始后台导入',
-                      textAlign: TextAlign.center,
-                    ),
-                    duration: Duration(seconds: 1),
+                    content: Text('开始后台导入'),
+                    showCloseIcon: true,
+                    behavior: SnackBarBehavior.floating,
+                    duration: Duration(seconds: 2),
                   ),
                 );
                 final int failCount = await parseOpml(result);
@@ -346,17 +458,20 @@ class _SetPageState extends State<SetPage> {
                   SnackBar(
                     content: Text(
                       failCount == 0 ? '导入成功' : '$failCount 个订阅源导入失败',
-                      textAlign: TextAlign.center,
                     ),
-                    duration: const Duration(seconds: 1),
+                    showCloseIcon: true,
+                    behavior: SnackBarBehavior.floating,
+                    duration: const Duration(seconds: 2),
                   ),
                 );
               }
             },
           ),
           ListTile(
+            leading: const Icon(Icons.file_upload_outlined),
+            iconColor: Theme.of(context).textTheme.bodyLarge!.color,
             title: const Text('导出 OPML'),
-            trailing: const Icon(Icons.chevron_right),
+            subtitle: const Text('从 OPML 文件导入订阅源'),
             onTap: () async {
               String opmlStr = await exportOpml();
               // opmlStr 字符串写入 feeds.opml 文件并分享，分享后删除文件
@@ -370,12 +485,22 @@ class _SetPageState extends State<SetPage> {
               await file.delete();
             },
           ),
-          const Divider(thickness: 1),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(18, 18, 18, 0),
+            child: Text(
+              '其他',
+              style: TextStyle(
+                fontSize: 14,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ),
           ListTile(
+            leading: const Icon(Icons.android_outlined),
+            iconColor: Theme.of(context).textTheme.bodyLarge!.color,
             title: const Text(
               '关于应用',
             ),
-            trailing: const Icon(Icons.chevron_right),
             onTap: () {
               Navigator.push(context, CupertinoPageRoute(builder: (context) {
                 return const AboutPage();

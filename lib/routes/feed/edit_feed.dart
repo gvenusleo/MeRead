@@ -29,111 +29,97 @@ class EditFeedPageState extends State<EditFeedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          '编辑订阅',
-          style: TextStyle(fontWeight: FontWeight.w700),
-        ),
+        title: const Text('编辑订阅'),
       ),
       body: ListView(
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.fromLTRB(18, 18, 18, 0),
             child: TextField(
               controller: _urlController,
-              style: TextStyle(
-                color: Theme.of(context).textTheme.headlineSmall!.color,
-              ),
               decoration: const InputDecoration(
+                border: OutlineInputBorder(),
                 labelText: '订阅源地址',
                 enabled: false,
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.fromLTRB(18, 24, 18, 0),
             child: TextField(
               controller: _nameController,
-              style: TextStyle(
-                color: Theme.of(context).textTheme.headlineSmall!.color,
-              ),
               decoration: const InputDecoration(
+                border: OutlineInputBorder(),
                 labelText: '订阅源名称',
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.fromLTRB(18, 24, 18, 18),
             child: TextField(
               controller: _categoryController,
-              style: TextStyle(
-                color: Theme.of(context).textTheme.headlineSmall!.color,
-              ),
               decoration: const InputDecoration(
+                border: OutlineInputBorder(),
                 labelText: '订阅源分类',
               ),
             ),
           ),
-          const Divider(),
           // 获取全文
-          ListTile(
+          SwitchListTile(
+            value: widget.feed.fullText == 1,
             title: const Text('是否获取全文'),
-            trailing: Switch(
-              value: widget.feed.fullText == 0 ? false : true,
-              onChanged: (bool value) {
-                setState(() {
-                  widget.feed.fullText = value ? 1 : 0;
-                });
-              },
+            onChanged: (bool value) {
+              setState(() {
+                widget.feed.fullText = value ? 1 : 0;
+              });
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(18, 18, 18, 0),
+            child: Text(
+              '文章打开方式',
+              style: TextStyle(
+                fontSize: 14,
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
           ),
-          // 文章打开方式
-          ListTile(
-            title: const Text('文章打开方式'),
-            trailing: DropdownButton(
-              value: widget.feed.openType,
-              elevation: 1,
-              items: [
-                DropdownMenuItem(
-                  value: 0,
-                  child: Text(
-                    '阅读器',
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.headlineSmall!.color,
-                    ),
-                  ),
-                ),
-                DropdownMenuItem(
-                  value: 1,
-                  child: Text(
-                    '内置标签页',
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.headlineSmall!.color,
-                    ),
-                  ),
-                ),
-                DropdownMenuItem(
-                  value: 2,
-                  child: Text(
-                    '系统浏览器',
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.headlineSmall!.color,
-                    ),
-                  ),
-                ),
-              ],
-              onChanged: (int? value) {
-                setState(() {
-                  widget.feed.openType = value!;
-                });
-              },
-            ),
+          RadioListTile(
+            value: 0,
+            groupValue: widget.feed.openType,
+            title: const Text('在应用内打开'),
+            onChanged: (int? value) {
+              setState(() {
+                widget.feed.openType = value!;
+              });
+            },
+          ),
+          RadioListTile(
+            value: 1,
+            groupValue: widget.feed.openType,
+            title: const Text('在内置标签页中打开'),
+            onChanged: (int? value) {
+              setState(() {
+                widget.feed.openType = value!;
+              });
+            },
+          ),
+          RadioListTile(
+            value: 2,
+            groupValue: widget.feed.openType,
+            title: const Text('在系统浏览器中打开'),
+            onChanged: (int? value) {
+              setState(() {
+                widget.feed.openType = value!;
+              });
+            },
           ),
           const SizedBox(height: 24),
           // 取消与保存
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              OutlinedButton(
+              FilledButton.tonal(
                 onPressed: () {
                   Navigator.pop(context);
                   Navigator.pop(context);
@@ -141,7 +127,7 @@ class EditFeedPageState extends State<EditFeedPage> {
                 child: const Text('取消'),
               ),
               const SizedBox(width: 24),
-              OutlinedButton(
+              FilledButton.tonal(
                 onPressed: () async {
                   widget.feed.name = _nameController.text;
                   widget.feed.category = _categoryController.text;

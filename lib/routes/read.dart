@@ -39,8 +39,9 @@ class ReadPageState extends State<ReadPage> {
   @override
   Widget build(BuildContext context) {
     final String textColor = Theme.of(context)
-        .colorScheme
-        .primary
+        .textTheme
+        .bodyLarge!
+        .color!
         .value
         .toRadixString(16)
         .substring(2);
@@ -141,10 +142,7 @@ ${widget.post.content}
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: appBarHeight,
-        title: Text(
-          widget.post.feedName,
-          style: const TextStyle(fontWeight: FontWeight.w700),
-        ),
+        title: Text(widget.post.feedName),
         actions: [
           PopupMenuButton(
             position: PopupMenuPosition.under,
