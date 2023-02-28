@@ -45,30 +45,11 @@ dependencies:
   shared_preferences: ^2.0.15 # 本地存储
   provider: ^6.0.4 # 状态管理
   share_plus: ^6.3.0 # 分享
-  flutter_launcher_icons: ^0.10.0 # 启动图标
   file_picker: ^5.2.2 # 文件选择
   opml: ^0.3.0 # OPML 解析
   url_launcher: ^6.1.6 # 打开链接
   path_provider: ^2.0.11 # 路径
   html: ^0.15.1 # HTML 解析
-
-flutter_icons:
-  android: true
-  ios: true
-  image_path: "assets/images/meread.png"
-  min_sdk_android: 21 # android min sdk min:16, default 21
-  # web:
-  #   generate: true
-  #   image_path: "assets/images/meread_round.png"
-  #   background_color: "#hexcode"
-  #   theme_color: "#hexcode"
-  # windows:
-  #   generate: true
-  #   image_path: "assets/images/meread_round.png"
-  #   icon_size: 48 # min:48, max:256, default: 48
-  # macos:
-  #   generate: true
-  #   image_path: "assets/images/meread_round.png"
 
 dev_dependencies:
   flutter_test:
