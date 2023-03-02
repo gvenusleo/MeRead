@@ -33,6 +33,10 @@
 - [x] 适配 Material You
 - [ ] 多语言支持
 
+## 致谢
+
+- [spacecowboy/Feeder](https://gitlab.com/spacecowboy/Feeder)
+
 ## License
 
 [GNU GPL-3.0](./LICENSE)
