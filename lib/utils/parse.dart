@@ -86,12 +86,17 @@ Future<bool> parseFeedContent(Feed feed) async {
 
 Future<void> parseRSSPostFuturesItem(RssItem item, Feed feed) async {
   String title = item.title!.trim();
+  
+  var descLen = item.description?.length;
+  var contentLen = item.content?.value.length;
+  var contentOrDesc = descLen! > contentLen! ? item.description! : item.content?.value;
+  
   Post post = Post(
     title: title,
     feedId: feed.id!,
     feedName: feed.name,
     link: item.link!,
-    content: item.description!,
+    content: contentOrDesc!,
     pubDate: item.pubDate!.toString(),
     read: 0,
     favorite: 0,
