@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../utils/db.dart';
-import '../models/models.dart';
+import '../data/db.dart';
+import '../models/post.dart';
 
 class ReadPage extends StatefulWidget {
   const ReadPage({

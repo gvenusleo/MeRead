@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../widgets/post_container.dart';
-import '../../utils/db.dart';
+import '../data/db.dart';
+import '../models/feed.dart';
 import '../utils/parse.dart';
-import '../../utils/key.dart';
+import '../data/setting.dart';
 import '../../routes/feed/add_feed.dart';
 import '../../routes/feed/feed.dart';
 import '../../routes/read.dart';
 import '../../routes/setting/set.dart';
-import '../../models/models.dart';
+import '../models/post.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

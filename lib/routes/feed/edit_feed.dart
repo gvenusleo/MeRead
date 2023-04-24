@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../utils/db.dart';
-import '../../models/models.dart';
+import '../../data/db.dart';
+import '../../models/feed.dart';
 
 class EditFeedPage extends StatefulWidget {
   const EditFeedPage({Key? key, required this.feed}) : super(key: key);

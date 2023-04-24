@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'states/state.dart';
+import 'states/theme_state.dart';
 import 'theme/theme.dart';
 import 'routes/home.dart';
 
@@ -20,12 +20,12 @@ Future<void> main() async {
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   }
   SystemChrome.setEnabledSystemUIMode(
-    SystemUiMode.edgeToEdge, // 设置全屏
+    SystemUiMode.edgeToEdge, // 适配 EdgeToEdge
   );
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ThemeModel()), // 主题
+        ChangeNotifierProvider(create: (_) => ThemeModel()), // 主题状态管理
       ],
       child: const MyApp(),
     ),
@@ -62,11 +62,11 @@ class _MyAppState extends State<MyApp> {
       ],
       theme: lightTheme,
       darkTheme: darkTheme,
-      themeMode: Provider.of<ThemeModel>(context).themeIndex == 0
-          ? ThemeMode.light
-          : Provider.of<ThemeModel>(context).themeIndex == 1
-              ? ThemeMode.dark
-              : ThemeMode.system,
+      themeMode: [
+        ThemeMode.light,
+        ThemeMode.dark,
+        ThemeMode.system,
+      ][Provider.of<ThemeModel>(context).themeIndex],
       home: const HomePage(),
     );
   }

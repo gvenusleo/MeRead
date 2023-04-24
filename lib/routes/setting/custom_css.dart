@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../utils/key.dart';
+import '../../data/setting.dart';
 
 class CustomCssPage extends StatefulWidget {
   const CustomCssPage({Key? key}) : super(key: key);

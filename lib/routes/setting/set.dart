@@ -8,8 +8,8 @@ import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../routes/setting/about.dart';
-import '../../states/state.dart';
-import '../../utils/key.dart';
+import '../../states/theme_state.dart';
+import '../../data/setting.dart';
 import '../../utils/parse.dart';
 import 'custom_css.dart';
 

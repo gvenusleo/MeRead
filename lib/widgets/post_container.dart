@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/models.dart';
+import '../models/post.dart';
 
 // 定义用于展示 Post 的 Widget
 class PostContainer extends StatelessWidget {

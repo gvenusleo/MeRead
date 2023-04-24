@@ -2,12 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:meread/models/feed.dart';
 import 'package:opml/opml.dart';
 import 'package:webfeed/webfeed.dart';
 import 'package:http/http.dart';
 
-import '../utils/db.dart';
-import '../models/models.dart';
+import '../data/db.dart';
+import '../models/post.dart';
 
 // 解析订阅源
 // 参数：订阅源地址
