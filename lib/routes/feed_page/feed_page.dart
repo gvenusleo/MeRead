@@ -192,72 +192,74 @@ class FeedPageState extends State<FeedPage> {
           ),
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          bool parseFeed = await parseFeedContent(widget.feed);
-          if (onlyUnread) {
-            getUnreadPostList();
-          } else if (onlyFavorite) {
-            getFavoritePostList();
-          } else {
-            getPostList();
-          }
-          if (!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                parseFeed ? '更新成功' : '更新失败',
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            bool parseFeed = await parseFeedContent(widget.feed);
+            if (onlyUnread) {
+              getUnreadPostList();
+            } else if (onlyFavorite) {
+              getFavoritePostList();
+            } else {
+              getPostList();
+            }
+            if (!mounted) return;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  parseFeed ? '更新成功' : '更新失败',
+                ),
+                behavior: SnackBarBehavior.floating,
+                duration: const Duration(seconds: 2),
+                action: SnackBarAction(label: '确定', onPressed: () {}),
               ),
-              showCloseIcon: true,
-              behavior: SnackBarBehavior.floating,
-              duration: const Duration(seconds: 2),
-            ),
-          );
-        },
-        child: ListView.separated(
-          cacheExtent: 30, // 预加载
-          itemCount: postList.length,
-          padding: const EdgeInsets.fromLTRB(8, 8, 8, 24),
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () async {
-                if (postList[index].openType == 2) {
-                  await launchUrl(
-                    Uri.parse(postList[index].link),
-                    mode: LaunchMode.externalApplication,
-                  );
-                } else {
-                  getReadPageInitData();
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => ReadPage(
-                        post: postList[index],
-                        initData: readPageInitData,
-                        fullText: widget.feed.fullText == 1,
-                      ),
-                    ),
-                  ).then((value) {
-                    if (onlyUnread) {
-                      getUnreadPostList();
-                    } else if (onlyFavorite) {
-                      getFavoritePostList();
-                    } else {
-                      getPostList();
-                    }
-                  });
-                }
-                // 标记文章为已读
-                if (postList[index].read == 0) {
-                  markPostAsRead(postList[index].id!);
-                }
-              },
-              child: PostContainer(post: postList[index]),
             );
           },
-          separatorBuilder: (context, index) {
-            return const SizedBox(height: 4);
-          },
+          child: ListView.separated(
+            cacheExtent: 30, // 预加载
+            itemCount: postList.length,
+            padding: const EdgeInsets.all(12),
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () async {
+                  if (postList[index].openType == 2) {
+                    await launchUrl(
+                      Uri.parse(postList[index].link),
+                      mode: LaunchMode.externalApplication,
+                    );
+                  } else {
+                    getReadPageInitData();
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => ReadPage(
+                          post: postList[index],
+                          initData: readPageInitData,
+                          fullText: widget.feed.fullText == 1,
+                        ),
+                      ),
+                    ).then((value) {
+                      if (onlyUnread) {
+                        getUnreadPostList();
+                      } else if (onlyFavorite) {
+                        getFavoritePostList();
+                      } else {
+                        getPostList();
+                      }
+                    });
+                  }
+                  // 标记文章为已读
+                  if (postList[index].read == 0) {
+                    markPostAsRead(postList[index].id!);
+                  }
+                },
+                child: PostContainer(post: postList[index]),
+              );
+            },
+            separatorBuilder: (context, index) {
+              return const SizedBox(height: 4);
+            },
+          ),
         ),
       ),
     );

@@ -114,18 +114,18 @@ class HomePageState extends State<HomePage> {
         SnackBar(
           content: Text('更新失败 $failCount 个订阅源'),
           behavior: SnackBarBehavior.floating,
-          showCloseIcon: true,
           duration: const Duration(seconds: 2),
+          action: SnackBarAction(label: '确定', onPressed: () {}),
         ),
       );
     } else {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('更新成功'),
+        SnackBar(
+          content: const Text('更新成功'),
           behavior: SnackBarBehavior.floating,
-          showCloseIcon: true,
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
+          action: SnackBarAction(label: '确定', onPressed: () {}),
         ),
       );
     }
@@ -250,14 +250,14 @@ class HomePageState extends State<HomePage> {
       drawer: Drawer(
         child: SafeArea(
           child: ListView.builder(
-            padding: const EdgeInsets.only(top: 12, bottom: 12),
+            padding: const EdgeInsets.symmetric(vertical: 18),
             itemCount: feedListGroupByCategory.length,
             itemBuilder: (BuildContext context, int index) {
               return ExpansionTile(
                 title: Text(
                   feedListGroupByCategory.keys.toList()[index],
-                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
+                shape: Border.all(color: Colors.transparent),
                 children: [
                   Column(
                     children: [
@@ -265,8 +265,10 @@ class HomePageState extends State<HomePage> {
                           in feedListGroupByCategory.values.toList()[index])
                         ListTile(
                           dense: true,
-                          contentPadding:
-                              const EdgeInsets.fromLTRB(40, 0, 20, 0),
+                          contentPadding: const EdgeInsets.only(
+                            left: 40,
+                            right: 28,
+                          ),
                           title: Text(
                             feed.name,
                             maxLines: 1,
@@ -306,59 +308,61 @@ class HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: RefreshIndicator(
-        onRefresh: refresh,
-        child: ListView.separated(
-          cacheExtent: 30, // 预加载
-          itemCount: postList.length,
-          padding: const EdgeInsets.fromLTRB(8, 8, 8, 24),
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              // 根据 openType 打开文章
-              onTap: () async {
-                if (postList[index].openType == 2) {
-                  // 系统浏览器打开
-                  await launchUrl(
-                    Uri.parse(postList[index].link),
-                    mode: LaunchMode.externalApplication,
-                  );
-                } else {
-                  // 应用内打开：阅读器 or 标签页
-                  final bool fullText =
-                      await feedFullText(postList[index].feedId) == 1;
-                  if (!mounted) return;
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => ReadPage(
-                        post: postList[index],
-                        initData: readPageInitData,
-                        fullText: fullText,
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: refresh,
+          child: ListView.separated(
+            cacheExtent: 30, // 预加载
+            itemCount: postList.length,
+            padding: const EdgeInsets.all(12),
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                // 根据 openType 打开文章
+                onTap: () async {
+                  if (postList[index].openType == 2) {
+                    // 系统浏览器打开
+                    await launchUrl(
+                      Uri.parse(postList[index].link),
+                      mode: LaunchMode.externalApplication,
+                    );
+                  } else {
+                    // 应用内打开：阅读器 or 标签页
+                    final bool fullText =
+                        await feedFullText(postList[index].feedId) == 1;
+                    if (!mounted) return;
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => ReadPage(
+                          post: postList[index],
+                          initData: readPageInitData,
+                          fullText: fullText,
+                        ),
                       ),
-                    ),
-                  ).then((value) {
-                    // 返回时刷新文章列表
-                    if (onlyUnread) {
-                      getUnreadPost();
-                    } else if (onlyFavorite) {
-                      getFavoritePost();
-                    } else {
-                      getPostList();
-                    }
-                    getUnreadCount();
-                  });
-                }
-                // 标记文章为已读
-                if (postList[index].read == 0) {
-                  markPostAsRead(postList[index].id!);
-                }
-              },
-              child: PostContainer(post: postList[index]),
-            );
-          },
-          separatorBuilder: (context, index) {
-            return const SizedBox(height: 4);
-          },
+                    ).then((value) {
+                      // 返回时刷新文章列表
+                      if (onlyUnread) {
+                        getUnreadPost();
+                      } else if (onlyFavorite) {
+                        getFavoritePost();
+                      } else {
+                        getPostList();
+                      }
+                      getUnreadCount();
+                    });
+                  }
+                  // 标记文章为已读
+                  if (postList[index].read == 0) {
+                    markPostAsRead(postList[index].id!);
+                  }
+                },
+                child: PostContainer(post: postList[index]),
+              );
+            },
+            separatorBuilder: (context, index) {
+              return const SizedBox(height: 4);
+            },
+          ),
         ),
       ),
     );
