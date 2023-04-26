@@ -129,9 +129,6 @@ class HomePageState extends State<HomePage> {
         ),
       );
     }
-    // 保证订阅源的文章数不大于 feedMaxSaveCount
-    final int feedMaxSaveCount = await getFeedMaxSaveCount();
-    checkPostCount(feedMaxSaveCount);
   }
 
   @override

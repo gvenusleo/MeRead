@@ -11,17 +11,18 @@ Future<void> setThemeIndex(int index) async {
   prefs.setInt('themeIndex', index);
 }
 
-// 订阅源解析数据管理
-Future<int> getFeedMaxSaveCount() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getInt('feedMaxSaveCount') ?? 50;
+// 主题字体
+Future<String> getThemeFont() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('themeFont') ?? '默认字体';
 }
 
-Future<void> setFeedMaxSaveCount(int count) async {
-  final prefs = await SharedPreferences.getInstance();
-  prefs.setInt('feedMaxSaveCount', count);
+Future<void> setThemeFont(String themeFont) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString('themeFont', themeFont);
 }
 
+// 是否允许文章重复
 Future<bool> getAllowDuplicate() async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.getBool('allowDuplicate') ?? false;
@@ -32,7 +33,7 @@ Future<void> setAllowDuplicate(bool allow) async {
   prefs.setBool('allowDuplicate', allow);
 }
 
-// 阅读页面数据管理
+// 字体大小
 Future<int> getFontSize() async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.getInt('fontSize') ?? 18;
@@ -43,6 +44,7 @@ Future<void> setFontSize(int size) async {
   prefs.setInt('fontSize', size);
 }
 
+// 行间距
 Future<double> getLineheight() async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.getDouble('lineheight') ?? 1.5;
@@ -53,6 +55,7 @@ Future<void> setLineheight(double height) async {
   prefs.setDouble('lineheight', height);
 }
 
+// 页边距
 Future<int> getPagePadding() async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.getInt('pagePadding') ?? 18;
@@ -63,6 +66,7 @@ Future<void> setPagePadding(int padding) async {
   prefs.setInt('pagePadding', padding);
 }
 
+// 文字对齐
 Future<String> getTextAlign() async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.getString('textAlign') ?? 'justify';
@@ -73,6 +77,7 @@ Future<void> setTextAlign(String align) async {
   prefs.setString('textAlign', align);
 }
 
+// 自定义 CSS
 Future<String> getCustomCss() async {
   final prefs = await SharedPreferences.getInstance();
   return prefs.getString('customCss') ?? '';
@@ -83,6 +88,7 @@ Future<void> setCustomCss(String css) async {
   prefs.setString('customCss', css);
 }
 
+// 阅读页面初始化数据
 Future<Map<String, dynamic>> getAllReadPageInitData() async {
   final prefs = await SharedPreferences.getInstance();
   return {
@@ -92,15 +98,4 @@ Future<Map<String, dynamic>> getAllReadPageInitData() async {
     'textAlign': prefs.getString('textAlign') ?? 'justify',
     'customCss': prefs.getString('customCss') ?? '',
   };
-}
-
-// 主题字体
-Future<String> getThemeFont() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString('themeFont') ?? '默认字体';
-}
-
-Future<void> setThemeFont(String themeFont) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setString('themeFont', themeFont);
 }

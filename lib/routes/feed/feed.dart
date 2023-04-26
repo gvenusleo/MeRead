@@ -213,9 +213,6 @@ class FeedPageState extends State<FeedPage> {
               duration: const Duration(seconds: 2),
             ),
           );
-          // 保证订阅源文章数不大于 feedMaxSaveCount
-          final int feedMaxSaveCount = await getFeedMaxSaveCount();
-          checkPostCountByFeed(widget.feed.id!, feedMaxSaveCount);
         },
         child: ListView.separated(
           cacheExtent: 30, // 预加载

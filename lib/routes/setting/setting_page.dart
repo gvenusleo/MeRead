@@ -26,7 +26,6 @@ class _SettingPageState extends State<SettingPage> {
   double lineheight = 1.5;
   int pagePadding = 18;
   String textAlign = '两端对齐';
-  int feedMaxSaveCount = 50;
   bool allowDuplicate = false;
 
   final Map<String, String> alignMap = {
@@ -41,7 +40,6 @@ class _SettingPageState extends State<SettingPage> {
     final double height = await getLineheight();
     final int padding = await getPagePadding();
     final String align = await getTextAlign();
-    final int maxSaveCount = await getFeedMaxSaveCount();
     final bool allowDup = await getAllowDuplicate();
 
     setState(() {
@@ -49,7 +47,6 @@ class _SettingPageState extends State<SettingPage> {
       lineheight = height;
       pagePadding = padding;
       textAlign = alignMap[align] ?? '两端对齐';
-      feedMaxSaveCount = maxSaveCount;
       allowDuplicate = allowDup;
     });
   }
@@ -126,81 +123,6 @@ class _SettingPageState extends State<SettingPage> {
               },
             ),
             const ListTileGroupTitle(title: '数据管理'),
-            ListTile(
-              leading: const Icon(Icons.article_outlined),
-              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
-              title: const Text('订阅源文章最大保存数量'),
-              subtitle: Text(
-                feedMaxSaveCount.toString(),
-              ),
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => StatefulBuilder(
-                    builder: (context, setFeedMaxSaveCountState) {
-                      return AlertDialog(
-                        contentPadding:
-                            const EdgeInsets.only(top: 12, bottom: 24),
-                        title: const Text('选择订阅源文章最大保存数量'),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            RadioListTile(
-                              value: 50,
-                              groupValue: feedMaxSaveCount,
-                              onChanged: (int? value) async {
-                                setFeedMaxSaveCountState(() {
-                                  feedMaxSaveCount = value!;
-                                });
-                                setState(() {
-                                  feedMaxSaveCount = value!;
-                                });
-                                await setFeedMaxSaveCount(feedMaxSaveCount);
-                                if (!mounted) return;
-                                Navigator.pop(context);
-                              },
-                              title: const Text('50'),
-                            ),
-                            RadioListTile(
-                              value: 100,
-                              groupValue: feedMaxSaveCount,
-                              onChanged: (int? value) async {
-                                setFeedMaxSaveCountState(() {
-                                  feedMaxSaveCount = value!;
-                                });
-                                setState(() {
-                                  feedMaxSaveCount = value!;
-                                });
-                                await setFeedMaxSaveCount(feedMaxSaveCount);
-                                if (!mounted) return;
-                                Navigator.pop(context);
-                              },
-                              title: const Text('100'),
-                            ),
-                            RadioListTile(
-                              value: 500,
-                              groupValue: feedMaxSaveCount,
-                              onChanged: (int? value) async {
-                                setFeedMaxSaveCountState(() {
-                                  feedMaxSaveCount = value!;
-                                });
-                                setState(() {
-                                  feedMaxSaveCount = value!;
-                                });
-                                await setFeedMaxSaveCount(feedMaxSaveCount);
-                                if (!mounted) return;
-                                Navigator.pop(context);
-                              },
-                              title: const Text('500'),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
             SwitchListTile(
               secondary: Icon(
                 Icons.copy_outlined,
