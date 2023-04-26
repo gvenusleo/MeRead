@@ -7,10 +7,10 @@ import '../data/db.dart';
 import '../models/feed.dart';
 import '../utils/parse.dart';
 import '../data/setting.dart';
-import '../../routes/feed/add_feed.dart';
-import '../../routes/feed/feed.dart';
+import 'feed_page/add_feed_page.dart';
+import 'feed_page/feed_page.dart';
 import '../../routes/read.dart';
-import 'setting/setting_page.dart';
+import 'setting_page/setting_page.dart';
 import '../models/post.dart';
 
 class HomePage extends StatefulWidget {

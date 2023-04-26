@@ -60,17 +60,6 @@ Future<void> updateFeed(Feed feed) async {
   );
 }
 
-// 根据 url 查询 Feed 是否存在
-Future<bool> feedExist(String url) async {
-  final Database db = await openDb();
-  final List<Map<String, dynamic>> maps = await db.query(
-    'feed',
-    where: "url = ?",
-    whereArgs: [url],
-  );
-  return maps.isNotEmpty;
-}
-
 // 查询所有 Feed 并按分类分组
 Future<Map<String, List<Feed>>> feedsGroupByCategory() async {
   final Database db = await openDb();

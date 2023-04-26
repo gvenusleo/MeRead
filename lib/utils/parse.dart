@@ -131,7 +131,7 @@ Future<int> parseOpml(FilePickerResult result) async {
         await Future.wait(
           category.children!.map(
             (feed) async {
-              if (!await feedExist(feed.xmlUrl!)) {
+              if (!await Feed.isExist(feed.xmlUrl!)) {
                 Feed? feedObj =
                     await parseFeed(feed.xmlUrl!, categoryName, feed.title!);
                 if (feedObj != null) {

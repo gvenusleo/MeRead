@@ -132,7 +132,7 @@ class EditFeedPageState extends State<EditFeedPage> {
                   widget.feed.name = _nameController.text;
                   widget.feed.category = _categoryController.text;
                   // 如果 feed 不存在，添加 feed，否则更新 feed
-                  if (await feedExist(widget.feed.url)) {
+                  if (await Feed.isExist(widget.feed.url)) {
                     await updateFeed(widget.feed);
                     await updatePostFeedName(widget.feed.id!, widget.feed.name);
                     await updateFeedPostsOpenType(

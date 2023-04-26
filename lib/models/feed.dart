@@ -1,4 +1,8 @@
 // 定义 Feed 类
+import 'package:sqflite/sqflite.dart';
+
+import '../data/db.dart';
+
 class Feed {
   int? id;
   String name; // 订阅源名称
@@ -28,5 +32,16 @@ class Feed {
       'fullText': fullText,
       'openType': openType,
     };
+  }
+
+  // 根据 url 判断 Feed 是否已存在
+  static isExist(String url) async {
+    final Database db = await openDb();
+    final List<Map<String, dynamic>> maps = await db.query(
+      'feed',
+      where: "url = ?",
+      whereArgs: [url],
+    );
+    return maps.isNotEmpty;
   }
 }

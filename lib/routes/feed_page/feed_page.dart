@@ -7,9 +7,9 @@ import '../../widgets/post_container.dart';
 import '../../data/db.dart';
 import '../../data/setting.dart';
 import '../../utils/parse.dart';
-import '../../routes/feed/edit_feed.dart';
-import '../../routes/read.dart';
+import '../read.dart';
 import '../../models/post.dart';
+import 'edit_feed.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key, required this.feed});

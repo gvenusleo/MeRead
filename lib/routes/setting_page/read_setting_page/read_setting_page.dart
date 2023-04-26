@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meread/provider/read_page_provider.dart';
-import 'package:meread/routes/setting/read_setting_page/font_size_setting_page.dart';
-import 'package:meread/routes/setting/read_setting_page/line_height_setting_page.dart';
-import 'package:meread/routes/setting/read_setting_page/page_padding_setting_page.dart';
+import 'package:meread/routes/setting_page/read_setting_page/font_size_setting_page.dart';
+import 'package:meread/routes/setting_page/read_setting_page/line_height_setting_page.dart';
+import 'package:meread/routes/setting_page/read_setting_page/page_padding_setting_page.dart';
 import 'package:provider/provider.dart';
 
 import 'custom_css_page.dart';
