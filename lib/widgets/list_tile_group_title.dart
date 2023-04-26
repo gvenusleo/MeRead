@@ -7,7 +7,7 @@ class ListTileGroupTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(18, 18, 18, 12),
+      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 18.0),
       child: Text(
         title,
         style: TextStyle(
