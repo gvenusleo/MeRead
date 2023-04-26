@@ -3,16 +3,16 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:meread/routes/setting/font_setting_page.dart';
-import 'package:meread/routes/setting/read_setting_page.dart';
+import 'package:meread/routes/setting/font_setting_page/font_setting_page.dart';
+import 'package:meread/routes/setting/read_setting_page/read_setting_page.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-import 'about.dart';
 import '../../states/theme_state.dart';
 import '../../utils/parse.dart';
 import '../../widgets/list_tile_group_title.dart';
+import 'about_page/about_page.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -72,23 +72,22 @@ class _SettingPageState extends State<SettingPage> {
               leading: const Icon(Icons.file_download_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
               title: const Text('导入 OPML'),
-              subtitle: const Text('将订阅源导出为 OPML 文件'),
+              subtitle: const Text('从 OPML 文件导入订阅源'),
               onTap: importOPML,
             ),
             ListTile(
               leading: const Icon(Icons.file_upload_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
               title: const Text('导出 OPML'),
-              subtitle: const Text('从 OPML 文件导入订阅源'),
+              subtitle: const Text('将订阅源导出为 OPML 文件'),
               onTap: exportOPML,
             ),
             const ListTileGroupTitle(title: '其他'),
             ListTile(
               leading: const Icon(Icons.android_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
-              title: const Text(
-                '关于应用',
-              ),
+              title: const Text('关于应用'),
+              subtitle: const Text('联系作者与开源地址'),
               onTap: () {
                 Navigator.push(context, CupertinoPageRoute(builder: (context) {
                   return const AboutPage();

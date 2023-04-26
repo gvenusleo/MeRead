@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../data/setting.dart';
-import 'custom_css_page.dart';
+import '../../../data/setting.dart';
+import 'custom_css_page/custom_css_page.dart';
 
 class ReadSettingPage extends StatefulWidget {
   const ReadSettingPage({super.key});

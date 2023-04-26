@@ -5,7 +5,6 @@ import 'package:sqflite/sqflite.dart';
 
 import '../models/feed.dart';
 import '../models/post.dart';
-import 'setting.dart';
 
 // 打开数据库，如果不存在则创建
 Future<Database> openDb() async {
