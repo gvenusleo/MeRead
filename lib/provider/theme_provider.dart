@@ -1,13 +1,16 @@
+
 import 'package:flutter/material.dart';
 
 import '../data/setting.dart';
 
-class ThemeState extends ChangeNotifier {
-  ThemeState() {
+class ThemeProvider extends ChangeNotifier {
+  ThemeProvider() {
     initData();
   }
+
   int themeIndex = 0;
   String themeFont = '默认字体';
+
   Future<void> initData() async {
     final int index = await getThemeIndex();
     final String font = await getThemeFont();

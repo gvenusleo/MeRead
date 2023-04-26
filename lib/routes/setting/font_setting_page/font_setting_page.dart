@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../states/theme_state.dart';
+import '../../../provider/theme_provider.dart';
 import '../../../utils/font_manager.dart';
 
 class FontSettingPage extends StatefulWidget {
@@ -52,14 +52,14 @@ class _FontSettingPageState extends State<FontSettingPage> {
             if (index == 0) {
               return RadioListTile(
                 value: '默认字体',
-                groupValue: context.watch<ThemeState>().themeFont,
+                groupValue: context.watch<ThemeProvider>().themeFont,
                 title: const Text(
                   '默认字体',
                   style: TextStyle(fontFamily: '默认字体'),
                 ),
                 onChanged: (value) {
                   if (value != null) {
-                    context.read<ThemeState>().setThemeFontState(value);
+                    context.read<ThemeProvider>().setThemeFontState(value);
                   }
                 },
               );
@@ -67,19 +67,20 @@ class _FontSettingPageState extends State<FontSettingPage> {
             if (index == _fontNameList.length + 1) {
               return const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-                child: Text('* 点击右上角导入字体\n* 仅支持 otf/ttf/ttc 格式的字体文件'),
+                child: Text(
+                    '* 点击右上角导入字体\n* 仅支持 otf/ttf/ttc 格式的字体文件\n* 改字体仅用于应用界面字体，阅读字体另行设置'),
               );
             }
             return RadioListTile(
               value: _fontNameList[index - 1],
-              groupValue: context.watch<ThemeState>().themeFont,
+              groupValue: context.watch<ThemeProvider>().themeFont,
               title: Text(
                 _fontNameList[index - 1].split('.').first,
                 style: TextStyle(fontFamily: _fontNameList[index - 1]),
               ),
               onChanged: (value) {
                 if (value != null) {
-                  context.read<ThemeState>().setThemeFontState(value);
+                  context.read<ThemeProvider>().setThemeFontState(value);
                 }
               },
               secondary: IconButton(
@@ -100,10 +101,10 @@ class _FontSettingPageState extends State<FontSettingPage> {
                         ),
                         TextButton(
                           onPressed: () async {
-                            if (context.read<ThemeState>().themeFont ==
+                            if (context.read<ThemeProvider>().themeFont ==
                                 _fontNameList[index - 1]) {
                               context
-                                  .read<ThemeState>()
+                                  .read<ThemeProvider>()
                                   .setThemeFontState('思源黑体');
                             }
                             // 删除字体

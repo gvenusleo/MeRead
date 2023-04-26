@@ -1,12 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:meread/provider/read_page_provider.dart';
 import 'package:meread/utils/font_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'states/theme_state.dart';
+import 'provider/theme_provider.dart';
 import 'theme/theme.dart';
 import 'routes/home.dart';
 
@@ -27,7 +28,8 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ThemeState()), // 主题状态管理
+        ChangeNotifierProvider(create: (_) => ThemeProvider()), // 主题状态管理
+        ChangeNotifierProvider(create: (_) => ReadPageProvider()), // 阅读页面状态管理
       ],
       child: const MyApp(),
     ),
@@ -45,7 +47,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    context.read<ThemeState>().initData();
+    context.read<ThemeProvider>().initData();
   }
 
   @override
@@ -62,13 +64,13 @@ class _MyAppState extends State<MyApp> {
         Locale('en', 'US'),
         Locale('zh', 'CN'),
       ],
-      theme: lightTheme(context.watch<ThemeState>().themeFont),
-      darkTheme: darkTheme(context.watch<ThemeState>().themeFont),
+      theme: lightTheme(context.watch<ThemeProvider>().themeFont),
+      darkTheme: darkTheme(context.watch<ThemeProvider>().themeFont),
       themeMode: [
         ThemeMode.light,
         ThemeMode.dark,
         ThemeMode.system,
-      ][Provider.of<ThemeState>(context).themeIndex],
+      ][Provider.of<ThemeProvider>(context).themeIndex],
       home: const HomePage(),
     );
   }

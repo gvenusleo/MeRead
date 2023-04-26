@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../states/theme_state.dart';
+import '../../../provider/theme_provider.dart';
 
 class ThemeSettingPage extends StatefulWidget {
   const ThemeSettingPage({super.key});
@@ -25,11 +25,11 @@ class _ThemeSettingPageState extends State<ThemeSettingPage> {
           itemBuilder: (context, index) {
             return RadioListTile(
               value: index,
-              groupValue: context.watch<ThemeState>().themeIndex,
+              groupValue: context.watch<ThemeProvider>().themeIndex,
               title: Text(themeMode[index]),
               onChanged: (int? value) async {
                 if (value != null) {
-                  context.read<ThemeState>().setThemeIndexState(value);
+                  context.read<ThemeProvider>().setThemeIndexState(value);
                 }
               },
             );

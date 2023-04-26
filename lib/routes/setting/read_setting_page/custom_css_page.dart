@@ -1,8 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '../../../../data/setting.dart';
+import 'package:meread/provider/read_page_provider.dart';
+import 'package:provider/provider.dart';
 
 class CustomCssPage extends StatefulWidget {
   const CustomCssPage({Key? key}) : super(key: key);
@@ -14,24 +13,17 @@ class CustomCssPage extends StatefulWidget {
 class CustomCssPageState extends State<CustomCssPage> {
   final TextEditingController _customCssController = TextEditingController();
 
-  Future<void> initData() async {
-    final String css = await getCustomCss();
-    setState(() {
-      _customCssController.text = css;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    initData();
+    _customCssController.text = context.read<ReadPageProvider>().customCss;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('自定义CSS'),
+        title: const Text('自定义 CSS'),
       ),
       body: SafeArea(
         child: ListView(
@@ -67,7 +59,9 @@ class CustomCssPageState extends State<CustomCssPage> {
                 const SizedBox(width: 24),
                 TextButton(
                   onPressed: () async {
-                    await setCustomCss(_customCssController.text);
+                    await context
+                        .read<ReadPageProvider>()
+                        .setCustomCssState(_customCssController.text);
                     if (!mounted) return;
                     Navigator.pop(context);
                   },

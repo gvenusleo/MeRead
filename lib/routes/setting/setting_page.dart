@@ -10,7 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../states/theme_state.dart';
+import '../../provider/theme_provider.dart';
 import '../../utils/parse.dart';
 import '../../widgets/list_tile_group_title.dart';
 import 'about_page/about_page.dart';
@@ -42,7 +42,7 @@ class _SettingPageState extends State<SettingPage> {
                   '浅色模式',
                   '深色模式',
                   '跟随系统',
-                ][context.watch<ThemeState>().themeIndex],
+                ][context.watch<ThemeProvider>().themeIndex],
               ),
               onTap: () {
                 Navigator.push(context, CupertinoPageRoute(builder: (context) {
