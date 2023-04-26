@@ -10,7 +10,7 @@ import '../data/setting.dart';
 import '../../routes/feed/add_feed.dart';
 import '../../routes/feed/feed.dart';
 import '../../routes/read.dart';
-import '../../routes/setting/set.dart';
+import 'setting/setting_page.dart';
 import '../models/post.dart';
 
 class HomePage extends StatefulWidget {
@@ -227,7 +227,7 @@ class HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         CupertinoPageRoute(
-                          builder: (context) => const SetPage(),
+                          builder: (context) => const SettingPage(),
                         ),
                       ).then((value) {
                         getFeedList();

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:meread/utils/font_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -22,10 +23,11 @@ Future<void> main() async {
   SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.edgeToEdge, // 适配 EdgeToEdge
   );
+  await readThemeFont(); // 读取主题字体
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ThemeModel()), // 主题状态管理
+        ChangeNotifierProvider(create: (_) => ThemeState()), // 主题状态管理
       ],
       child: const MyApp(),
     ),
@@ -43,7 +45,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    context.read<ThemeModel>().getTheme();
+    context.read<ThemeState>().initData();
   }
 
   @override
@@ -60,13 +62,13 @@ class _MyAppState extends State<MyApp> {
         Locale('en', 'US'),
         Locale('zh', 'CN'),
       ],
-      theme: lightTheme,
-      darkTheme: darkTheme,
+      theme: lightTheme(context.watch<ThemeState>().themeFont),
+      darkTheme: darkTheme(context.watch<ThemeState>().themeFont),
       themeMode: [
         ThemeMode.light,
         ThemeMode.dark,
         ThemeMode.system,
-      ][Provider.of<ThemeModel>(context).themeIndex],
+      ][Provider.of<ThemeState>(context).themeIndex],
       home: const HomePage(),
     );
   }

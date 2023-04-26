@@ -93,3 +93,14 @@ Future<Map<String, dynamic>> getAllReadPageInitData() async {
     'customCss': prefs.getString('customCss') ?? '',
   };
 }
+
+// 主题字体
+Future<String> getThemeFont() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getString('themeFont') ?? '默认字体';
+}
+
+Future<void> setThemeFont(String themeFont) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setString('themeFont', themeFont);
+}

@@ -104,10 +104,6 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
-  fonts:
-    - family: NotoSerifSC
-      fonts:
-        - asset: assets/fonts/NotoSerifSC-Medium.otf
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
