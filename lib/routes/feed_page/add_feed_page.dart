@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 import '../../utils/parse.dart';
 import '../../models/feed.dart';
-import 'edit_feed.dart';
+import 'edit_feed_page.dart';
 
 class AddFeedPage extends StatefulWidget {
   const AddFeedPage({super.key});

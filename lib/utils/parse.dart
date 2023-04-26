@@ -135,7 +135,7 @@ Future<int> parseOpml(FilePickerResult result) async {
                 Feed? feedObj =
                     await parseFeed(feed.xmlUrl!, categoryName, feed.title!);
                 if (feedObj != null) {
-                  await insertFeed(feedObj);
+                  await feedObj.insertToDb();
                 } else {
                   failCount++;
                 }

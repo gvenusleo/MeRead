@@ -22,16 +22,6 @@ Future<Database> openDb() async {
   );
 }
 
-// 将 Feed 插入数据库
-Future<void> insertFeed(Feed feed) async {
-  final Database db = await openDb();
-  await db.insert(
-    'feed',
-    feed.toMap(),
-    conflictAlgorithm: ConflictAlgorithm.replace,
-  );
-}
-
 // 查询所有 Feed
 Future<List<Feed>> feeds() async {
   final Database db = await openDb();
@@ -47,17 +37,6 @@ Future<List<Feed>> feeds() async {
       openType: maps[i]['openType'],
     );
   });
-}
-
-// 修改 Feed
-Future<void> updateFeed(Feed feed) async {
-  final db = await openDb();
-  await db.update(
-    'feed',
-    feed.toMap(),
-    where: "id = ?",
-    whereArgs: [feed.id],
-  );
 }
 
 // 查询所有 Feed 并按分类分组
@@ -110,17 +89,6 @@ Future<String> feedCategory(int id) async {
     whereArgs: [id],
   );
   return maps[0]['category'];
-}
-
-// 更新 Feed 下所有 Post 中的 feedName
-Future<void> updatePostFeedName(int id, String name) async {
-  final db = await openDb();
-  await db.update(
-    'post',
-    {'feedName': name},
-    where: "feedId = ?",
-    whereArgs: [id],
-  );
 }
 
 // 根据 id 查询 Feed 的 openType
@@ -313,17 +281,6 @@ Future<void> markPostAsUnread(int id) async {
     {'read': 0},
     where: "id = ?",
     whereArgs: [id],
-  );
-}
-
-// 更改 Feed 下所有 Post 的 openType
-Future<void> updateFeedPostsOpenType(int feedId, int openType) async {
-  final db = await openDb();
-  await db.update(
-    'post',
-    {'openType': openType},
-    where: "feedId = ?",
-    whereArgs: [feedId],
   );
 }
 

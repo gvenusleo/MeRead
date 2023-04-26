@@ -44,4 +44,47 @@ class Feed {
     );
     return maps.isNotEmpty;
   }
+
+  // 将 Feed 插入数据库
+  Future<void> insertToDb() async {
+    final Database db = await openDb();
+    await db.insert(
+      'feed',
+      toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  // 更新 Feed
+  Future<void> updateToDb() async {
+    final Database db = await openDb();
+    await db.update(
+      'feed',
+      toMap(),
+      where: "id = ?",
+      whereArgs: [id],
+    );
+  }
+
+  // 更新 Feed 下所有 Post 中的 feedName
+  Future<void> updatePostFeedName() async {
+    final db = await openDb();
+    await db.update(
+      'post',
+      {'feedName': name},
+      where: "feedId = ?",
+      whereArgs: [id],
+    );
+  }
+
+  // 更改 Feed 下所有 Post 的 openType
+  Future<void> updatePostsOpenType() async {
+    final db = await openDb();
+    await db.update(
+      'post',
+      {'openType': openType},
+      where: "feedId = ?",
+      whereArgs: [id],
+    );
+  }
 }
