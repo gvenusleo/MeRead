@@ -160,27 +160,18 @@ Future<int> feedFullText(int id) async {
 // 将 Post 插入数据库
 Future<void> insertPost(Post post) async {
   final Database db = await openDb();
-  bool allowDup = await getAllowDuplicate();
-  if (allowDup) {
+  // 根据 link 判断是否重复，如果重复则不插入
+  final List<Map<String, dynamic>> maps = await db.query(
+    'post',
+    where: "link = ?",
+    whereArgs: [post.link],
+  );
+  if (maps.isEmpty) {
     await db.insert(
       'post',
       post.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
-  } else {
-    // 根据 link 判断是否重复，如果重复则不插入
-    final List<Map<String, dynamic>> maps = await db.query(
-      'post',
-      where: "link = ?",
-      whereArgs: [post.link],
-    );
-    if (maps.isEmpty) {
-      await db.insert(
-        'post',
-        post.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
-    }
   }
 }
 

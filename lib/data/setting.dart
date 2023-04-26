@@ -22,17 +22,6 @@ Future<void> setThemeFont(String themeFont) async {
   prefs.setString('themeFont', themeFont);
 }
 
-// 是否允许文章重复
-Future<bool> getAllowDuplicate() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('allowDuplicate') ?? false;
-}
-
-Future<void> setAllowDuplicate(bool allow) async {
-  final prefs = await SharedPreferences.getInstance();
-  prefs.setBool('allowDuplicate', allow);
-}
-
 // 字体大小
 Future<int> getFontSize() async {
   final prefs = await SharedPreferences.getInstance();

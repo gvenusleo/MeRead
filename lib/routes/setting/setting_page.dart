@@ -26,7 +26,6 @@ class _SettingPageState extends State<SettingPage> {
   double lineheight = 1.5;
   int pagePadding = 18;
   String textAlign = '两端对齐';
-  bool allowDuplicate = false;
 
   final Map<String, String> alignMap = {
     'left': '左对齐',
@@ -40,14 +39,12 @@ class _SettingPageState extends State<SettingPage> {
     final double height = await getLineheight();
     final int padding = await getPagePadding();
     final String align = await getTextAlign();
-    final bool allowDup = await getAllowDuplicate();
 
     setState(() {
       fontSize = size;
       lineheight = height;
       pagePadding = padding;
       textAlign = alignMap[align] ?? '两端对齐';
-      allowDuplicate = allowDup;
     });
   }
 
@@ -123,21 +120,6 @@ class _SettingPageState extends State<SettingPage> {
               },
             ),
             const ListTileGroupTitle(title: '数据管理'),
-            SwitchListTile(
-              secondary: Icon(
-                Icons.copy_outlined,
-                color: Theme.of(context).textTheme.bodyLarge!.color,
-              ),
-              title: const Text('允许文章重复'),
-              subtitle: const Text('开启后将不剔除重复文章'),
-              value: allowDuplicate,
-              onChanged: (bool value) async {
-                setState(() {
-                  allowDuplicate = value;
-                });
-                await setAllowDuplicate(value);
-              },
-            ),
             ListTile(
               leading: const Icon(Icons.file_download_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,

@@ -39,7 +39,7 @@ class CustomCssPageState extends State<CustomCssPage> {
             TextFormField(
               controller: _customCssController,
               expands: false,
-              maxLines: 15,
+              maxLines: 12,
               decoration: const InputDecoration(
                 hintText: '输入 CSS 代码',
                 border: OutlineInputBorder(),
