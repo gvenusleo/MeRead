@@ -25,7 +25,7 @@ class ThemeState extends ChangeNotifier {
   }
 
   Future<void> setThemeFontState(String font) async {
-    await setThemeFontState(font);
+    await setThemeFont(font);
     setState(() {
       themeFont = font;
     });

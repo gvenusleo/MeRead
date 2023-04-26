@@ -7,7 +7,7 @@ import 'package:meread/data/setting.dart';
 import 'dir.dart';
 
 // 读取所有字体文件，注册到系统中
-Future<List<String>> readAll() async {
+Future<List<String>> readAllFont() async {
   List<String> fontNameList = [];
   final fontFileDir = Directory(await getFontDir());
   // 遍历字体文件目录，将字体文件注册到系统中
@@ -37,7 +37,7 @@ Future<void> readThemeFont() async {
 }
 
 // 删除指定字体文件
-Future<void> delete(String fontName) async {
+Future<void> deleteFont(String fontName) async {
   final fontFileDir = Directory(await getFontDir());
   final fontFile = File('${fontFileDir.path}/$fontName');
   if (fontFile.existsSync()) {
