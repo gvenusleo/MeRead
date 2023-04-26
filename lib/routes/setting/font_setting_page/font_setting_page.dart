@@ -33,23 +33,6 @@ class _FontSettingPageState extends State<FontSettingPage> {
       appBar: AppBar(
         title: const Text('应用字体'),
         actions: [
-          // 说明对话框
-          IconButton(
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('说明'),
-                content: const Text('仅支持导入 otf/ttf/ttc 格式的字体文件'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('确定'),
-                  ),
-                ],
-              ),
-            ),
-            icon: const Icon(Icons.help_outline),
-          ),
           // 添加字体
           IconButton(
             onPressed: () async {

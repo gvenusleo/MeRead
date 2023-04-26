@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meread/routes/setting/font_setting_page/font_setting_page.dart';
 import 'package:meread/routes/setting/read_setting_page/read_setting_page.dart';
+import 'package:meread/routes/setting/theme_setting_page/theme_setting_page.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -43,7 +44,11 @@ class _SettingPageState extends State<SettingPage> {
                   '跟随系统',
                 ][context.watch<ThemeState>().themeIndex],
               ),
-              onTap: showSetThemeIndexDialog,
+              onTap: () {
+                Navigator.push(context, CupertinoPageRoute(builder: (context) {
+                  return const ThemeSettingPage();
+                }));
+              },
             ),
             ListTile(
               leading: const Icon(Icons.font_download_outlined),
@@ -95,33 +100,6 @@ class _SettingPageState extends State<SettingPage> {
               },
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  // 设置主题颜色
-  Future<void> showSetThemeIndexDialog() async {
-    List<String> themeMode = ['浅色模式', '深色模式', '跟随系统'];
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('主题颜色'),
-        contentPadding: const EdgeInsets.only(top: 12, bottom: 24),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: themeMode.map((e) {
-            return RadioListTile(
-                value: themeMode.indexOf(e),
-                groupValue: context.watch<ThemeState>().themeIndex,
-                title: Text(e),
-                onChanged: (int? value) {
-                  if (value != null) {
-                    context.read<ThemeState>().setThemeIndexState(value);
-                  }
-                  Navigator.pop(context);
-                });
-          }).toList(),
         ),
       ),
     );
