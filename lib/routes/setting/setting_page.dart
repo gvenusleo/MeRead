@@ -143,55 +143,14 @@ class _SettingPageState extends State<SettingPage> {
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
               title: const Text('导入 OPML'),
               subtitle: const Text('将订阅源导出为 OPML 文件'),
-              onTap: () async {
-                // 打开文件选择器
-                final result = await FilePicker.platform.pickFiles(
-                  type: FileType.custom,
-                  allowedExtensions: ['opml', 'xml'],
-                );
-                if (result != null) {
-                  if (!mounted) return;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('开始后台导入'),
-                      showCloseIcon: true,
-                      behavior: SnackBarBehavior.floating,
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
-                  final int failCount = await parseOpml(result);
-                  if (!mounted) return;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        failCount == 0 ? '导入成功' : '$failCount 个订阅源导入失败',
-                      ),
-                      showCloseIcon: true,
-                      behavior: SnackBarBehavior.floating,
-                      duration: const Duration(seconds: 2),
-                    ),
-                  );
-                }
-              },
+              onTap: importOPML,
             ),
             ListTile(
               leading: const Icon(Icons.file_upload_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
               title: const Text('导出 OPML'),
               subtitle: const Text('从 OPML 文件导入订阅源'),
-              onTap: () async {
-                String opmlStr = await exportOpml();
-                // opmlStr 字符串写入 feeds.opml 文件并分享，分享后删除文件
-                final Directory tempDir = await getTemporaryDirectory();
-                final File file =
-                    File('${tempDir.path}/feeds-from-MeReader.xml');
-                await file.writeAsString(opmlStr);
-                await Share.shareXFiles(
-                  [XFile(file.path)],
-                  text: '分享 OPML 文件',
-                );
-                await file.delete();
-              },
+              onTap: exportOPML,
             ),
             const ListTileGroupTitle(title: '其他'),
             ListTile(
@@ -406,5 +365,62 @@ class _SettingPageState extends State<SettingPage> {
         ),
       ),
     );
+  }
+
+  // 导入 OPML 文件
+  Future<void> importOPML() async {
+    // 打开文件选择器
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['opml', 'xml'],
+    );
+    if (result != null) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('开始后台导入'),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+          action: SnackBarAction(label: '确定', onPressed: () {}),
+        ),
+      );
+      final int failCount = await parseOpml(result);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            failCount == 0 ? '导入成功' : '$failCount 个订阅源导入失败',
+          ),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+          action: SnackBarAction(label: '确定', onPressed: () {}),
+        ),
+      );
+    }
+  }
+
+  // 导出 OPML 文件
+  Future<void> exportOPML() async {
+    String opmlStr = await exportOpml();
+    // opmlStr 字符串写入 feeds.opml 文件并分享，分享后删除文件
+    final Directory tempDir = await getTemporaryDirectory();
+    final File file = File('${tempDir.path}/feeds-from-MeReader.xml');
+    await file.writeAsString(opmlStr);
+    await Share.shareXFiles(
+      [XFile(file.path)],
+      text: '分享 OPML 文件',
+    ).then((value) {
+      if (value.status == ShareResultStatus.success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('导出成功'),
+            behavior: SnackBarBehavior.floating,
+            duration: const Duration(seconds: 2),
+            action: SnackBarAction(label: '确定', onPressed: () {}),
+          ),
+        );
+      }
+    });
+    await file.delete();
   }
 }
