@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:meread/models/feed.dart';
 import 'package:opml/opml.dart';
 import 'package:webfeed/webfeed.dart';
-import 'package:http/http.dart';
 
 import '../data/db.dart';
 import '../models/post.dart';
@@ -19,8 +19,8 @@ Future<Feed?> parseFeed(String url,
   categoryName ??= '默认分类';
   int defaultOpenType = 0;
   try {
-    final response = await get(Uri.parse(url));
-    final postXmlString = utf8.decode(response.bodyBytes);
+    final response = await Dio().get(url);
+    final postXmlString = utf8.decode(response.data);
     try {
       RssFeed rssFeed = RssFeed.parse(postXmlString);
       feedName ??= rssFeed.title;
@@ -54,8 +54,8 @@ Future<Feed?> parseFeed(String url,
 // 注意：如果 Post 已存在，则不存入数据库
 Future<bool> parseFeedContent(Feed feed) async {
   try {
-    final response = await get(Uri.parse(feed.url));
-    final postXmlString = utf8.decode(response.bodyBytes);
+    final response = await Dio().get(feed.url);
+    final postXmlString = utf8.decode(response.data);
     final String? feedLastUpdated = await getFeedLatestPostPubDate(feed.id!);
     try {
       RssFeed rssFeed = RssFeed.parse(postXmlString);

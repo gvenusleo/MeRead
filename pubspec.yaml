@@ -39,7 +39,6 @@ dependencies:
     sdk: flutter         # 本地化
   sqflite: ^2.1.0 # 数据库
   webfeed: ^0.7.0 # Feed 解析
-  http: ^0.13.5 # 网络请求
   flutter_inappwebview: ^5.7.1  # 创建 WebView
   path: ^1.8.2
   shared_preferences: ^2.0.15 # 本地存储
@@ -50,6 +49,8 @@ dependencies:
   url_launcher: ^6.1.6 # 打开链接
   path_provider: ^2.0.11 # 路径
   html: ^0.15.1 # HTML 解析
+  html_main_element: ^2.1.0 # 全文获取（Readability）
+  dio: ^5.1.1 # 网络请求
 
 dev_dependencies:
   flutter_test:

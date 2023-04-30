@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../data/db.dart';
 import '../../models/feed.dart';
 import '../../widgets/list_tile_group_title.dart';
 

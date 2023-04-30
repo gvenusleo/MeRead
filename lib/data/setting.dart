@@ -76,15 +76,3 @@ Future<void> setCustomCss(String css) async {
   final prefs = await SharedPreferences.getInstance();
   prefs.setString('customCss', css);
 }
-
-// 阅读页面初始化数据
-Future<Map<String, dynamic>> getAllReadPageInitData() async {
-  final prefs = await SharedPreferences.getInstance();
-  return {
-    'fontSize': prefs.getInt('fontSize') ?? 18,
-    'lineheight': prefs.getDouble('lineheight') ?? 1.5,
-    'pagePadding': prefs.getInt('pagePadding') ?? 18,
-    'textAlign': prefs.getString('textAlign') ?? 'justify',
-    'customCss': prefs.getString('customCss') ?? '',
-  };
-}

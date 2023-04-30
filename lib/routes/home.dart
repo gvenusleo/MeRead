@@ -6,7 +6,6 @@ import '../../widgets/post_container.dart';
 import '../data/db.dart';
 import '../models/feed.dart';
 import '../utils/parse.dart';
-import '../data/setting.dart';
 import 'feed_page/add_feed_page.dart';
 import 'feed_page/feed_page.dart';
 import '../../routes/read.dart';
@@ -24,7 +23,6 @@ class HomePageState extends State<HomePage> {
   List<Post> postList = [];
   bool onlyUnread = false;
   bool onlyFavorite = false;
-  Map<String, dynamic> readPageInitData = {};
   Map<int, int> unreadCount = {};
 
   Future<void> getFeedList() async {
@@ -62,16 +60,6 @@ class HomePageState extends State<HomePage> {
       (value) => setState(
         () {
           postList = value;
-        },
-      ),
-    );
-  }
-
-  Future<void> getReadPageInitData() async {
-    await getAllReadPageInitData().then(
-      (value) => setState(
-        () {
-          readPageInitData = value;
         },
       ),
     );
@@ -137,7 +125,6 @@ class HomePageState extends State<HomePage> {
     getFeedList();
     getPostList();
     getUnreadCount();
-    getReadPageInitData();
   }
 
   @override
@@ -235,7 +222,6 @@ class HomePageState extends State<HomePage> {
                         } else {
                           getPostList();
                         }
-                        getReadPageInitData();
                       });
                     });
                   },
@@ -335,7 +321,6 @@ class HomePageState extends State<HomePage> {
                       CupertinoPageRoute(
                         builder: (context) => ReadPage(
                           post: postList[index],
-                          initData: readPageInitData,
                           fullText: fullText,
                         ),
                       ),

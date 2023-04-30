@@ -5,7 +5,6 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../models/feed.dart';
 import '../../widgets/post_container.dart';
 import '../../data/db.dart';
-import '../../data/setting.dart';
 import '../../utils/parse.dart';
 import '../read.dart';
 import '../../models/post.dart';
@@ -22,7 +21,6 @@ class FeedPageState extends State<FeedPage> {
   List<Post> postList = [];
   bool onlyUnread = false;
   bool onlyFavorite = false;
-  Map<String, dynamic> readPageInitData = {};
 
   Future<void> getPostList() async {
     await postsByFeedId(widget.feed.id!).then(
@@ -49,16 +47,6 @@ class FeedPageState extends State<FeedPage> {
       (value) => setState(
         () {
           postList = value;
-        },
-      ),
-    );
-  }
-
-  Future<void> getReadPageInitData() async {
-    await getAllReadPageInitData().then(
-      (value) => setState(
-        () {
-          readPageInitData = value;
         },
       ),
     );
@@ -228,13 +216,11 @@ class FeedPageState extends State<FeedPage> {
                       mode: LaunchMode.externalApplication,
                     );
                   } else {
-                    getReadPageInitData();
                     Navigator.push(
                       context,
                       CupertinoPageRoute(
                         builder: (context) => ReadPage(
                           post: postList[index],
-                          initData: readPageInitData,
                           fullText: widget.feed.fullText == 1,
                         ),
                       ),

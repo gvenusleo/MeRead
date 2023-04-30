@@ -68,7 +68,7 @@ class _FontSettingPageState extends State<FontSettingPage> {
               return const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24, vertical: 18),
                 child: Text(
-                    '* 点击右上角导入字体\n* 仅支持 otf/ttf/ttc 格式的字体文件\n* 改字体仅用于应用界面字体，阅读字体另行设置'),
+                    '* 点击右上角导入字体\n* 仅支持 otf/ttf/ttc 格式的字体文件\n* 该字体仅用于应用界面字体，阅读字体另行设置'),
               );
             }
             return RadioListTile(
