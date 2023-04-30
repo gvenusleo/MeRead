@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:meread/provider/read_page_provider.dart';
 import 'package:meread/utils/font_manager.dart';
@@ -52,26 +53,35 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'MeRead',
-      localizationsDelegates: const [
-        GlobalWidgetsLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en', 'US'),
-        Locale('zh', 'CN'),
-      ],
-      theme: lightTheme(context.watch<ThemeProvider>().themeFont),
-      darkTheme: darkTheme(context.watch<ThemeProvider>().themeFont),
-      themeMode: [
-        ThemeMode.light,
-        ThemeMode.dark,
-        ThemeMode.system,
-      ][Provider.of<ThemeProvider>(context).themeIndex],
-      home: const HomePage(),
-    );
+    return DynamicColorBuilder(
+        builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'MeRead',
+        localizationsDelegates: const [
+          GlobalWidgetsLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en', 'US'),
+          Locale('zh', 'CN'),
+        ],
+        theme: lightTheme(
+          context,
+          lightDynamic,
+        ),
+        darkTheme: darkTheme(
+          context,
+          darkDynamic,
+        ),
+        themeMode: [
+          ThemeMode.light,
+          ThemeMode.dark,
+          ThemeMode.system,
+        ][Provider.of<ThemeProvider>(context).themeIndex],
+        home: const HomePage(),
+      );
+    });
   }
 }

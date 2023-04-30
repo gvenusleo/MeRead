@@ -14,6 +14,7 @@ import '../../provider/theme_provider.dart';
 import '../../utils/parse.dart';
 import '../../widgets/list_tile_group_title.dart';
 import 'about_page/about_page.dart';
+import 'dynamic_color_setting_page/dynamic_color_setting_page.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -51,10 +52,24 @@ class _SettingPageState extends State<SettingPage> {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.color_lens_outlined),
+              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
+              title: const Text('动态取色'),
+              subtitle: Text(
+                  context.watch<ThemeProvider>().isDynamicColor ? '开启' : '关闭'),
+              onTap: () {
+                Navigator.push(context, CupertinoPageRoute(builder: (context) {
+                  return const DynamicColorSettingPage();
+                }));
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.font_download_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
               title: const Text('应用字体'),
-              subtitle: const Text('自定义应用字体'),
+              subtitle: Text(
+                context.watch<ThemeProvider>().themeFont.split('.').first,
+              ),
               onTap: () {
                 Navigator.push(context, CupertinoPageRoute(builder: (context) {
                   return const FontSettingPage();

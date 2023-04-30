@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../data/setting.dart';
@@ -10,13 +9,16 @@ class ThemeProvider extends ChangeNotifier {
 
   int themeIndex = 0;
   String themeFont = '默认字体';
+  bool isDynamicColor = false;
 
   Future<void> initData() async {
     final int index = await getThemeIndex();
     final String font = await getThemeFont();
+    final bool dynamicColor = await getDynamicColor();
     setState(() {
       themeIndex = index;
       themeFont = font;
+      isDynamicColor = dynamicColor;
     });
   }
 
@@ -31,6 +33,13 @@ class ThemeProvider extends ChangeNotifier {
     await setThemeFont(font);
     setState(() {
       themeFont = font;
+    });
+  }
+
+  Future<void> setDynamicColorState(bool dynamicColor) async {
+    await setDynamicColor(dynamicColor);
+    setState(() {
+      isDynamicColor = dynamicColor;
     });
   }
 

@@ -11,6 +11,17 @@ Future<void> setThemeIndex(int index) async {
   prefs.setInt('themeIndex', index);
 }
 
+// 启用壁纸动态取色
+Future<bool> getDynamicColor() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('dynamicColor') ?? false;
+}
+
+Future<void> setDynamicColor(bool dynamicColor) async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setBool('dynamicColor', dynamicColor);
+}
+
 // 主题字体
 Future<String> getThemeFont() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
