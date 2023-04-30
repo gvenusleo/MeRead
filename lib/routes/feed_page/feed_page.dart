@@ -4,7 +4,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/feed.dart';
 import '../../widgets/post_container.dart';
-import '../../data/db.dart';
 import '../../utils/parse.dart';
 import '../read.dart';
 import '../../models/post.dart';

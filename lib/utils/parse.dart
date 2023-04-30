@@ -1,13 +1,11 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:meread/models/feed.dart';
 import 'package:opml/opml.dart';
 import 'package:webfeed/webfeed.dart';
 
-import '../data/db.dart';
+import '../models/feed.dart';
 import '../models/post.dart';
 
 // 解析订阅源
@@ -20,7 +18,7 @@ Future<Feed?> parseFeed(String url,
   int defaultOpenType = 0;
   try {
     final response = await Dio().get(url);
-    final postXmlString = utf8.decode(response.data);
+    final postXmlString = response.data;
     try {
       RssFeed rssFeed = RssFeed.parse(postXmlString);
       feedName ??= rssFeed.title;
@@ -55,7 +53,7 @@ Future<Feed?> parseFeed(String url,
 Future<bool> parseFeedContent(Feed feed) async {
   try {
     final response = await Dio().get(feed.url);
-    final postXmlString = utf8.decode(response.data);
+    final postXmlString = response.data;
     final String? feedLastUpdated = await feed.getLatesPubDate();
     try {
       RssFeed rssFeed = RssFeed.parse(postXmlString);

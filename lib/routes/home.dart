@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../widgets/post_container.dart';
-import '../data/db.dart';
 import '../models/feed.dart';
 import '../utils/parse.dart';
 import 'feed_page/add_feed_page.dart';

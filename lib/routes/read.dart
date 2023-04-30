@@ -7,7 +7,6 @@ import 'package:html_main_element/html_main_element.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../data/db.dart';
 import '../models/post.dart';
 import '../provider/read_page_provider.dart';
 
