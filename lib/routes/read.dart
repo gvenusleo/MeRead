@@ -94,14 +94,12 @@ h3,h4,h5,h6 {
   font-size: 1.0em;
   font-weight: 700;
 }
-img {
+img,figure,video,iframe {
   max-width: 100% !important;
   height: auto;
+  margin: 0 auto;
 }
-iframe {
-  max-width: 100% !important;
-  height: auto;
-}
+
 a {
   color: #$textColor;
   text-decoration: none;
