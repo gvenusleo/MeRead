@@ -6,6 +6,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:html_main_element/html_main_element.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../models/post.dart';
 import '../provider/read_page_provider.dart';
@@ -135,6 +136,24 @@ ${context.watch<ReadPageProvider>().customCss}
       appBar: AppBar(
         title: Text(widget.post.feedName),
         actions: [
+          IconButton(
+            onPressed: () async {
+              await launchUrl(
+                Uri.parse(widget.post.link),
+                mode: LaunchMode.externalApplication,
+              );
+            },
+            icon: const Icon(Icons.open_in_browser_outlined),
+          ),
+          IconButton(
+            onPressed: () {
+              Share.share(
+                widget.post.link,
+                subject: widget.post.title,
+              );
+            },
+            icon: const Icon(Icons.share_outlined),
+          ),
           PopupMenuButton(
             position: PopupMenuPosition.under,
             itemBuilder: (BuildContext context) {
@@ -168,18 +187,6 @@ ${context.watch<ReadPageProvider>().customCss}
                   },
                   child: Text(
                     '复制链接',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
-                PopupMenuItem(
-                  onTap: () {
-                    Share.share(
-                      widget.post.link,
-                      subject: widget.post.title,
-                    );
-                  },
-                  child: Text(
-                    '分享文章',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
