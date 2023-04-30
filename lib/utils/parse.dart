@@ -56,7 +56,7 @@ Future<bool> parseFeedContent(Feed feed) async {
   try {
     final response = await Dio().get(feed.url);
     final postXmlString = utf8.decode(response.data);
-    final String? feedLastUpdated = await getFeedLatestPostPubDate(feed.id!);
+    final String? feedLastUpdated = await feed.getLatesPubDate();
     try {
       RssFeed rssFeed = RssFeed.parse(postXmlString);
       List<Future> futures = [];
@@ -98,7 +98,7 @@ Future<void> parseRSSPostFuturesItem(RssItem item, Feed feed) async {
     favorite: 0,
     openType: feed.openType,
   );
-  await insertPost(post);
+  await post.insertToDb();
 }
 
 Future<void> parseAtomPostFuturesItem(AtomItem item, Feed feed) async {
@@ -113,7 +113,7 @@ Future<void> parseAtomPostFuturesItem(AtomItem item, Feed feed) async {
     favorite: 0,
     openType: feed.openType,
   );
-  await insertPost(post);
+  await post.insertToDb();
 }
 
 // 解析 OPML 文件
@@ -153,7 +153,7 @@ Future<int> parseOpml(FilePickerResult result) async {
 Future<String> exportOpml() async {
   final head = OpmlHeadBuilder().title('Feeds From 悦读 App').build();
   final body = <OpmlOutline>[];
-  final Map<String, List<Feed>> feedMap = await feedsGroupByCategory();
+  final Map<String, List<Feed>> feedMap = await Feed.groupByCategory();
   for (var category in feedMap.keys) {
     var c = OpmlOutlineBuilder().title(category).text(category);
     for (var feed in feedMap[category]!) {

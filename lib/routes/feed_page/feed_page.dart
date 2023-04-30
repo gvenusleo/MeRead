@@ -23,33 +23,33 @@ class FeedPageState extends State<FeedPage> {
   bool onlyFavorite = false;
 
   Future<void> getPostList() async {
-    await postsByFeedId(widget.feed.id!).then(
-      (value) => setState(
-        () {
-          postList = value;
-        },
-      ),
-    );
+    await widget.feed.getAllPosts().then(
+          (value) => setState(
+            () {
+              postList = value;
+            },
+          ),
+        );
   }
 
   Future<void> getUnreadPostList() async {
-    unreadPostsByFeedId(widget.feed.id!).then(
-      (value) => setState(
-        () {
-          postList = value;
-        },
-      ),
-    );
+    widget.feed.getUnreadPosts().then(
+          (value) => setState(
+            () {
+              postList = value;
+            },
+          ),
+        );
   }
 
   Future<void> getFavoritePostList() async {
-    await favoritePostsByFeedId(widget.feed.id!).then(
-      (value) => setState(
-        () {
-          postList = value;
-        },
-      ),
-    );
+    await widget.feed.getAllfavoritePosts().then(
+          (value) => setState(
+            () {
+              postList = value;
+            },
+          ),
+        );
   }
 
   @override
@@ -108,7 +108,7 @@ class FeedPageState extends State<FeedPage> {
               return <PopupMenuEntry>[
                 PopupMenuItem(
                   onTap: () async {
-                    await markFeedPostsAsRead(widget.feed.id!);
+                    await widget.feed.markPostsAsRead();
                     if (onlyUnread) {
                       getUnreadPostList();
                     } else if (onlyFavorite) {
@@ -161,7 +161,7 @@ class FeedPageState extends State<FeedPage> {
                             ),
                             TextButton(
                               onPressed: () async {
-                                await deleteFeed(widget.feed.id!);
+                                await widget.feed.deleteFromDb();
                                 if (!mounted) return;
                                 Navigator.pop(context);
                                 Navigator.pop(context);
@@ -236,7 +236,7 @@ class FeedPageState extends State<FeedPage> {
                   }
                   // 标记文章为已读
                   if (postList[index].read == 0) {
-                    markPostAsRead(postList[index].id!);
+                    postList[index].markRead();
                   }
                 },
                 child: PostContainer(post: postList[index]),

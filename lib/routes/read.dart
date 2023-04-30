@@ -40,7 +40,7 @@ class ReadPageState extends State<ReadPage> {
           readabilityMainElement(document.documentElement!);
       widget.post.content = bestElemReadability.outerHtml;
       widget.post.read = 2;
-      updatePost(widget.post);
+      widget.post.updateToDb();
       setState(() {
         contentHtml = widget.post.content;
         _index = 1;
@@ -142,7 +142,7 @@ ${context.watch<ReadPageProvider>().customCss}
               return <PopupMenuEntry>[
                 PopupMenuItem(
                   onTap: () async {
-                    await markPostAsUnread(widget.post.id!);
+                    await widget.post.markUnread();
                   },
                   child: Text(
                     '标记未读',
@@ -151,7 +151,8 @@ ${context.watch<ReadPageProvider>().customCss}
                 ),
                 PopupMenuItem(
                   onTap: () async {
-                    await changePostFavorite(widget.post.id!);
+                    widget.post.favorite = widget.post.favorite == 0 ? 1 : 0;
+                    await widget.post.changeFavorite();
                     setState(() {
                       widget.post.favorite = widget.post.favorite == 0 ? 1 : 0;
                     });

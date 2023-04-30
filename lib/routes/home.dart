@@ -26,7 +26,7 @@ class HomePageState extends State<HomePage> {
   Map<int, int> unreadCount = {};
 
   Future<void> getFeedList() async {
-    await feedsGroupByCategory().then(
+    await Feed.groupByCategory().then(
       (value) => setState(
         () {
           feedListGroupByCategory = value;
@@ -36,7 +36,7 @@ class HomePageState extends State<HomePage> {
   }
 
   Future<void> getPostList() async {
-    await posts().then(
+    await Post.getAll().then(
       (value) => setState(
         () {
           postList = value;
@@ -46,7 +46,7 @@ class HomePageState extends State<HomePage> {
   }
 
   Future<void> getUnreadPost() async {
-    await unreadPosts().then(
+    await Post.getUnread().then(
       (value) => setState(
         () {
           postList = value;
@@ -56,7 +56,7 @@ class HomePageState extends State<HomePage> {
   }
 
   Future<void> getFavoritePost() async {
-    await favoritePosts().then(
+    await Post.getAllFavorite().then(
       (value) => setState(
         () {
           postList = value;
@@ -66,7 +66,7 @@ class HomePageState extends State<HomePage> {
   }
 
   Future<void> getUnreadCount() async {
-    await unreadPostCount().then(
+    await Feed.unreadPostCount().then(
       (value) => setState(
         () {
           unreadCount = value;
@@ -76,7 +76,7 @@ class HomePageState extends State<HomePage> {
   }
 
   Future<void> refresh() async {
-    List<Feed> feedList = await feeds();
+    List<Feed> feedList = await Feed.getAll();
     int failCount = 0;
     await Future.wait(
       feedList.map(
@@ -178,7 +178,7 @@ class HomePageState extends State<HomePage> {
               return <PopupMenuEntry>[
                 PopupMenuItem(
                   onTap: () async {
-                    await markAllPostsAsRead();
+                    await Post.markAllRead();
                     if (onlyUnread) {
                       getUnreadPost();
                     } else if (onlyFavorite) {
@@ -314,7 +314,7 @@ class HomePageState extends State<HomePage> {
                   } else {
                     // 应用内打开：阅读器 or 标签页
                     final bool fullText =
-                        await feedFullText(postList[index].feedId) == 1;
+                        await postList[index].getFullText() == 1;
                     if (!mounted) return;
                     Navigator.push(
                       context,
@@ -338,7 +338,7 @@ class HomePageState extends State<HomePage> {
                   }
                   // 标记文章为已读
                   if (postList[index].read == 0) {
-                    markPostAsRead(postList[index].id!);
+                    postList[index].markRead();
                   }
                 },
                 child: PostContainer(post: postList[index]),
