@@ -169,9 +169,6 @@ ${context.watch<ReadPageProvider>().customCss}
                   onTap: () async {
                     widget.post.favorite = widget.post.favorite == 0 ? 1 : 0;
                     await widget.post.changeFavorite();
-                    setState(() {
-                      widget.post.favorite = widget.post.favorite == 0 ? 1 : 0;
-                    });
                   },
                   child: Text(
                     widget.post.favorite == 1 ? '取消收藏' : '收藏文章',
