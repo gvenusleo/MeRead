@@ -1,5 +1,5 @@
 <div align='center'>
-<img src='./assets/images/meread_round.png' alt='MeRead' width='100px'/>
+<img src='./assets/meread_round.png' alt='MeRead' width='100px'/>
 <h1>MeRead - 悦读</h1>
 
 </p>
@@ -13,10 +13,10 @@
 </p>
 
 <p>
-<img alt="MeRead" src="./assets/images/app1.jpg" width="204">
-<img alt="MeRead" src="./assets/images/app2.jpg" width="204">
-<img alt="MeRead" src="./assets/images/app3.jpg" width="204">
-<img alt="MeRead" src="./assets/images/app4.jpg" width="204">
+<img alt="MeRead" src="./assets/app1.jpg" width="200">
+<img alt="MeRead" src="./assets/app2.jpg" width="200">
+<img alt="MeRead" src="./assets/app3.jpg" width="200">
+<img alt="MeRead" src="./assets/app4.jpg" width="200">
 </p>
 </div>
 
@@ -30,7 +30,7 @@
 - [x] 三种阅读模式：阅读器、应用内标签页、系统浏览器
 - [x] 未读筛选、文章收藏、订阅源分组
 - [x] 适配深色模式
-- [x] 适配 Material You
+- [x] 适配 Material You，支持壁纸动态取色
 - [ ] 多语言支持
 
 ## 致谢

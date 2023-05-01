@@ -17,7 +17,7 @@ class AboutPage extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(0, 24, 0, 8),
               child: CircleAvatar(
                 radius: 50,
-                backgroundImage: AssetImage('assets/images/meread.png'),
+                backgroundImage: AssetImage('assets/meread.png'),
               ),
             ),
             const Center(
@@ -29,7 +29,7 @@ class AboutPage extends StatelessWidget {
             const SizedBox(height: 8),
             const Center(
               child: Text(
-                'V 0.3.3',
+                'V 0.4.0',
                 style: TextStyle(fontSize: 16),
               ),
             ),
