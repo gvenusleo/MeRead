@@ -10,9 +10,9 @@ ThemeData lightTheme(BuildContext context, ColorScheme? lightDynamic) {
     colorScheme:
         context.watch<ThemeProvider>().isDynamicColor ? lightDynamic : null,
     colorSchemeSeed:
-        (context.watch<ThemeProvider>().isDynamicColor || lightDynamic == null)
-            ? null
-            : Colors.indigo,
+        (!context.watch<ThemeProvider>().isDynamicColor || lightDynamic == null)
+            ? Colors.indigo
+            : null,
     listTileTheme: const ListTileThemeData(
       contentPadding: EdgeInsets.symmetric(horizontal: 24),
     ),
@@ -27,9 +27,9 @@ ThemeData darkTheme(BuildContext context, ColorScheme? darkDynamic) {
     colorScheme:
         context.watch<ThemeProvider>().isDynamicColor ? darkDynamic : null,
     colorSchemeSeed:
-        (context.watch<ThemeProvider>().isDynamicColor || darkDynamic == null)
-            ? null
-            : Colors.indigo,
+        (!context.watch<ThemeProvider>().isDynamicColor || darkDynamic == null)
+            ? Colors.indigo
+            : null,
     listTileTheme: const ListTileThemeData(
       contentPadding: EdgeInsets.symmetric(horizontal: 24),
     ),
