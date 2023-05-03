@@ -29,7 +29,7 @@ class _ThemeSettingPageState extends State<ThemeSettingPage> {
               title: Text(themeMode[index]),
               onChanged: (int? value) async {
                 if (value != null) {
-                  context.read<ThemeProvider>().setThemeIndexState(value);
+                  context.read<ThemeProvider>().changeThemeIndex(value);
                 }
               },
             );

@@ -1,63 +1,44 @@
 import 'package:flutter/material.dart';
 
-import '../data/setting.dart';
+import '../global/global.dart';
 
 class ReadPageProvider extends ChangeNotifier {
-  ReadPageProvider() {
-    initData();
-  }
+  int fontSize = prefs.getInt('fontSize') ?? 18;
+  double lineHeight = prefs.getDouble('lineheight') ?? 1.5;
+  int pagePadding = prefs.getInt('pagePadding') ?? 18;
+  String textAlign = prefs.getString('textAlign') ?? 'justify';
+  String customCss = prefs.getString('customCss') ?? '';
 
-  int fontSize = 18;
-  double lineHeight = 1.5;
-  int pagePadding = 18;
-  String textAlign = 'justify';
-  String customCss = '';
-
-  Future<void> initData() async {
-    final int size = await getFontSize();
-    final double height = await getLineheight();
-    final int padding = await getPagePadding();
-    final String align = await getTextAlign();
-    final String css = await getCustomCss();
-    setState(() {
-      fontSize = size;
-      lineHeight = height;
-      pagePadding = padding;
-      textAlign = align;
-      customCss = css;
-    });
-  }
-
-  Future<void> setFontSizeState(int size) async {
-    await setFontSize(size);
+  Future<void> changeFontSize(int size) async {
+    await prefs.setInt('fontSize', size);
     setState(() {
       fontSize = size;
     });
   }
 
-  Future<void> setLineHeightState(double height) async {
-    await setLineheight(height);
+  Future<void> changeLineHeight(double height) async {
+    await prefs.setDouble('lineheight', height);
     setState(() {
       lineHeight = height;
     });
   }
 
-  Future<void> setPagePaddingState(int padding) async {
-    await setPagePadding(padding);
+  Future<void> changePagePadding(int padding) async {
+    await prefs.setInt('pagePadding', padding);
     setState(() {
       pagePadding = padding;
     });
   }
 
-  Future<void> setTextAlignState(String align) async {
-    await setTextAlign(align);
+  Future<void> changeTextAlign(String align) async {
+    await prefs.setString('textAlign', align);
     setState(() {
       textAlign = align;
     });
   }
 
-  Future<void> setCustomCssState(String css) async {
-    await setCustomCss(css);
+  Future<void> changeCustomCss(String css) async {
+    await prefs.setString('customCss', css);
     setState(() {
       customCss = css;
     });

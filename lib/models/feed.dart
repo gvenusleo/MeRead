@@ -1,7 +1,7 @@
 // 定义 Feed 类
 import 'package:sqflite/sqflite.dart';
 
-import '../data/db.dart';
+import '../db/db.dart';
 import 'post.dart';
 
 class Feed {

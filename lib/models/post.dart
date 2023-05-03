@@ -1,7 +1,7 @@
 // 定义 Post 类
 import 'package:sqflite/sqflite.dart';
 
-import '../data/db.dart';
+import '../db/db.dart';
 
 class Post {
   int? id;

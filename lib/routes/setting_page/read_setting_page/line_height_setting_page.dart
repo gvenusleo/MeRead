@@ -29,7 +29,7 @@ class LineHeightSettingPage extends StatelessWidget {
               title: Text(lineHeightMap.values.toList()[index]),
               onChanged: (double? value) async {
                 if (value != null) {
-                  context.read<ReadPageProvider>().setLineHeightState(value);
+                  context.read<ReadPageProvider>().changeLineHeight(value);
                 }
               },
             );

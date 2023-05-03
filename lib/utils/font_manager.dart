@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
-import 'package:meread/data/setting.dart';
 
+import '../global/global.dart';
 import 'dir.dart';
 
 // 读取所有字体文件，注册到系统中
@@ -25,7 +25,7 @@ Future<List<String>> readAllFont() async {
 
 // 读取主题字体文件，注册到系统中
 Future<void> readThemeFont() async {
-  final String themeFont = await getThemeFont();
+  final String themeFont = prefs.getString('themeFont') ?? '默认字体';
   if (themeFont != '默认字体') {
     final fontFileDir = Directory(await getFontDir());
     final fontFile = File('${fontFileDir.path}/$themeFont');

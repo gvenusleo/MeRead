@@ -1,43 +1,27 @@
 import 'package:flutter/material.dart';
-
-import '../data/setting.dart';
+import '../../global/global.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  ThemeProvider() {
-    initData();
-  }
+  int themeIndex = prefs.getInt('themeIndex') ?? 2;
+  String themeFont = prefs.getString('themeFont') ?? '默认字体';
+  bool isDynamicColor = prefs.getBool('dynamicColor') ?? false;
 
-  int themeIndex = 0;
-  String themeFont = '默认字体';
-  bool isDynamicColor = false;
-
-  Future<void> initData() async {
-    final int index = await getThemeIndex();
-    final String font = await getThemeFont();
-    final bool dynamicColor = await getDynamicColor();
-    setState(() {
-      themeIndex = index;
-      themeFont = font;
-      isDynamicColor = dynamicColor;
-    });
-  }
-
-  Future<void> setThemeIndexState(int index) async {
-    await setThemeIndex(index);
+  Future<void> changeThemeIndex(int index) async {
+    await prefs.setInt('themeIndex', index);
     setState(() {
       themeIndex = index;
     });
   }
 
   Future<void> setThemeFontState(String font) async {
-    await setThemeFont(font);
+    await prefs.setString('themeFont', font);
     setState(() {
       themeFont = font;
     });
   }
 
   Future<void> setDynamicColorState(bool dynamicColor) async {
-    await setDynamicColor(dynamicColor);
+    await prefs.setBool('dynamicColor', dynamicColor);
     setState(() {
       isDynamicColor = dynamicColor;
     });

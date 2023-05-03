@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:meread/global/global.dart';
 import 'package:meread/provider/read_page_provider.dart';
 import 'package:meread/utils/font_manager.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +26,7 @@ Future<void> main() async {
   SystemChrome.setEnabledSystemUIMode(
     SystemUiMode.edgeToEdge, // 适配 EdgeToEdge
   );
+  await init(); // 初始化全局变量
   await readThemeFont(); // 读取主题字体
   runApp(
     MultiProvider(
@@ -37,19 +39,8 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<ThemeProvider>().initData();
-  }
 
   @override
   Widget build(BuildContext context) {

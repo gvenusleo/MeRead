@@ -61,7 +61,7 @@ class CustomCssPageState extends State<CustomCssPage> {
                   onPressed: () async {
                     await context
                         .read<ReadPageProvider>()
-                        .setCustomCssState(_customCssController.text);
+                        .changeCustomCss(_customCssController.text);
                     if (!mounted) return;
                     Navigator.pop(context);
                   },

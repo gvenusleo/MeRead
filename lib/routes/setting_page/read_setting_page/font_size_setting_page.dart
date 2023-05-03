@@ -29,7 +29,7 @@ class FontSizeSettingPage extends StatelessWidget {
               title: Text(fontSizeMap.values.toList()[index]),
               onChanged: (int? value) {
                 if (value != null) {
-                  context.read<ReadPageProvider>().setFontSizeState(value);
+                  context.read<ReadPageProvider>().changeFontSize(value);
                 }
               },
             );

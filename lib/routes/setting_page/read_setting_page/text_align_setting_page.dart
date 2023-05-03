@@ -28,7 +28,7 @@ class TextAlignSettingPage extends StatelessWidget {
               title: Text(textAlignMap.values.toList()[index]),
               onChanged: (String? value) {
                 if (value != null) {
-                  context.read<ReadPageProvider>().setTextAlignState(value);
+                  context.read<ReadPageProvider>().changeTextAlign(value);
                 }
               },
             );

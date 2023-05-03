@@ -29,7 +29,7 @@ class PagePaddingSettingPage extends StatelessWidget {
               title: Text(pagePaddingMap.values.toList()[index]),
               onChanged: (int? value) {
                 if (value != null) {
-                  context.read<ReadPageProvider>().setPagePaddingState(value);
+                  context.read<ReadPageProvider>().changePagePadding(value);
                 }
               },
             );
