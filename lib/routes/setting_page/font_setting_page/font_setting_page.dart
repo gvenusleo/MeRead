@@ -31,7 +31,7 @@ class _FontSettingPageState extends State<FontSettingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('应用字体'),
+        title: const Text('全局字体'),
         actions: [
           // 添加字体
           IconButton(
@@ -73,8 +73,7 @@ class _FontSettingPageState extends State<FontSettingPage> {
                   Divider(),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    child: Text(
-                        '* 点击右上角导入字体\n* 仅支持 otf/ttf/ttc 格式的字体文件\n* 该字体仅用于应用界面字体，阅读字体另行设置'),
+                    child: Text('* 点击右上角导入字体\n* 仅支持 otf/ttf/ttc 格式的字体文件'),
                   ),
                 ],
               );

@@ -1,20 +1,17 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:html/parser.dart' as html_parser;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:html_main_element/html_main_element.dart';
-import 'package:meread/global/global.dart';
-import 'package:meread/provider/theme_provider.dart';
-import 'package:meread/utils/dir.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../models/post.dart';
 import '../provider/read_page_provider.dart';
+import '../provider/theme_provider.dart';
+import '../utils/dir.dart';
 
 class ReadPage extends StatefulWidget {
   const ReadPage({
@@ -32,15 +29,17 @@ class ReadPage extends StatefulWidget {
 class ReadPageState extends State<ReadPage> {
   int _index = 0; // 堆叠索引
   String contentHtml = ''; // 内容 html
-  String fontDir = ''; // 字体路径
+  String? fontDir; // 字体路径
 
   // 根据 url 获取 html 内容
   Future<void> initData(String url) async {
-    getFontDir().then((value) {
-      setState(() {
-        fontDir = value;
+    if (context.read<ThemeProvider>().themeFont != '默认字体') {
+      getFontDir().then((value) {
+        setState(() {
+          fontDir = value;
+        });
       });
-    });
+    }
     if (widget.fullText && widget.post.read != 2 && widget.post.openType == 0) {
       setState(() {
         _index = 0;
@@ -233,6 +232,23 @@ ${context.watch<ReadPageProvider>().customCss}
         ),
       );
     }
+    if (context.read<ThemeProvider>().themeFont != '默认字体' && fontDir == null) {
+      return Center(
+        child: SizedBox(
+          height: 200,
+          width: 200,
+          child: Column(
+            children: const [
+              CircularProgressIndicator(
+                strokeWidth: 3,
+              ),
+              SizedBox(height: 12),
+              Text('加载字体'),
+            ],
+          ),
+        ),
+      );
+    }
     return InAppWebView(
       initialData: widget.post.openType == 0
           ? InAppWebViewInitialData(
@@ -252,7 +268,7 @@ $contentHtml
 </body>
 </html>
 ''',
-              baseUrl: Uri.directory(fontDir),
+              baseUrl: Uri.directory(fontDir!),
             )
           : null,
       initialUrlRequest: widget.post.openType != 0

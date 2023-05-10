@@ -66,7 +66,7 @@ class _SettingPageState extends State<SettingPage> {
             ListTile(
               leading: const Icon(Icons.font_download_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
-              title: const Text('应用字体'),
+              title: const Text('全局字体'),
               subtitle: Text(
                 context.watch<ThemeProvider>().themeFont.split('.').first,
               ),
