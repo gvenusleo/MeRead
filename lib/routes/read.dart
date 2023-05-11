@@ -216,12 +216,12 @@ ${context.watch<ReadPageProvider>().customCss}
 
   Widget _buildBody(String cssStr, String titleStr) {
     if (_index == 0) {
-      return Center(
+      return const Center(
         child: SizedBox(
           height: 200,
           width: 200,
           child: Column(
-            children: const [
+            children: [
               CircularProgressIndicator(
                 strokeWidth: 3,
               ),
@@ -233,12 +233,12 @@ ${context.watch<ReadPageProvider>().customCss}
       );
     }
     if (context.read<ThemeProvider>().themeFont != '默认字体' && fontDir == null) {
-      return Center(
+      return const Center(
         child: SizedBox(
           height: 200,
           width: 200,
           child: Column(
-            children: const [
+            children: [
               CircularProgressIndicator(
                 strokeWidth: 3,
               ),

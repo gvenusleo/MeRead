@@ -38,7 +38,6 @@ dependencies:
   flutter_localizations: # 本地化
     sdk: flutter         # 本地化
   sqflite: ^2.1.0 # 数据库
-  webfeed: ^0.7.0 # Feed 解析
   flutter_inappwebview: ^5.7.1  # 创建 WebView
   path: ^1.8.2
   shared_preferences: ^2.0.15 # 本地存储
@@ -52,6 +51,8 @@ dependencies:
   html_main_element: ^2.1.0 # 全文获取（Readability）
   dio: ^5.1.1 # 网络请求
   dynamic_color: ^1.6.3
+  xml: ^5.4.1
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:

@@ -65,11 +65,11 @@ class _FontSettingPageState extends State<FontSettingPage> {
               );
             }
             if (index == _fontNameList.length + 1) {
-              return Column(
+              return const Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Divider(),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
