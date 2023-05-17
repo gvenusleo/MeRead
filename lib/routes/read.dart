@@ -77,7 +77,7 @@ class ReadPageState extends State<ReadPage> {
   src: url('${widget.fontDir}/${context.watch<ThemeProvider>().themeFont}');
 }
 body {
-  font-family: 'customFont', serif;
+  font-family: 'customFont';
   font-size: ${context.watch<ReadPageProvider>().fontSize}px;
   line-height: ${context.watch<ReadPageProvider>().lineHeight};
   color: #$textColor;
