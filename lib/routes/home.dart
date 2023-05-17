@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../widgets/post_container.dart';
 import '../models/feed.dart';
+import '../utils/dir.dart';
 import '../utils/parse.dart';
 import 'feed_page/add_feed_page.dart';
 import 'feed_page/feed_page.dart';
@@ -23,6 +24,7 @@ class HomePageState extends State<HomePage> {
   bool onlyUnread = false;
   bool onlyFavorite = false;
   Map<int, int> unreadCount = {};
+  String? fontDir;
 
   Future<void> getFeedList() async {
     await Feed.groupByCategory().then(
@@ -118,12 +120,21 @@ class HomePageState extends State<HomePage> {
     }
   }
 
+  void initFontDir() {
+    getFontDir().then((value) {
+      setState(() {
+        fontDir = value;
+      });
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     getFeedList();
     getPostList();
     getUnreadCount();
+    initFontDir();
   }
 
   @override
@@ -315,12 +326,14 @@ class HomePageState extends State<HomePage> {
                     final bool fullText =
                         await postList[index].getFullText() == 1;
                     if (!mounted) return;
+                    if (fontDir == null) return;
                     Navigator.push(
                       context,
                       CupertinoPageRoute(
                         builder: (context) => ReadPage(
                           post: postList[index],
                           fullText: fullText,
+                          fontDir: fontDir!,
                         ),
                       ),
                     ).then((value) {

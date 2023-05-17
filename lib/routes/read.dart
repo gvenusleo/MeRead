@@ -11,16 +11,17 @@ import 'package:url_launcher/url_launcher.dart';
 import '../models/post.dart';
 import '../provider/read_page_provider.dart';
 import '../provider/theme_provider.dart';
-import '../utils/dir.dart';
 
 class ReadPage extends StatefulWidget {
   const ReadPage({
     super.key,
     required this.post,
     required this.fullText,
+    required this.fontDir,
   });
   final Post post;
   final bool fullText;
+  final String fontDir;
 
   @override
   ReadPageState createState() => ReadPageState();
@@ -29,17 +30,9 @@ class ReadPage extends StatefulWidget {
 class ReadPageState extends State<ReadPage> {
   int _index = 0; // 堆叠索引
   String contentHtml = ''; // 内容 html
-  String? fontDir; // 字体路径
 
   // 根据 url 获取 html 内容
   Future<void> initData(String url) async {
-    if (context.read<ThemeProvider>().themeFont != '默认字体') {
-      getFontDir().then((value) {
-        setState(() {
-          fontDir = value;
-        });
-      });
-    }
     if (widget.fullText && widget.post.read != 2 && widget.post.openType == 0) {
       setState(() {
         _index = 0;
@@ -81,7 +74,7 @@ class ReadPageState extends State<ReadPage> {
     final String cssStr = '''
 @font-face {
   font-family: 'customFont';
-  src: url('$fontDir/${context.watch<ThemeProvider>().themeFont}');
+  src: url('${widget.fontDir}/${context.watch<ThemeProvider>().themeFont}');
 }
 body {
   font-family: 'customFont', serif;
@@ -232,23 +225,6 @@ ${context.watch<ReadPageProvider>().customCss}
         ),
       );
     }
-    if (context.read<ThemeProvider>().themeFont != '默认字体' && fontDir == null) {
-      return const Center(
-        child: SizedBox(
-          height: 200,
-          width: 200,
-          child: Column(
-            children: [
-              CircularProgressIndicator(
-                strokeWidth: 3,
-              ),
-              SizedBox(height: 12),
-              Text('加载字体'),
-            ],
-          ),
-        ),
-      );
-    }
     return InAppWebView(
       initialData: widget.post.openType == 0
           ? InAppWebViewInitialData(
@@ -268,7 +244,7 @@ $contentHtml
 </body>
 </html>
 ''',
-              baseUrl: Uri.directory(fontDir!),
+              baseUrl: Uri.directory(widget.fontDir),
             )
           : null,
       initialUrlRequest: widget.post.openType != 0

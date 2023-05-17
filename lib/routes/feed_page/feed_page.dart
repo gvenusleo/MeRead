@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/feed.dart';
+import '../../utils/dir.dart';
 import '../../widgets/post_container.dart';
 import '../../utils/parse.dart';
 import '../read.dart';
@@ -20,6 +21,7 @@ class FeedPageState extends State<FeedPage> {
   List<Post> postList = [];
   bool onlyUnread = false;
   bool onlyFavorite = false;
+  String? fontDir;
 
   Future<void> getPostList() async {
     await widget.feed.getAllPosts().then(
@@ -49,6 +51,14 @@ class FeedPageState extends State<FeedPage> {
             },
           ),
         );
+  }
+
+  void initFontDir() {
+    getFontDir().then((value) {
+      setState(() {
+        fontDir = value;
+      });
+    });
   }
 
   @override
@@ -215,12 +225,14 @@ class FeedPageState extends State<FeedPage> {
                       mode: LaunchMode.externalApplication,
                     );
                   } else {
+                    if (fontDir == null) return;
                     Navigator.push(
                       context,
                       CupertinoPageRoute(
                         builder: (context) => ReadPage(
                           post: postList[index],
                           fullText: widget.feed.fullText == 1,
+                          fontDir: fontDir!,
                         ),
                       ),
                     ).then((value) {
