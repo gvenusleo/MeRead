@@ -68,8 +68,16 @@ class MyApp extends StatelessWidget {
             ThemeMode.light,
             ThemeMode.dark,
             ThemeMode.system,
-          ][Provider.of<ThemeProvider>(context).themeIndex],
+          ][context.watch<ThemeProvider>().themeIndex],
           home: const HomePage(),
+          builder: (context, child) {
+            return MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                textScaleFactor: context.watch<ThemeProvider>().textScaleFactor,
+              ),
+              child: child!,
+            );
+          },
         );
       },
     );

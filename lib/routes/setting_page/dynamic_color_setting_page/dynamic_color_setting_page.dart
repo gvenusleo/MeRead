@@ -17,7 +17,7 @@ class DynamicColorSettingPage extends StatelessWidget {
             SwitchListTile(
               value: context.watch<ThemeProvider>().isDynamicColor,
               onChanged: (bool value) async {
-                context.read<ThemeProvider>().setDynamicColorState(value);
+                context.read<ThemeProvider>().changeDynamicColor(value);
               },
               title: const Text('壁纸动态取色'),
               subtitle: const Text('主题颜色根据桌面壁纸自动变化'),

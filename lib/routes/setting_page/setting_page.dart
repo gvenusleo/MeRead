@@ -15,6 +15,7 @@ import '../../utils/parse.dart';
 import '../../widgets/list_tile_group_title.dart';
 import 'about_page/about_page.dart';
 import 'dynamic_color_setting_page/dynamic_color_setting_page.dart';
+import 'text_scale_factor_setting_page/text_scale_factor_setting_page.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -73,6 +74,22 @@ class _SettingPageState extends State<SettingPage> {
               onTap: () {
                 Navigator.push(context, CupertinoPageRoute(builder: (context) {
                   return const FontSettingPage();
+                }));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.text_fields_outlined),
+              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
+              title: const Text('全局缩放'),
+              subtitle: Text(
+                context
+                    .watch<ThemeProvider>()
+                    .textScaleFactor
+                    .toStringAsFixed(1),
+              ),
+              onTap: () {
+                Navigator.push(context, CupertinoPageRoute(builder: (context) {
+                  return TextScaleFactorSettingPage();
                 }));
               },
             ),

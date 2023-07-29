@@ -59,7 +59,7 @@ class _FontSettingPageState extends State<FontSettingPage> {
                 ),
                 onChanged: (value) {
                   if (value != null) {
-                    context.read<ThemeProvider>().setThemeFontState(value);
+                    context.read<ThemeProvider>().changeThemeFont(value);
                   }
                 },
               );
@@ -87,7 +87,7 @@ class _FontSettingPageState extends State<FontSettingPage> {
               ),
               onChanged: (value) {
                 if (value != null) {
-                  context.read<ThemeProvider>().setThemeFontState(value);
+                  context.read<ThemeProvider>().changeThemeFont(value);
                 }
               },
               secondary: IconButton(
@@ -112,7 +112,7 @@ class _FontSettingPageState extends State<FontSettingPage> {
                                 _fontNameList[index - 1]) {
                               context
                                   .read<ThemeProvider>()
-                                  .setThemeFontState('思源黑体');
+                                  .changeThemeFont('思源黑体');
                             }
                             // 删除字体
                             await deleteFont(_fontNameList[index - 1]);

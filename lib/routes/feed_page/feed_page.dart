@@ -65,6 +65,7 @@ class FeedPageState extends State<FeedPage> {
   void initState() {
     super.initState();
     getPostList();
+    initFontDir();
   }
 
   @override
