@@ -13,10 +13,10 @@
 </p>
 
 <p>
-<img alt="MeRead" src="./assets/app1.jpg" width="200">
-<img alt="MeRead" src="./assets/app2.jpg" width="200">
-<img alt="MeRead" src="./assets/app3.jpg" width="200">
-<img alt="MeRead" src="./assets/app4.jpg" width="200">
+<img alt="MeRead" src="./assets/app1.png" width="200">
+<img alt="MeRead" src="./assets/app2.png" width="200">
+<img alt="MeRead" src="./assets/app3.png" width="200">
+<img alt="MeRead" src="./assets/app4.png" width="200">
 </p>
 </div>
 
@@ -26,7 +26,8 @@
 - [x] 自动获取全文
 - [x] 三种阅读模式：阅读器、应用内标签页、系统浏览器
 - [x] 支持未读筛选、文章收藏、订阅源分组
-- [x] 自定义全局字体
+- [x] 通过关键词屏蔽文章
+- [x] 自定义全局字体和全局缩放
 - [x] 自定义阅读页面字体大小、行间距、页面边距、文字对齐、CSS
 - [x] 适配深色模式
 - [x] 适配 Material You，支持壁纸动态取色
