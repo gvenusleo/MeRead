@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:meread/global/global.dart';
 import 'package:meread/models/feed.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/webfeed/webfeed.dart';
@@ -83,7 +84,18 @@ Future<bool> parseFeedContent(Feed feed) async {
 }
 
 Future<void> parseRSSPostFuturesItem(RssItem item, Feed feed) async {
+  List<String> blockList = prefs.getStringList('blockList') ?? [];
   String title = item.title!.trim();
+  bool isBlock = false;
+  for (String block in blockList) {
+    if (title.contains(block)) {
+      isBlock = true;
+      break;
+    }
+  }
+  if (isBlock) {
+    return;
+  }
   Post post = Post(
     title: title,
     feedId: feed.id!,
@@ -99,8 +111,20 @@ Future<void> parseRSSPostFuturesItem(RssItem item, Feed feed) async {
 }
 
 Future<void> parseAtomPostFuturesItem(AtomItem item, Feed feed) async {
+  List<String> blockList = prefs.getStringList('blockList') ?? [];
+  String title = item.title!.trim();
+  bool isBlock = false;
+  for (String block in blockList) {
+    if (title.contains(block)) {
+      isBlock = true;
+      break;
+    }
+  }
+  if (isBlock) {
+    return;
+  }
   Post post = Post(
-    title: item.title!,
+    title: title,
     feedId: feed.id!,
     feedName: feed.name,
     link: item.links![0].href!,

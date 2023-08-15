@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:meread/provider/theme_provider.dart';
 import 'package:meread/routes/setting_page/about_page/about_page.dart';
+import 'package:meread/routes/setting_page/block_setting_page/block_setting_page.dart';
 import 'package:meread/routes/setting_page/dynamic_color_setting_page/dynamic_color_setting_page.dart';
 import 'package:meread/routes/setting_page/font_setting_page/font_setting_page.dart';
 import 'package:meread/routes/setting_page/read_setting_page/read_setting_page.dart';
@@ -81,10 +82,17 @@ class _SettingPageState extends State<SettingPage> {
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
               title: const Text('全局缩放'),
               subtitle: Text(
-                context
-                    .watch<ThemeProvider>()
-                    .textScaleFactor
-                    .toStringAsFixed(1),
+                {
+                      0.8: '最小',
+                      0.9: '较小',
+                      1.0: '适中',
+                      1.1: '较大',
+                      1.2: '最大',
+                    }[context
+                        .watch<ThemeProvider>()
+                        .textScaleFactor
+                        .toStringAsFixed(1)] ??
+                    '适中',
               ),
               onTap: () {
                 Navigator.push(context, CupertinoPageRoute(builder: (context) {
@@ -104,6 +112,16 @@ class _SettingPageState extends State<SettingPage> {
               },
             ),
             const ListTileGroupTitle(title: '数据管理'),
+            ListTile(
+              leading: const Icon(Icons.app_blocking_outlined),
+              title: const Text('屏蔽规则'),
+              subtitle: const Text('设置文章屏蔽规则'),
+              onTap: () {
+                Navigator.push(context, CupertinoPageRoute(builder: (context) {
+                  return const BlockSettingPage();
+                }));
+              },
+            ),
             ListTile(
               leading: const Icon(Icons.file_download_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
