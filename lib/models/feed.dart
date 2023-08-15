@@ -1,9 +1,8 @@
-// 定义 Feed 类
+import 'package:meread/db/db.dart';
+import 'package:meread/models/post.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../db/db.dart';
-import 'post.dart';
-
+// 定义 Feed 类
 class Feed {
   int? id;
   String name; // 订阅源名称

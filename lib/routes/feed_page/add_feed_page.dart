@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '../../utils/parse.dart';
-import '../../models/feed.dart';
-import 'edit_feed_page.dart';
+import 'package:meread/models/feed.dart';
+import 'package:meread/routes/feed_page/edit_feed_page.dart';
+import 'package:meread/utils/parse.dart';
 
 class AddFeedPage extends StatefulWidget {
   const AddFeedPage({super.key});

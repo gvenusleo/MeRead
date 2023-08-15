@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:html_main_element/html_main_element.dart';
+import 'package:meread/models/post.dart';
+import 'package:meread/provider/read_page_provider.dart';
+import 'package:meread/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../models/post.dart';
-import '../provider/read_page_provider.dart';
-import '../provider/theme_provider.dart';
 
 class ReadPage extends StatefulWidget {
   const ReadPage({

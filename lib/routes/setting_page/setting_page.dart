@@ -3,19 +3,18 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meread/provider/theme_provider.dart';
+import 'package:meread/routes/setting_page/about_page/about_page.dart';
+import 'package:meread/routes/setting_page/dynamic_color_setting_page/dynamic_color_setting_page.dart';
 import 'package:meread/routes/setting_page/font_setting_page/font_setting_page.dart';
 import 'package:meread/routes/setting_page/read_setting_page/read_setting_page.dart';
+import 'package:meread/routes/setting_page/text_scale_factor_setting_page/text_scale_factor_setting_page.dart';
 import 'package:meread/routes/setting_page/theme_setting_page/theme_setting_page.dart';
+import 'package:meread/utils/parse.dart';
+import 'package:meread/widgets/list_tile_group_title.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-
-import '../../provider/theme_provider.dart';
-import '../../utils/parse.dart';
-import '../../widgets/list_tile_group_title.dart';
-import 'about_page/about_page.dart';
-import 'dynamic_color_setting_page/dynamic_color_setting_page.dart';
-import 'text_scale_factor_setting_page/text_scale_factor_setting_page.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});

@@ -2,15 +2,14 @@ import 'dart:io';
 
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:meread/global/global.dart';
+import 'package:meread/provider/read_page_provider.dart';
+import 'package:meread/provider/theme_provider.dart';
+import 'package:meread/routes/home.dart';
+import 'package:meread/theme/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
-import 'global/global.dart';
-import 'provider/read_page_provider.dart';
-import 'provider/theme_provider.dart';
-import 'theme/theme.dart';
-import 'routes/home.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

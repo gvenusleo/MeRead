@@ -1,8 +1,7 @@
-// 定义 Post 类
+import 'package:meread/db/db.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../db/db.dart';
-
+// 定义 Post 类
 class Post {
   int? id;
   int feedId; // 订阅源 ID

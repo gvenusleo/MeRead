@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../global/global.dart';
+import 'package:meread/global/global.dart';
 
 class ReadPageProvider extends ChangeNotifier {
   int fontSize = prefs.getInt('fontSize') ?? 18;

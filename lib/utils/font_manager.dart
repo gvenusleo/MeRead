@@ -2,9 +2,8 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
-
-import '../global/global.dart';
-import 'dir.dart';
+import 'package:meread/global/global.dart';
+import 'package:meread/utils/dir.dart';
 
 // 读取所有字体文件，注册到系统中
 Future<List<String>> readAllFont() async {

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:meread/provider/theme_provider.dart';
+import 'package:meread/utils/font_manager.dart';
 import 'package:provider/provider.dart';
-
-import '../../../provider/theme_provider.dart';
-import '../../../utils/font_manager.dart';
 
 class FontSettingPage extends StatefulWidget {
   const FontSettingPage({Key? key}) : super(key: key);

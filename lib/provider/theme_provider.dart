@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../global/global.dart';
+import 'package:meread/global/global.dart';
 
 class ThemeProvider extends ChangeNotifier {
   int themeIndex = prefs.getInt('themeIndex') ?? 2;

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../../models/feed.dart';
-import '../../widgets/list_tile_group_title.dart';
+import 'package:meread/models/feed.dart';
+import 'package:meread/widgets/list_tile_group_title.dart';
 
 class EditFeedPage extends StatefulWidget {
   const EditFeedPage({Key? key, required this.feed}) : super(key: key);
