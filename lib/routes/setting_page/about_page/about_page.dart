@@ -29,7 +29,7 @@ class AboutPage extends StatelessWidget {
             const SizedBox(height: 8),
             const Center(
               child: Text(
-                'v 0.4.3',
+                'v 0.4.4',
                 style: TextStyle(fontSize: 16),
               ),
             ),

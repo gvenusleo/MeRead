@@ -157,7 +157,7 @@ class _SettingPageState extends State<SettingPage> {
               onTap: () => showLicensePage(
                 context: context,
                 applicationName: 'MeRead 悦读',
-                applicationVersion: 'v 0.4.3',
+                applicationVersion: 'v 0.4.4',
                 applicationIcon: Container(
                   width: 64,
                   height: 64,
