@@ -22,14 +22,14 @@ class AboutPage extends StatelessWidget {
             ),
             const Center(
               child: Text(
-                '悦读 App',
+                'MeRead 悦读',
                 style: TextStyle(fontSize: 20),
               ),
             ),
             const SizedBox(height: 8),
             const Center(
               child: Text(
-                'V 0.4.3',
+                'v 0.4.3',
                 style: TextStyle(fontSize: 16),
               ),
             ),

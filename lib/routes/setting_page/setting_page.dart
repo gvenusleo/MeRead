@@ -114,6 +114,7 @@ class _SettingPageState extends State<SettingPage> {
             const ListTileGroupTitle(title: '数据管理'),
             ListTile(
               leading: const Icon(Icons.app_blocking_outlined),
+              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
               title: const Text('屏蔽规则'),
               subtitle: const Text('设置文章屏蔽规则'),
               onTap: () {
@@ -147,6 +148,30 @@ class _SettingPageState extends State<SettingPage> {
                   return const AboutPage();
                 }));
               },
+            ),
+            ListTile(
+              leading: const Icon(Icons.privacy_tip_outlined),
+              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
+              title: const Text('开源许可'),
+              subtitle: const Text('查看开源许可证'),
+              onTap: () => showLicensePage(
+                context: context,
+                applicationName: 'MeRead 悦读',
+                applicationVersion: 'v 0.4.3',
+                applicationIcon: Container(
+                  width: 64,
+                  height: 64,
+                  margin: const EdgeInsets.only(bottom: 8, top: 8),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                    image: DecorationImage(
+                      image: AssetImage('assets/meread.png'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                applicationLegalese: '© 2022 - 2023 悦读. All Rights Reserved',
+              ),
             ),
           ],
         ),
