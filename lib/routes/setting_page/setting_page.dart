@@ -88,10 +88,7 @@ class _SettingPageState extends State<SettingPage> {
                       1.0: '适中',
                       1.1: '较大',
                       1.2: '最大',
-                    }[context
-                        .watch<ThemeProvider>()
-                        .textScaleFactor
-                        .toStringAsFixed(1)] ??
+                    }[context.watch<ThemeProvider>().textScaleFactor] ??
                     '适中',
               ),
               onTap: () {
