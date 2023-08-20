@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meread/global/global.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutPage extends StatelessWidget {
@@ -27,10 +28,10 @@ class AboutPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            const Center(
+            Center(
               child: Text(
-                'v 0.4.4',
-                style: TextStyle(fontSize: 16),
+                applicationVersion,
+                style: const TextStyle(fontSize: 16),
               ),
             ),
             const Spacer(),

@@ -2,6 +2,7 @@ import 'package:meread/utils/font_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 late SharedPreferences prefs;
+String applicationVersion = 'v0.4.4';
 
 Future<void> init() async {
   prefs = await SharedPreferences.getInstance();

@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meread/global/global.dart';
 import 'package:meread/provider/theme_provider.dart';
 import 'package:meread/routes/setting_page/about_page/about_page.dart';
 import 'package:meread/routes/setting_page/block_setting_page/block_setting_page.dart';
@@ -136,6 +138,54 @@ class _SettingPageState extends State<SettingPage> {
             ),
             const ListTileGroupTitle(title: '其他'),
             ListTile(
+              leading: const Icon(Icons.update_outlined),
+              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
+              title: const Text('检查更新'),
+              subtitle: const Text('获取应用最新版本'),
+              onTap: () async {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text('正在检查更新……'),
+                    behavior: SnackBarBehavior.floating,
+                    duration: const Duration(seconds: 2),
+                    action: SnackBarAction(label: '确定', onPressed: () {}),
+                  ),
+                );
+                try {
+                  // 通过访问 https://github.com/gvenusleo/MeRead/releases/latest 获取最新版本号
+                  final Dio dio = Dio();
+                  final response = await dio.get(
+                    'https://github.com/gvenusleo/MeRead/releases/latest',
+                  );
+                  // 获取网页 title
+                  final String title =
+                      response.data.split('<title>')[1].split('</title>')[0];
+                  final String latestVersion = title.split(' ')[1];
+                  if (latestVersion == applicationVersion) {
+                    if (!mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: const Text('已是最新版本'),
+                        behavior: SnackBarBehavior.floating,
+                        duration: const Duration(seconds: 2),
+                        action: SnackBarAction(label: '确定', onPressed: () {}),
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  if (!mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text('检查更新失败'),
+                      behavior: SnackBarBehavior.floating,
+                      duration: const Duration(seconds: 2),
+                      action: SnackBarAction(label: '确定', onPressed: () {}),
+                    ),
+                  );
+                }
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.android_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
               title: const Text('关于应用'),
@@ -154,7 +204,7 @@ class _SettingPageState extends State<SettingPage> {
               onTap: () => showLicensePage(
                 context: context,
                 applicationName: 'MeRead 悦读',
-                applicationVersion: 'v 0.4.4',
+                applicationVersion: applicationVersion,
                 applicationIcon: Container(
                   width: 64,
                   height: 64,
