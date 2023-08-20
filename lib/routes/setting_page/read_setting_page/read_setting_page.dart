@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:meread/provider/read_page_provider.dart';
 import 'package:meread/routes/setting_page/read_setting_page/custom_css_page.dart';
 import 'package:meread/routes/setting_page/read_setting_page/font_size_setting_page.dart';
@@ -15,7 +16,7 @@ class ReadSettingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('阅读页面'),
+        title: Text(AppLocalizations.of(context)!.readingPage),
       ),
       body: SafeArea(
         child: ListView(
@@ -23,22 +24,22 @@ class ReadSettingPage extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.text_increase_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
-              title: const Text('字体大小'),
+              title: Text(AppLocalizations.of(context)!.fontSize),
               subtitle: Text(
                 {
-                      14: '最小',
-                      16: '较小',
-                      18: '适中',
-                      20: '较大',
-                      22: '最大',
+                      14: AppLocalizations.of(context)!.minimum,
+                      16: AppLocalizations.of(context)!.small,
+                      18: AppLocalizations.of(context)!.medium,
+                      20: AppLocalizations.of(context)!.large,
+                      22: AppLocalizations.of(context)!.maximum,
                     }[context.watch<ReadPageProvider>().fontSize] ??
-                    '适中',
+                    AppLocalizations.of(context)!.medium,
               ),
               onTap: () {
                 Navigator.push(
                   context,
                   CupertinoPageRoute(
-                    builder: (context) => FontSizeSettingPage(),
+                    builder: (context) => const FontSizeSettingPage(),
                   ),
                 );
               },
@@ -46,22 +47,22 @@ class ReadSettingPage extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.vertical_distribute_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
-              title: const Text('行高'),
+              title: Text(AppLocalizations.of(context)!.lineHeight),
               subtitle: Text(
                 {
-                      1.0: '最小',
-                      1.2: '较小',
-                      1.5: '适中',
-                      1.8: '较大',
-                      2.0: '最大',
+                      1.0: AppLocalizations.of(context)!.minimum,
+                      1.2: AppLocalizations.of(context)!.small,
+                      1.5: AppLocalizations.of(context)!.medium,
+                      1.8: AppLocalizations.of(context)!.large,
+                      2.0: AppLocalizations.of(context)!.maximum,
                     }[context.watch<ReadPageProvider>().lineHeight] ??
-                    '适中',
+                    AppLocalizations.of(context)!.medium,
               ),
               onTap: () {
                 Navigator.push(
                   context,
                   CupertinoPageRoute(
-                    builder: (context) => LineHeightSettingPage(),
+                    builder: (context) => const LineHeightSettingPage(),
                   ),
                 );
               },
@@ -69,22 +70,22 @@ class ReadSettingPage extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.space_bar_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
-              title: const Text('页面边距'),
+              title: Text(AppLocalizations.of(context)!.pagePadding),
               subtitle: Text(
                 {
-                      0: '最小',
-                      9: '较小',
-                      18: '适中',
-                      27: '较大',
-                      36: '最大',
+                      0: AppLocalizations.of(context)!.minimum,
+                      9: AppLocalizations.of(context)!.small,
+                      18: AppLocalizations.of(context)!.medium,
+                      27: AppLocalizations.of(context)!.large,
+                      36: AppLocalizations.of(context)!.maximum,
                     }[context.watch<ReadPageProvider>().pagePadding] ??
-                    '适中',
+                    AppLocalizations.of(context)!.medium,
               ),
               onTap: () {
                 Navigator.push(
                   context,
                   CupertinoPageRoute(
-                    builder: (context) => PagePaddingSettingPage(),
+                    builder: (context) => const PagePaddingSettingPage(),
                   ),
                 );
               },
@@ -92,21 +93,21 @@ class ReadSettingPage extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.format_align_left_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
-              title: const Text('文字对齐'),
+              title: Text(AppLocalizations.of(context)!.textAlignment),
               subtitle: Text(
                 {
-                      'left': '左对齐',
-                      'right': '右对齐',
-                      'center': '居中对齐',
-                      'justify': '两端对齐',
+                      'left': AppLocalizations.of(context)!.leftAlignment,
+                      'right': AppLocalizations.of(context)!.rightAlignment,
+                      'center': AppLocalizations.of(context)!.centerAlignment,
+                      'justify': AppLocalizations.of(context)!.justifyAlignment,
                     }[context.watch<ReadPageProvider>().textAlign] ??
-                    '两端对齐',
+                    AppLocalizations.of(context)!.justifyAlignment,
               ),
               onTap: () {
                 Navigator.push(
                   context,
                   CupertinoPageRoute(
-                    builder: (context) => TextAlignSettingPage(),
+                    builder: (context) => const TextAlignSettingPage(),
                   ),
                 );
               },
@@ -114,8 +115,8 @@ class ReadSettingPage extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.code_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
-              title: const Text('自定义 CSS'),
-              subtitle: const Text('阅读页面 CSS 样式'),
+              title: Text(AppLocalizations.of(context)!.customCSS),
+              subtitle: Text(AppLocalizations.of(context)!.readingPageCSSStyle),
               onTap: () {
                 Navigator.push(
                   context,

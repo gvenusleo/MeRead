@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:meread/models/feed.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/routes/feed_page/add_feed_page.dart';
@@ -101,20 +102,28 @@ class HomePageState extends State<HomePage> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('更新失败 $failCount 个订阅源'),
+          content: Text(
+            AppLocalizations.of(context)!.updateFailedFeeds(failCount),
+          ),
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 2),
-          action: SnackBarAction(label: '确定', onPressed: () {}),
+          action: SnackBarAction(
+            label: AppLocalizations.of(context)!.ok,
+            onPressed: () {},
+          ),
         ),
       );
     } else {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('更新成功'),
+          content: Text(AppLocalizations.of(context)!.updateSuccess),
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 2),
-          action: SnackBarAction(label: '确定', onPressed: () {}),
+          action: SnackBarAction(
+            label: AppLocalizations.of(context)!.ok,
+            onPressed: () {},
+          ),
         ),
       );
     }
@@ -141,7 +150,7 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('悦读'),
+        title: Text(AppLocalizations.of(context)!.meRead),
         centerTitle: false,
         actions: [
           IconButton(
@@ -198,7 +207,7 @@ class HomePageState extends State<HomePage> {
                     }
                     getUnreadCount();
                   },
-                  child: const Text('全标已读'),
+                  child: Text(AppLocalizations.of(context)!.markAllAsRead),
                 ),
                 PopupMenuItem(
                   onTap: () {
@@ -212,7 +221,7 @@ class HomePageState extends State<HomePage> {
                       ).then((value) => getFeedList());
                     });
                   },
-                  child: const Text('添加订阅'),
+                  child: Text(AppLocalizations.of(context)!.addFeed),
                 ),
                 const PopupMenuDivider(),
                 PopupMenuItem(
@@ -235,7 +244,7 @@ class HomePageState extends State<HomePage> {
                       });
                     });
                   },
-                  child: const Text('设置'),
+                  child: Text(AppLocalizations.of(context)!.settings),
                 ),
               ];
             },

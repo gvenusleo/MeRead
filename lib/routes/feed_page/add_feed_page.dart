@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:meread/models/feed.dart';
 import 'package:meread/routes/feed_page/edit_feed_page.dart';
 import 'package:meread/utils/parse.dart';
@@ -27,7 +28,7 @@ class _AddFeedPageState extends State<AddFeedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('添加订阅'),
+        title: Text(AppLocalizations.of(context)!.addFeed),
       ),
       body: SafeArea(
         child: ListView(
@@ -36,10 +37,10 @@ class _AddFeedPageState extends State<AddFeedPage> {
             TextField(
               autofocus: true,
               controller: _urlController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: '输入订阅源地址',
-                labelText: '订阅源地址',
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                hintText: AppLocalizations.of(context)!.enterFeedUrl,
+                labelText: AppLocalizations.of(context)!.feedUrl,
               ),
             ),
             const SizedBox(height: 12),
@@ -60,7 +61,7 @@ class _AddFeedPageState extends State<AddFeedPage> {
                       },
                     );
                   },
-                  child: const Text('粘贴'),
+                  child: Text(AppLocalizations.of(context)!.paste),
                 ),
                 const SizedBox(width: 24),
                 TextButton(
@@ -70,10 +71,14 @@ class _AddFeedPageState extends State<AddFeedPage> {
                       if (!mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: const Text('订阅源已存在'),
+                          content: Text(
+                              AppLocalizations.of(context)!.feedAlreadyExists),
                           behavior: SnackBarBehavior.floating,
                           duration: const Duration(seconds: 2),
-                          action: SnackBarAction(label: '确定', onPressed: () {}),
+                          action: SnackBarAction(
+                            label: AppLocalizations.of(context)!.ok,
+                            onPressed: () {},
+                          ),
                         ),
                       );
                     } else {
@@ -114,17 +119,21 @@ class _AddFeedPageState extends State<AddFeedPage> {
                         if (!mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: const Text('无法解析订阅源'),
+                            content: Text(
+                              AppLocalizations.of(context)!.unableToParseFeed,
+                            ),
                             behavior: SnackBarBehavior.floating,
                             duration: const Duration(seconds: 2),
-                            action:
-                                SnackBarAction(label: '确定', onPressed: () {}),
+                            action: SnackBarAction(
+                              label: AppLocalizations.of(context)!.ok,
+                              onPressed: () {},
+                            ),
                           ),
                         );
                       }
                     }
                   },
-                  child: const Text('解析'),
+                  child: Text(AppLocalizations.of(context)!.parse),
                 ),
               ],
             ),

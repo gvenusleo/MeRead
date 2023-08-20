@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:meread/models/feed.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/routes/feed_page/edit_feed_page.dart';
@@ -126,7 +127,7 @@ class FeedPageState extends State<FeedPage> {
                       getPostList();
                     }
                   },
-                  child: const Text('全标已读'),
+                  child: Text(AppLocalizations.of(context)!.markAllAsRead),
                 ),
                 PopupMenuItem(
                   onTap: () {
@@ -147,7 +148,7 @@ class FeedPageState extends State<FeedPage> {
                       });
                     });
                   },
-                  child: const Text('编辑订阅'),
+                  child: Text(AppLocalizations.of(context)!.editFeed),
                 ),
                 const PopupMenuDivider(),
                 // 删除订阅源
@@ -159,14 +160,17 @@ class FeedPageState extends State<FeedPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: const Text('删除订阅'),
-                          content: const Text('确定要删除该订阅吗？'),
+                          title: Text(AppLocalizations.of(context)!.deleteFeed),
+                          content: Text(
+                            AppLocalizations.of(context)!
+                                .doYouWantToDeleteThisFeed,
+                          ),
                           actions: [
                             TextButton(
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: const Text('取消'),
+                              child: Text(AppLocalizations.of(context)!.cancel),
                             ),
                             TextButton(
                               onPressed: () async {
@@ -175,14 +179,14 @@ class FeedPageState extends State<FeedPage> {
                                 Navigator.pop(context);
                                 Navigator.pop(context);
                               },
-                              child: const Text('确定'),
+                              child: Text(AppLocalizations.of(context)!.ok),
                             ),
                           ],
                         );
                       },
                     );
                   },
-                  child: const Text('删除订阅'),
+                  child: Text(AppLocalizations.of(context)!.deleteFeed),
                 ),
               ];
             },
@@ -204,11 +208,16 @@ class FeedPageState extends State<FeedPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  parseFeed ? '更新成功' : '更新失败',
+                  parseFeed
+                      ? AppLocalizations.of(context)!.updateSuccess
+                      : AppLocalizations.of(context)!.updateFailed,
                 ),
                 behavior: SnackBarBehavior.floating,
                 duration: const Duration(seconds: 2),
-                action: SnackBarAction(label: '确定', onPressed: () {}),
+                action: SnackBarAction(
+                  label: AppLocalizations.of(context)!.ok,
+                  onPressed: () {},
+                ),
               ),
             );
           },

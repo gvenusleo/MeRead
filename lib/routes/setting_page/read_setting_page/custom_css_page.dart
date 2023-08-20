@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:meread/provider/read_page_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +24,7 @@ class CustomCssPageState extends State<CustomCssPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('自定义 CSS'),
+        title: Text(AppLocalizations.of(context)!.customCSS),
       ),
       body: SafeArea(
         child: ListView(
@@ -33,9 +34,9 @@ class CustomCssPageState extends State<CustomCssPage> {
               controller: _customCssController,
               expands: false,
               maxLines: 12,
-              decoration: const InputDecoration(
-                hintText: '输入 CSS 代码',
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                hintText: AppLocalizations.of(context)!.enterCSSCode,
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 18),
@@ -54,7 +55,7 @@ class CustomCssPageState extends State<CustomCssPage> {
                       }
                     });
                   },
-                  child: const Text('粘贴'),
+                  child: Text(AppLocalizations.of(context)!.paste),
                 ),
                 const SizedBox(width: 24),
                 TextButton(
@@ -65,7 +66,7 @@ class CustomCssPageState extends State<CustomCssPage> {
                     if (!mounted) return;
                     Navigator.pop(context);
                   },
-                  child: const Text('保存'),
+                  child: Text(AppLocalizations.of(context)!.save),
                 ),
               ],
             )

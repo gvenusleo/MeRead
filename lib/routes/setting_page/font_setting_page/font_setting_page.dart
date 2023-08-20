@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:meread/provider/theme_provider.dart';
 import 'package:meread/utils/font_manager.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +31,7 @@ class _FontSettingPageState extends State<FontSettingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('全局字体'),
+        title: Text(AppLocalizations.of(context)!.globalFont),
         actions: [
           // 添加字体
           IconButton(
@@ -52,9 +53,9 @@ class _FontSettingPageState extends State<FontSettingPage> {
               return RadioListTile(
                 value: '默认字体',
                 groupValue: context.watch<ThemeProvider>().themeFont,
-                title: const Text(
-                  '默认字体',
-                  style: TextStyle(fontFamily: '默认字体'),
+                title: Text(
+                  AppLocalizations.of(context)!.defaultFont,
+                  style: const TextStyle(fontFamily: '默认字体'),
                 ),
                 onChanged: (value) {
                   if (value != null) {
@@ -64,15 +65,18 @@ class _FontSettingPageState extends State<FontSettingPage> {
               );
             }
             if (index == _fontNameList.length + 1) {
-              return const Column(
+              return Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Divider(),
+                  const Divider(),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    child: Text('* 点击右上角导入字体\n* 仅支持 otf/ttf/ttc 格式的字体文件'),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
+                    child: Text(
+                      AppLocalizations.of(context)!.fontInfo,
+                    ),
                   ),
                 ],
               );

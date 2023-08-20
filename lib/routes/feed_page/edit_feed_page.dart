@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:meread/models/feed.dart';
 import 'package:meread/widgets/list_tile_group_title.dart';
 
@@ -16,12 +17,6 @@ class EditFeedPageState extends State<EditFeedPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
 
-  final List<String> openTypeList = [
-    '在应用内打开',
-    '在内置标签页中打开',
-    '在系统浏览器中打开',
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -32,9 +27,14 @@ class EditFeedPageState extends State<EditFeedPage> {
 
   @override
   Widget build(BuildContext context) {
+    final List<String> openTypeList = [
+      AppLocalizations.of(context)!.openInApp,
+      AppLocalizations.of(context)!.openInBuiltInTab,
+      AppLocalizations.of(context)!.openInSystemBrowser,
+    ];
     return Scaffold(
       appBar: AppBar(
-        title: const Text('编辑订阅'),
+        title: Text(AppLocalizations.of(context)!.editFeed),
       ),
       body: SafeArea(
         child: ListView(
@@ -44,9 +44,9 @@ class EditFeedPageState extends State<EditFeedPage> {
               padding: const EdgeInsets.symmetric(horizontal: 18),
               child: TextField(
                 controller: _urlController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: '订阅源地址',
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: AppLocalizations.of(context)!.feedUrl,
                   enabled: false,
                 ),
               ),
@@ -56,9 +56,9 @@ class EditFeedPageState extends State<EditFeedPage> {
               padding: const EdgeInsets.symmetric(horizontal: 18),
               child: TextField(
                 controller: _nameController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: '订阅源名称',
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: AppLocalizations.of(context)!.feedName,
                 ),
               ),
             ),
@@ -67,23 +67,24 @@ class EditFeedPageState extends State<EditFeedPage> {
               padding: const EdgeInsets.symmetric(horizontal: 18),
               child: TextField(
                 controller: _categoryController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: '订阅源分类',
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: AppLocalizations.of(context)!.feedCategory,
                 ),
               ),
             ),
             const SizedBox(height: 18),
             SwitchListTile(
               value: widget.feed.fullText == 1,
-              title: const Text('是否获取全文'),
+              title: Text(AppLocalizations.of(context)!.fullText),
               onChanged: (bool value) {
                 setState(() {
                   widget.feed.fullText = value ? 1 : 0;
                 });
               },
             ),
-            const ListTileGroupTitle(title: '文章打开方式'),
+            ListTileGroupTitle(
+                title: AppLocalizations.of(context)!.postOpenWith),
             ...openTypeList.map(
               (e) {
                 return RadioListTile(
@@ -107,7 +108,7 @@ class EditFeedPageState extends State<EditFeedPage> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: const Text('取消'),
+                  child: Text(AppLocalizations.of(context)!.cancel),
                 ),
                 const SizedBox(width: 24),
                 TextButton(
@@ -125,7 +126,7 @@ class EditFeedPageState extends State<EditFeedPage> {
                     if (!mounted) return;
                     Navigator.pop(context);
                   },
-                  child: const Text('保存'),
+                  child: Text(AppLocalizations.of(context)!.save),
                 ),
                 const SizedBox(width: 18),
               ],

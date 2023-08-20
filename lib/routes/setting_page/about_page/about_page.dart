@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:meread/global/global.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -9,7 +10,7 @@ class AboutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('关于'),
+        title: Text(AppLocalizations.of(context)!.about),
       ),
       body: SafeArea(
         child: Column(
@@ -21,10 +22,10 @@ class AboutPage extends StatelessWidget {
                 backgroundImage: AssetImage('assets/meread.png'),
               ),
             ),
-            const Center(
+            Center(
               child: Text(
-                'MeRead 悦读',
-                style: TextStyle(fontSize: 20),
+                AppLocalizations.of(context)!.meRead,
+                style: const TextStyle(fontSize: 20),
               ),
             ),
             const SizedBox(height: 8),
@@ -45,7 +46,7 @@ class AboutPage extends StatelessWidget {
                       mode: LaunchMode.externalApplication,
                     );
                   },
-                  child: const Text('联系作者'),
+                  child: Text(AppLocalizations.of(context)!.contactAuthor),
                 ),
                 const SizedBox(width: 16),
                 OutlinedButton(
@@ -55,14 +56,17 @@ class AboutPage extends StatelessWidget {
                       mode: LaunchMode.externalApplication,
                     );
                   },
-                  child: const Text('开源地址'),
+                  child: Text(
+                    AppLocalizations.of(context)!.sourceAddress,
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 24),
-            const Text(
-              '© 2022 - 2023 悦读. All rights reserved.',
-              style: TextStyle(fontSize: 14),
+            Text(
+              '© 2022 - 2023 ${AppLocalizations.of(context)!.meRead}. All rights reserved.',
+              style: const TextStyle(fontSize: 14),
             ),
             const SizedBox(height: 24),
           ],

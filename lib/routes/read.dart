@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:html/parser.dart' as html_parser;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:html_main_element/html_main_element.dart';
 import 'package:meread/models/post.dart';
@@ -168,7 +169,7 @@ ${context.watch<ReadPageProvider>().customCss}
                     await widget.post.markUnread();
                   },
                   child: Text(
-                    '标记未读',
+                    AppLocalizations.of(context)!.markAsUnread,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
@@ -178,7 +179,9 @@ ${context.watch<ReadPageProvider>().customCss}
                     await widget.post.changeFavorite();
                   },
                   child: Text(
-                    widget.post.favorite == 1 ? '取消收藏' : '收藏文章',
+                    widget.post.favorite == 1
+                        ? AppLocalizations.of(context)!.cancelCollect
+                        : AppLocalizations.of(context)!.collectPost,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
@@ -188,7 +191,7 @@ ${context.watch<ReadPageProvider>().customCss}
                     Clipboard.setData(ClipboardData(text: widget.post.link));
                   },
                   child: Text(
-                    '复制链接',
+                    AppLocalizations.of(context)!.copyLink,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
@@ -208,17 +211,17 @@ ${context.watch<ReadPageProvider>().customCss}
 
   Widget _buildBody(String cssStr, String titleStr) {
     if (_index == 0) {
-      return const Center(
+      return Center(
         child: SizedBox(
           height: 200,
           width: 200,
           child: Column(
             children: [
-              CircularProgressIndicator(
+              const CircularProgressIndicator(
                 strokeWidth: 3,
               ),
-              SizedBox(height: 12),
-              Text('获取全文'),
+              const SizedBox(height: 12),
+              Text(AppLocalizations.of(context)!.gettingFullText),
             ],
           ),
         ),

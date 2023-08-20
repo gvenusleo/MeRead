@@ -9,6 +9,7 @@ import 'package:meread/routes/home.dart';
 import 'package:meread/theme/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 Future<void> main() async {
@@ -46,14 +47,18 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'MeRead',
+          locale: context.watch<ThemeProvider>().language == 'local'
+              ? null
+              : Locale(context.watch<ThemeProvider>().language),
           localizationsDelegates: const [
+            AppLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: const [
-            Locale('en', 'US'),
-            Locale('zh', 'CN'),
+            Locale('en'),
+            Locale('zh'),
           ],
           theme: lightTheme(
             context,
