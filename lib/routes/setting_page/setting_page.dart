@@ -182,18 +182,6 @@ class _SettingPageState extends State<SettingPage> {
               onTap: checkUpdate,
             ),
             ListTile(
-              leading: const Icon(Icons.android_outlined),
-              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
-              title: Text(AppLocalizations.of(context)!.about),
-              subtitle:
-                  Text(AppLocalizations.of(context)!.contactAndOpenSource),
-              onTap: () {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) {
-                  return const AboutPage();
-                }));
-              },
-            ),
-            ListTile(
               leading: const Icon(Icons.privacy_tip_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
               title: Text(AppLocalizations.of(context)!.openSourceLicenses),
@@ -219,6 +207,18 @@ class _SettingPageState extends State<SettingPage> {
                 applicationLegalese:
                     '© 2022 - 2023 ${AppLocalizations.of(context)!.meRead}. All Rights Reserved',
               ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.android_outlined),
+              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
+              title: Text(AppLocalizations.of(context)!.about),
+              subtitle:
+                  Text(AppLocalizations.of(context)!.contactAndOpenSource),
+              onTap: () {
+                Navigator.push(context, CupertinoPageRoute(builder: (context) {
+                  return const AboutPage();
+                }));
+              },
             ),
           ],
         ),
