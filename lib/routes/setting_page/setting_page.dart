@@ -20,6 +20,7 @@ import 'package:meread/widgets/list_tile_group_title.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -327,6 +328,33 @@ class _SettingPageState extends State<SettingPage> {
               onPressed: () {},
             ),
           ),
+        );
+      } else {
+        if (!mounted) return;
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(AppLocalizations.of(context)!.newVersionAvailable),
+              content: Text(AppLocalizations.of(context)!.downloadNow),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(AppLocalizations.of(context)!.cancel),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    await launchUrl(
+                      Uri.parse(
+                          'https://github.com/gvenusleo/MeRead/releases/latest'),
+                      mode: LaunchMode.externalApplication,
+                    );
+                  },
+                  child: Text(AppLocalizations.of(context)!.download),
+                ),
+              ],
+            );
+          },
         );
       }
     } catch (e) {

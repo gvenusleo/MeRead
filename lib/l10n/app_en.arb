@@ -92,5 +92,8 @@
     "collectPost": "Collect Post",
     "cancelCollect": "Cancel Collect",
     "copyLink": "Copy Link",
-    "gettingFullText": "Getting full text..."
+    "gettingFullText": "Getting full text...",
+    "newVersionAvailable": "New Version Available",
+    "downloadNow": "Do you want to go and download now?",
+    "download": "Download"
 }

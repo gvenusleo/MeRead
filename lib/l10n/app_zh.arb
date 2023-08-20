@@ -14,7 +14,7 @@
     "fullText": "获取全文",
     "postOpenWith": "文章打开方式",
     "openInApp": "在应用内打开",
-    "openInBuiltinTab": "在内置标签页中打开",
+    "openInBuiltInTab": "在内置标签页中打开",
     "openInSystemBrowser": "在系统浏览器中打开",
     "cancel": "取消",
     "save": "保存",
@@ -92,5 +92,8 @@
     "collectPost": "收藏文章",
     "cancelCollect": "取消收藏",
     "copyLink": "复制链接",
-    "gettingFullText": "正在获取全文……"
+    "gettingFullText": "正在获取全文……",
+    "newVersionAvailable": "有新版本可用",
+    "downloadNow": "是否立即前往下载？",
+    "download": "下载"
 }
