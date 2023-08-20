@@ -56,10 +56,7 @@ class AboutPage extends StatelessWidget {
                       mode: LaunchMode.externalApplication,
                     );
                   },
-                  child: Text(
-                    AppLocalizations.of(context)!.sourceAddress,
-                    style: TextStyle(color: Theme.of(context).primaryColor),
-                  ),
+                  child: Text(AppLocalizations.of(context)!.sourceAddress),
                 ),
               ],
             ),
