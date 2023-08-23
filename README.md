@@ -10,7 +10,7 @@
 </p>
 
 </p>
-<strong>A concise and easy-to-use feed reader built using <a href='https://flutter.dev' target='_blank'>Flutter</a> and designed with <a href='https://m3.material.io/' target='_blank'>Material You</a></strong>
+<strong>A concise and easy-to-use RSS reader built with <a href='https://flutter.dev' target='_blank'>Flutter</a> and designed with <a href='https://m3.material.io/' target='_blank'>Material You</a></strong>
 </p>
 
 <p>
@@ -24,7 +24,7 @@
 ## Explain
 
 - [x] Migrate feeds by importing and exporting OPML.
-- [x] 自 Automatically obtain full text.
+- [x] Automatically obtain full text.
 - [x] Three reading modes: reader, in app tab, and system browser.
 - [x] Supports unread filtering, article favorites, and feed grouping.
 - [x] Block articles through keywords.
