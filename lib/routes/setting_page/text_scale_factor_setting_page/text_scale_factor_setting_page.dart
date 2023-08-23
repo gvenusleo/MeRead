@@ -3,11 +3,19 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:meread/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 
-class TextScaleFactorSettingPage extends StatelessWidget {
+class TextScaleFactorSettingPage extends StatefulWidget {
   const TextScaleFactorSettingPage({Key? key}) : super(key: key);
 
   @override
+  State<TextScaleFactorSettingPage> createState() =>
+      _TextScaleFactorSettingPageState();
+}
+
+class _TextScaleFactorSettingPageState
+    extends State<TextScaleFactorSettingPage> {
+  @override
   Widget build(BuildContext context) {
+    double textScaleFactor = context.read<ThemeProvider>().textScaleFactor;
     final Map<double, String> textScaleFactorMap = {
       0.8: AppLocalizations.of(context)!.minimum,
       0.9: AppLocalizations.of(context)!.small,
@@ -25,11 +33,16 @@ class TextScaleFactorSettingPage extends StatelessWidget {
           itemBuilder: (context, index) {
             return RadioListTile(
               value: textScaleFactorMap.keys.toList()[index],
-              groupValue: context.watch<ThemeProvider>().textScaleFactor,
+              groupValue: textScaleFactor,
               title: Text(textScaleFactorMap.values.toList()[index]),
-              onChanged: (value) {
+              onChanged: (double? value) async {
                 if (value != null) {
-                  context.read<ThemeProvider>().changeTextScaleFactor(value);
+                  await context
+                      .read<ThemeProvider>()
+                      .changeTextScaleFactor(value);
+                  setState(() {
+                    textScaleFactor = value;
+                  });
                 }
               },
             );

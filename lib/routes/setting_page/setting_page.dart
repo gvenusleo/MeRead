@@ -205,7 +205,7 @@ class _SettingPageState extends State<SettingPage> {
                   ),
                 ),
                 applicationLegalese:
-                    '© 2022 - 2023 ${AppLocalizations.of(context)!.meRead}. All Rights Reserved',
+                    '© 2022 - 2023 ${AppLocalizations.of(context)!.meRead}. All Rights Reserved.',
               ),
             ),
             ListTile(
