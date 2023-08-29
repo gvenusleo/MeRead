@@ -95,5 +95,7 @@
     "gettingFullText": "Getting full text...",
     "newVersionAvailable": "New Version Available",
     "downloadNow": "Do you want to go and download now?",
-    "download": "Download"
+    "download": "Download",
+    "importFailed": "Import Failed",
+    "fileFormatError": "File Format Error. Please select a file with the suffix opml or xml."
 }

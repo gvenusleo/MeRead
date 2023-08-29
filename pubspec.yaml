@@ -42,17 +42,17 @@ dependencies:
   path: ^1.8.2
   shared_preferences: ^2.0.15 # 本地存储
   provider: ^6.0.4 # 状态管理
-  share_plus: ^6.3.0 # 分享
-  file_picker: ^5.2.2 # 文件选择
-  opml: ^0.3.0 # OPML 解析
+  share_plus: ^7.1.0 # 分享
+  opml: ^0.4.0 # OPML 解析
   url_launcher: ^6.1.6 # 打开链接
   path_provider: ^2.0.11 # 路径
   html: ^0.15.1 # HTML 解析
   html_main_element: ^2.1.0 # 全文获取（Readability）
   dio: ^5.1.1 # 网络请求
   dynamic_color: ^1.6.3
-  xml: ^5.4.1
   intl: any
+  file_picker: ^5.3.4
+  xml: ^6.3.0
 
 dev_dependencies:
   flutter_test:

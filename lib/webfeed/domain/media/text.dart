@@ -21,7 +21,7 @@ class Text {
       lang: element.getAttribute('lang'),
       start: element.getAttribute('start'),
       end: element.getAttribute('end'),
-      value: element.text,
+      value: element.innerText,
     );
   }
 }

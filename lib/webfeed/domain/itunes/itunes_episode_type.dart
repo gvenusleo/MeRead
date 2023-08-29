@@ -3,7 +3,7 @@ import 'package:xml/xml.dart';
 enum ItunesEpisodeType { full, trailer, bonus, unknown }
 
 ItunesEpisodeType newItunesEpisodeType(XmlElement element) {
-  switch (element.text) {
+  switch (element.innerText) {
     case 'full':
       return ItunesEpisodeType.full;
     case 'trailer':

@@ -15,7 +15,7 @@ class Credit {
     return Credit(
       role: element.getAttribute('role'),
       scheme: element.getAttribute('scheme'),
-      value: element.text,
+      value: element.innerText,
     );
   }
 }

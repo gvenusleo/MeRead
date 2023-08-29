@@ -12,7 +12,7 @@ class Param {
   factory Param.parse(XmlElement element) {
     return Param(
       name: element.getAttribute('name'),
-      value: element.text,
+      value: element.innerText,
     );
   }
 }

@@ -12,7 +12,7 @@ class Description {
   factory Description.parse(XmlElement element) {
     return Description(
       type: element.getAttribute('type'),
-      value: element.text,
+      value: element.innerText,
     );
   }
 }

@@ -17,7 +17,7 @@ class RssContent {
   RssContent(this.value, this.images);
 
   factory RssContent.parse(XmlElement element) {
-    final dynamic content = element.text;
+    final dynamic content = element.innerText;
     final images = <String>[];
     _imagesRegExp.allMatches(content).forEach((match) {
       images.add(match.group(1)!);

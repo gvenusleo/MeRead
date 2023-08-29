@@ -230,10 +230,31 @@ class _SettingPageState extends State<SettingPage> {
   Future<void> importOPML() async {
     // 打开文件选择器
     final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['opml', 'xml'],
+      type: FileType.any,
+      // file_picker 无法正确过滤 opml 格式文件
+      // allowedExtensions: ['opml', 'xml'],
     );
     if (result != null) {
+      if (result.files.first.extension != 'opml' &&
+          result.files.first.extension != 'xml') {
+        if (!mounted) return;
+        await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(AppLocalizations.of(context)!.importFailed),
+              content: Text(AppLocalizations.of(context)!.fileFormatError),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(AppLocalizations.of(context)!.ok),
+                ),
+              ],
+            );
+          },
+        );
+        return;
+      }
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -272,7 +293,7 @@ class _SettingPageState extends State<SettingPage> {
     String opmlStr = await exportOpml();
     // opmlStr 字符串写入 feeds.opml 文件并分享，分享后删除文件
     final Directory tempDir = await getTemporaryDirectory();
-    final File file = File('${tempDir.path}/feeds-from-MeReader.xml');
+    final File file = File('${tempDir.path}/feeds-from-MeRead.xml');
     await file.writeAsString(opmlStr);
     await Share.shareXFiles(
       [XFile(file.path)],

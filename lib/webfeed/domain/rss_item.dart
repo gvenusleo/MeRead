@@ -46,17 +46,18 @@ class RssItem {
 
   factory RssItem.parse(XmlElement element) {
     return RssItem(
-      title: element.findElements('title').firstOrNull?.text,
-      description: element.findElements('description').firstOrNull?.text,
-      link: element.findElements('link').firstOrNull?.text,
+      title: element.findElements('title').firstOrNull?.innerText,
+      description: element.findElements('description').firstOrNull?.innerText,
+      link: element.findElements('link').firstOrNull?.innerText,
       categories: element
           .findElements('category')
           .map((e) => RssCategory.parse(e))
           .toList(),
-      guid: element.findElements('guid').firstOrNull?.text,
-      pubDate: parseDateTime(element.findElements('pubDate').firstOrNull?.text),
-      author: element.findElements('author').firstOrNull?.text,
-      comments: element.findElements('comments').firstOrNull?.text,
+      guid: element.findElements('guid').firstOrNull?.innerText,
+      pubDate:
+          parseDateTime(element.findElements('pubDate').firstOrNull?.innerText),
+      author: element.findElements('author').firstOrNull?.innerText,
+      comments: element.findElements('comments').firstOrNull?.innerText,
       source: element
           .findElements('source')
           .map((e) => RssSource.parse(e))

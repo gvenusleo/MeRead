@@ -12,7 +12,7 @@ class Hash {
   factory Hash.parse(XmlElement element) {
     return Hash(
       algo: element.getAttribute('algo'),
-      value: element.text,
+      value: element.innerText,
     );
   }
 }

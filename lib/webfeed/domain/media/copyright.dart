@@ -12,7 +12,7 @@ class Copyright {
   factory Copyright.parse(XmlElement element) {
     return Copyright(
       url: element.getAttribute('url'),
-      value: element.text,
+      value: element.innerText,
     );
   }
 }
