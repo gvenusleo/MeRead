@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meread/models/feed.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/routes/feed_page/add_feed_page.dart';
@@ -100,31 +101,13 @@ class HomePageState extends State<HomePage> {
     );
     if (failCount > 0) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            AppLocalizations.of(context)!.updateFailedFeeds(failCount),
-          ),
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 2),
-          action: SnackBarAction(
-            label: AppLocalizations.of(context)!.ok,
-            onPressed: () {},
-          ),
-        ),
+      Fluttertoast.showToast(
+        msg: AppLocalizations.of(context)!.updateFailedFeeds(failCount),
       );
     } else {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context)!.updateSuccess),
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 2),
-          action: SnackBarAction(
-            label: AppLocalizations.of(context)!.ok,
-            onPressed: () {},
-          ),
-        ),
+      Fluttertoast.showToast(
+        msg: AppLocalizations.of(context)!.updateSuccess,
       );
     }
   }

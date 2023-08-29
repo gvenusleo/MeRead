@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meread/global/global.dart';
 import 'package:meread/provider/theme_provider.dart';
 import 'package:meread/routes/setting_page/about_page/about_page.dart';
@@ -256,33 +257,15 @@ class _SettingPageState extends State<SettingPage> {
         return;
       }
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context)!.startBackgroundImport),
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 2),
-          action: SnackBarAction(
-            label: AppLocalizations.of(context)!.ok,
-            onPressed: () {},
-          ),
-        ),
+      Fluttertoast.showToast(
+        msg: AppLocalizations.of(context)!.startBackgroundImport,
       );
       final int failCount = await parseOpml(result);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            failCount == 0
-                ? AppLocalizations.of(context)!.importSuccess
-                : AppLocalizations.of(context)!.importFailedForFeeds(failCount),
-          ),
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 2),
-          action: SnackBarAction(
-            label: AppLocalizations.of(context)!.ok,
-            onPressed: () {},
-          ),
-        ),
+      Fluttertoast.showToast(
+        msg: failCount == 0
+            ? AppLocalizations.of(context)!.importSuccess
+            : AppLocalizations.of(context)!.importFailedForFeeds(failCount),
       );
     }
   }
@@ -300,14 +283,8 @@ class _SettingPageState extends State<SettingPage> {
       text: successText,
     ).then((value) {
       if (value.status == ShareResultStatus.success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.exportSuccess),
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 2),
-            action: SnackBarAction(
-                label: AppLocalizations.of(context)!.ok, onPressed: () {}),
-          ),
+        Fluttertoast.showToast(
+          msg: AppLocalizations.of(context)!.exportSuccess,
         );
       }
     });
@@ -316,16 +293,8 @@ class _SettingPageState extends State<SettingPage> {
 
   // 检查更新
   Future<void> checkUpdate() async {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context)!.checkingForUpdates),
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
-        action: SnackBarAction(
-          label: AppLocalizations.of(context)!.ok,
-          onPressed: () {},
-        ),
-      ),
+    Fluttertoast.showToast(
+      msg: AppLocalizations.of(context)!.checkingForUpdates,
     );
     try {
       // 通过访问 https://github.com/gvenusleo/MeRead/releases/latest 获取最新版本号
@@ -339,16 +308,8 @@ class _SettingPageState extends State<SettingPage> {
       final String latestVersion = title.split(' ')[1];
       if (latestVersion == applicationVersion) {
         if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.alreadyLatestVersion),
-            behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 2),
-            action: SnackBarAction(
-              label: AppLocalizations.of(context)!.ok,
-              onPressed: () {},
-            ),
-          ),
+        Fluttertoast.showToast(
+          msg: AppLocalizations.of(context)!.alreadyLatestVersion,
         );
       } else {
         if (!mounted) return;
@@ -380,16 +341,8 @@ class _SettingPageState extends State<SettingPage> {
       }
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context)!.failedToCheckForUpdates),
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 2),
-          action: SnackBarAction(
-            label: AppLocalizations.of(context)!.failedToCheckForUpdates,
-            onPressed: () {},
-          ),
-        ),
+      Fluttertoast.showToast(
+        msg: AppLocalizations.of(context)!.failedToCheckForUpdates,
       );
     }
   }

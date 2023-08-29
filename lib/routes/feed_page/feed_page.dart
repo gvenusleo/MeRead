@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meread/models/feed.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/routes/feed_page/edit_feed_page.dart';
@@ -205,20 +206,10 @@ class FeedPageState extends State<FeedPage> {
               getPostList();
             }
             if (!mounted) return;
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  parseFeed
-                      ? AppLocalizations.of(context)!.updateSuccess
-                      : AppLocalizations.of(context)!.updateFailed,
-                ),
-                behavior: SnackBarBehavior.floating,
-                duration: const Duration(seconds: 2),
-                action: SnackBarAction(
-                  label: AppLocalizations.of(context)!.ok,
-                  onPressed: () {},
-                ),
-              ),
+            Fluttertoast.showToast(
+              msg: parseFeed
+                  ? AppLocalizations.of(context)!.updateSuccess
+                  : AppLocalizations.of(context)!.updateFailed,
             );
           },
           child: ListView.separated(
