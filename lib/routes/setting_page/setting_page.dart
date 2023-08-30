@@ -192,34 +192,6 @@ class _SettingPageState extends State<SettingPage> {
               subtitle: Text(AppLocalizations.of(context)!.getLatestVersion),
               onTap: checkUpdate,
             ),
-            /* 开源许可 */
-            ListTile(
-              leading: const Icon(Icons.privacy_tip_outlined),
-              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
-              title: Text(AppLocalizations.of(context)!.openSourceLicenses),
-              subtitle: Text(
-                AppLocalizations.of(context)!.viewOpenSourceLicenses,
-              ),
-              onTap: () => showLicensePage(
-                context: context,
-                applicationName: AppLocalizations.of(context)!.meRead,
-                applicationVersion: applicationVersion,
-                applicationIcon: Container(
-                  width: 64,
-                  height: 64,
-                  margin: const EdgeInsets.only(bottom: 8, top: 8),
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
-                    image: DecorationImage(
-                      image: AssetImage('assets/meread.png'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                applicationLegalese:
-                    '© 2022 - 2023 ${AppLocalizations.of(context)!.meRead}. All Rights Reserved.',
-              ),
-            ),
             /* 关于 */
             ListTile(
               leading: const Icon(Icons.android_outlined),
