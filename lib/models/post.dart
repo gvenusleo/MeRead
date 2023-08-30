@@ -66,8 +66,8 @@ class Post {
     for (Post post in posts) {
       post.read = true;
     }
-    isar.writeTxn(() async {
-      isar.posts.putAll(posts);
+    await isar.writeTxn(() async {
+      await isar.posts.putAll(posts);
     });
   }
 
