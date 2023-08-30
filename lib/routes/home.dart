@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meread/models/feed.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/routes/feed_page/add_feed_page.dart';
+import 'package:meread/routes/feed_page/edit_feed_page.dart';
 import 'package:meread/routes/read.dart';
 import 'package:meread/routes/setting_page/setting_page.dart';
 import 'package:meread/utils/font_util.dart';
@@ -62,36 +63,14 @@ class HomePageState extends State<HomePage> {
         actions: [
           /* 未读筛选 */
           IconButton(
-            onPressed: () async {
-              if (onlyUnread) {
-                setState(() {
-                  onlyUnread = false;
-                });
-              } else {
-                setState(() {
-                  onlyUnread = true;
-                  onlyFavorite = false;
-                });
-              }
-            },
+            onPressed: filterUnread,
             icon: onlyUnread
                 ? const Icon(Icons.radio_button_checked)
                 : const Icon(Icons.radio_button_unchecked),
           ),
           /* 收藏筛选 */
           IconButton(
-            onPressed: () async {
-              if (onlyFavorite) {
-                setState(() {
-                  onlyFavorite = false;
-                });
-              } else {
-                setState(() {
-                  onlyFavorite = true;
-                  onlyUnread = false;
-                });
-              }
-            },
+            onPressed: filterFavorite,
             icon: onlyFavorite
                 ? const Icon(Icons.bookmark)
                 : const Icon(Icons.bookmark_border_outlined),
@@ -102,45 +81,65 @@ class HomePageState extends State<HomePage> {
               return <PopupMenuEntry>[
                 /* 全标已读 */
                 PopupMenuItem(
-                  onTap: () async {
-                    await Post.markAllRead(unreadPostList);
-                    getAllPost();
-                    getUnreadCount();
-                  },
-                  child: Text(AppLocalizations.of(context)!.markAllAsRead),
+                  onTap: markAllReadFunc,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.done_all_outlined, size: 20),
+                      const SizedBox(width: 10),
+                      Text(AppLocalizations.of(context)!.markAllAsRead),
+                    ],
+                  ),
                 ),
+                const PopupMenuDivider(),
                 /* 添加订阅源 */
                 PopupMenuItem(
-                  onTap: () {
-                    // 打开订阅源添加页面，返回时刷新订阅源列表
-                    Future.delayed(const Duration(seconds: 0), () {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                          builder: (context) => const AddFeedPage(),
-                        ),
-                      ).then((value) => getAllFeed());
-                    });
-                  },
-                  child: Text(AppLocalizations.of(context)!.addFeed),
+                  onTap: addFeedFunc,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.add_outlined, size: 20),
+                      const SizedBox(width: 10),
+                      Text(AppLocalizations.of(context)!.addFeed),
+                    ],
+                  ),
+                ),
+                /* 编辑订阅 */
+                PopupMenuItem(
+                  onTap: editFeedFunc,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.edit_outlined, size: 20),
+                      const SizedBox(width: 10),
+                      Text(AppLocalizations.of(context)!.editFeed),
+                    ],
+                  ),
+                ),
+                /* 删除订阅 */
+                PopupMenuItem(
+                  onTap: deleteFeedFunc,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.delete_outline, size: 20),
+                      const SizedBox(width: 10),
+                      Text(AppLocalizations.of(context)!.deleteFeed),
+                    ],
+                  ),
                 ),
                 const PopupMenuDivider(),
                 /* 设置 */
                 PopupMenuItem(
-                  onTap: () {
-                    Future.delayed(const Duration(seconds: 0), () {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                          builder: (context) => const SettingPage(),
-                        ),
-                      ).then((value) {
-                        getAllFeed();
-                        getAllPost();
-                      });
-                    });
-                  },
-                  child: Text(AppLocalizations.of(context)!.settings),
+                  onTap: settingFunc,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.settings, size: 20),
+                      const SizedBox(width: 10),
+                      Text(AppLocalizations.of(context)!.settings),
+                    ],
+                  ),
                 ),
               ];
             },
@@ -320,6 +319,277 @@ class HomePageState extends State<HomePage> {
     getAllFeed().then((value) => getAllPost());
     getUnreadCount();
     initFontDir();
+  }
+
+  /* 未读帅选 */
+  Future<void> filterUnread() async {
+    if (onlyUnread) {
+      setState(() {
+        onlyUnread = false;
+      });
+    } else {
+      setState(() {
+        onlyUnread = true;
+        onlyFavorite = false;
+      });
+    }
+  }
+
+  /* 收藏筛选 */
+  Future<void> filterFavorite() async {
+    if (onlyFavorite) {
+      setState(() {
+        onlyFavorite = false;
+      });
+    } else {
+      setState(() {
+        onlyFavorite = true;
+        onlyUnread = false;
+      });
+    }
+  }
+
+  /* 全标已读 */
+  Future<void> markAllReadFunc() async {
+    await Post.markAllRead(unreadPostList);
+    getAllPost();
+    getUnreadCount();
+  }
+
+  /* 添加订阅源 */
+  void addFeedFunc() {
+    // 打开订阅源添加页面，返回时刷新订阅源列表
+    Future.delayed(Duration.zero, () {
+      Navigator.push(
+        context,
+        CupertinoPageRoute(
+          builder: (context) => const AddFeedPage(),
+        ),
+      ).then((value) => getAllFeed());
+    });
+  }
+
+  /* 编辑订阅 */
+  Future<void> editFeedFunc() async {
+    if (feedList.length == 1) {
+      Future.delayed(Duration.zero, () {
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (context) => EditFeedPage(
+              feed: feedList.first,
+            ),
+          ),
+        ).then(
+          (value) => getAllPost(),
+        );
+      });
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            icon: const Icon(Icons.edit_outlined),
+            title: Text(AppLocalizations.of(context)!.editFeed),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (Feed feed in feedList)
+                  ListTile(
+                    title: Text(feed.name),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Future.delayed(Duration.zero, () {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => EditFeedPage(feed: feed),
+                          ),
+                        ).then(
+                          (value) => getAllPost(),
+                        );
+                      });
+                    },
+                  ),
+              ],
+            ),
+            scrollable: true,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 0,
+              vertical: 8,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(AppLocalizations.of(context)!.cancel),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  /* 删除订阅 */
+  Future<void> deleteFeedFunc() async {
+    if (feedList.length == 1) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            icon: const Icon(Icons.warning_rounded),
+            title: Text(
+              AppLocalizations.of(context)!.deleteConfirmation,
+            ),
+            content: Text(
+              AppLocalizations.of(context)!.doYouWantToDeleteThisFeed,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(AppLocalizations.of(context)!.cancel),
+              ),
+              TextButton(
+                onPressed: () async {
+                  await feedList.first.deleteFromDb();
+                  if (!mounted) return;
+                  Navigator.pop(context);
+                  setState(() {
+                    appBarTitle = AppLocalizations.of(context)!.allFeed;
+                  });
+                  getAllFeed().then((value) => getAllPost());
+                },
+                child: Text(AppLocalizations.of(context)!.ok),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      List<Feed> deleteFeeds = [];
+      showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(
+            builder: (context, setCheckState) {
+              return AlertDialog(
+                icon: const Icon(Icons.delete_outline_outlined),
+                title: Text(
+                  AppLocalizations.of(context)!.deleteFeed,
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (Feed feed in feedList)
+                      CheckboxListTile(
+                        value: deleteFeeds.contains(feed),
+                        title: Text(feed.name),
+                        onChanged: (value) {
+                          if (value!) {
+                            setCheckState(() {
+                              deleteFeeds.add(feed);
+                            });
+                          } else {
+                            setCheckState(() {
+                              deleteFeeds.remove(feed);
+                            });
+                          }
+                        },
+                      ),
+                  ],
+                ),
+                scrollable: true,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(AppLocalizations.of(context)!.cancel),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      if (!mounted) return;
+                      Navigator.pop(context);
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            icon: const Icon(
+                              Icons.warning_rounded,
+                            ),
+                            title: Text(
+                              AppLocalizations.of(context)!.deleteConfirmation,
+                            ),
+                            content: Text(
+                              AppLocalizations.of(context)!
+                                  .doYouWantToDeleteTheseFeeds(
+                                deleteFeeds.length,
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child:
+                                    Text(AppLocalizations.of(context)!.cancel),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  for (Feed feed in deleteFeeds) {
+                                    await feed.deleteFromDb();
+                                  }
+                                  if (!mounted) return;
+                                  Navigator.pop(context);
+                                  setState(
+                                    () {
+                                      appBarTitle =
+                                          AppLocalizations.of(context)!.allFeed;
+                                    },
+                                  );
+                                  getAllFeed().then(
+                                    (value) => getAllPost(),
+                                  );
+                                },
+                                child: Text(
+                                  AppLocalizations.of(context)!.ok,
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: Text(AppLocalizations.of(context)!.ok),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+      );
+    }
+  }
+
+  /* 设置 */
+  void settingFunc() {
+    Future.delayed(Duration.zero, () {
+      Navigator.push(
+        context,
+        CupertinoPageRoute(
+          builder: (context) => const SettingPage(),
+        ),
+      ).then((value) {
+        getAllFeed();
+        getAllPost();
+      });
+    });
   }
 
   /* 构建 Post 列表 */
