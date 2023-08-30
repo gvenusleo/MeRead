@@ -39,6 +39,7 @@ Future<void> init() async {
 
   /* 数据库迁移 */
   int dbVersion = prefs.getInt('dbVersion') ?? 0;
+
   if (dbVersion == 0) {
     await migration();
     await prefs.setInt('dbVersion', 1);

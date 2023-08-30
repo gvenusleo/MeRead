@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meread/models/feed.dart';
 import 'package:meread/widgets/list_tile_group_title.dart';
 
@@ -43,12 +45,23 @@ class EditFeedPageState extends State<EditFeedPage> {
             /* 订阅源地址 */
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18),
-              child: TextField(
-                controller: _urlController,
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  labelText: AppLocalizations.of(context)!.feedUrl,
-                  enabled: false,
+              child: GestureDetector(
+                onTap: () {
+                  /* 复制订阅源地址 */
+                  Clipboard.setData(
+                    ClipboardData(text: widget.feed.url),
+                  );
+                  Fluttertoast.showToast(
+                    msg: AppLocalizations.of(context)!.copyFeedUrlSuccess,
+                  );
+                },
+                child: TextField(
+                  controller: _urlController,
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    labelText: AppLocalizations.of(context)!.feedUrl,
+                    enabled: false,
+                  ),
                 ),
               ),
             ),
