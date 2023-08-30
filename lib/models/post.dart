@@ -65,10 +65,10 @@ class Post {
         await isar.posts.where().filter().readEqualTo(false).findAll();
     for (Post post in posts) {
       post.read = true;
-      isar.writeTxn(() async {
-        await isar.posts.put(post);
-      });
     }
+    isar.writeTxn(() async {
+      isar.posts.putAll(posts);
+    });
   }
 
   /// Post 插入数据库
@@ -114,40 +114,4 @@ class Post {
       await isar.posts.put(this);
     });
   }
-
-//
-//   // 修改 Post
-//   Future<void> updateToDb() async {
-//     final Database db = await openDb();
-//     await db.update(
-//       'post',
-//       toMap(),
-//       where: "id = ?",
-//       whereArgs: [id],
-//     );
-//   }
-//
-
-//   Future<void> markUnread() async {
-//     final Database db = await openDb();
-//     await db.update(
-//       'post',
-//       {'read': 0},
-//       where: "id = ?",
-//       whereArgs: [id],
-//     );
-//   }
-//
-
-//   // 根据 Feed.id 查询 Feed 的 fullText
-//   Future<int> getFullText() async {
-//     final Database db = await openDb();
-//     final List<Map<String, dynamic>> maps = await db.query(
-//       'feed',
-//       where: "id = ?",
-//       whereArgs: [feedId],
-//     );
-//     return maps[0]['fullText'];
-//   }
-//
 }
