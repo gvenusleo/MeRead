@@ -21,6 +21,7 @@ class ReadSettingPage extends StatelessWidget {
       body: SafeArea(
         child: ListView(
           children: [
+            /* 字体大小 */
             ListTile(
               leading: const Icon(Icons.text_increase_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
@@ -44,6 +45,7 @@ class ReadSettingPage extends StatelessWidget {
                 );
               },
             ),
+            /* 行高 */
             ListTile(
               leading: const Icon(Icons.vertical_distribute_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
@@ -67,6 +69,7 @@ class ReadSettingPage extends StatelessWidget {
                 );
               },
             ),
+            /* 页面左右边距 */
             ListTile(
               leading: const Icon(Icons.space_bar_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
@@ -90,6 +93,7 @@ class ReadSettingPage extends StatelessWidget {
                 );
               },
             ),
+            /* 文字对齐方式 */
             ListTile(
               leading: const Icon(Icons.format_align_left_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
@@ -112,6 +116,7 @@ class ReadSettingPage extends StatelessWidget {
                 );
               },
             ),
+            /* 自定义 CSS */
             ListTile(
               leading: const Icon(Icons.code_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,

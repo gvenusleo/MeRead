@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meread/models/post.dart';
 
-// 定义用于展示 Post 的 Widget
+/// 用于展示 [Post]
 class PostContainer extends StatelessWidget {
   const PostContainer({Key? key, required this.post}) : super(key: key);
   final Post post;
@@ -9,8 +9,6 @@ class PostContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      // elevation: 0,
-      // color: Theme.of(context).colorScheme.surfaceVariant,
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
@@ -25,13 +23,13 @@ class PostContainer extends StatelessWidget {
               spacing: 8,
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
-                if (post.read == 0)
+                if (!post.read)
                   Icon(
                     Icons.circle,
                     size: 16,
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
-                if (post.favorite == 1)
+                if (post.favorite)
                   Icon(
                     Icons.star_rounded,
                     size: 16,

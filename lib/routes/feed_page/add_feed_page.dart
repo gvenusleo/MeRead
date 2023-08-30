@@ -5,7 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meread/models/feed.dart';
 import 'package:meread/routes/feed_page/edit_feed_page.dart';
-import 'package:meread/utils/parse.dart';
+import 'package:meread/utils/parse_feed_util.dart';
 
 class AddFeedPage extends StatefulWidget {
   const AddFeedPage({super.key});
@@ -17,7 +17,8 @@ class AddFeedPage extends StatefulWidget {
 class _AddFeedPageState extends State<AddFeedPage> {
   final TextEditingController _urlController = TextEditingController();
 
-  Widget _feedWidget = const SizedBox(); // 展示解析得到的 Feed 详情
+  // 展示解析得到的 Feed 详情
+  Widget _feedWidget = const SizedBox();
 
   @override
   void initState() {
@@ -50,7 +51,7 @@ class _AddFeedPageState extends State<AddFeedPage> {
               children: [
                 TextButton(
                   onPressed: () {
-                    // 从剪贴板获取订阅源地址，光标移到末尾
+                    /* 从剪贴板获取订阅源地址，光标移到末尾 */
                     Clipboard.getData('text/plain').then(
                       (value) {
                         if (value != null) {
@@ -67,7 +68,9 @@ class _AddFeedPageState extends State<AddFeedPage> {
                 const SizedBox(width: 24),
                 TextButton(
                   onPressed: () async {
-                    FocusScope.of(context).requestFocus(FocusNode()); // 收起键盘
+                    // 收起键盘
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    /* 解析订阅源地址 */
                     if (await Feed.isExist(_urlController.text)) {
                       if (!mounted) return;
                       Fluttertoast.showToast(

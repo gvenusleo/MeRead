@@ -10,6 +10,7 @@ class BlockSettingPage extends StatefulWidget {
 }
 
 class _BlockSettingPageState extends State<BlockSettingPage> {
+  // 屏蔽词列表
   final List<String> _blockList = prefs.getStringList('blockList') ?? [];
 
   @override
@@ -18,7 +19,7 @@ class _BlockSettingPageState extends State<BlockSettingPage> {
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.blockRules),
         actions: [
-          // 添加字体
+          // 添加屏蔽词
           IconButton(
             onPressed: () async {
               final TextEditingController controller = TextEditingController();
@@ -29,6 +30,7 @@ class _BlockSettingPageState extends State<BlockSettingPage> {
                     title: Text(AppLocalizations.of(context)!.addBlockRule),
                     content: TextField(
                       controller: controller,
+                      autofocus: true,
                       decoration: InputDecoration(
                         hintText:
                             AppLocalizations.of(context)!.enterBlockedWord,
@@ -81,6 +83,7 @@ class _BlockSettingPageState extends State<BlockSettingPage> {
               title: Text(_blockList[index]),
               trailing: IconButton(
                 onPressed: () {
+                  /* 删除屏蔽词 */
                   setState(() {
                     _blockList.removeAt(index);
                   });

@@ -40,6 +40,7 @@ class EditFeedPageState extends State<EditFeedPage> {
         child: ListView(
           padding: const EdgeInsets.symmetric(vertical: 12),
           children: [
+            /* 订阅源地址 */
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18),
               child: TextField(
@@ -52,6 +53,7 @@ class EditFeedPageState extends State<EditFeedPage> {
               ),
             ),
             const SizedBox(height: 24),
+            /* 订阅源名称 */
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18),
               child: TextField(
@@ -63,6 +65,7 @@ class EditFeedPageState extends State<EditFeedPage> {
               ),
             ),
             const SizedBox(height: 24),
+            /* 订阅源分类 */
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18),
               child: TextField(
@@ -74,17 +77,20 @@ class EditFeedPageState extends State<EditFeedPage> {
               ),
             ),
             const SizedBox(height: 18),
+            /* 是否获取全文 */
             SwitchListTile(
-              value: widget.feed.fullText == 1,
+              value: widget.feed.fullText,
               title: Text(AppLocalizations.of(context)!.fullText),
               onChanged: (bool value) {
                 setState(() {
-                  widget.feed.fullText = value ? 1 : 0;
+                  widget.feed.fullText = value;
                 });
               },
             ),
+            /* 文章打开方式 */
             ListTileGroupTitle(
-                title: AppLocalizations.of(context)!.postOpenWith),
+              title: AppLocalizations.of(context)!.postOpenWith,
+            ),
             ...openTypeList.map(
               (e) {
                 return RadioListTile(
@@ -100,7 +106,6 @@ class EditFeedPageState extends State<EditFeedPage> {
               },
             ),
             const SizedBox(height: 18),
-            // 取消与保存
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -111,17 +116,15 @@ class EditFeedPageState extends State<EditFeedPage> {
                   child: Text(AppLocalizations.of(context)!.cancel),
                 ),
                 const SizedBox(width: 24),
+                /* 保存按钮 */
                 TextButton(
                   onPressed: () async {
                     widget.feed.name = _nameController.text;
                     widget.feed.category = _categoryController.text;
-                    // 如果 feed 不存在，添加 feed，否则更新 feed
+                    await widget.feed.insertOrUpdateToDb();
+                    /* 如果 feed 已存在，否则更新 feed 下的 Post */
                     if (await Feed.isExist(widget.feed.url)) {
-                      await widget.feed.updateToDb();
-                      await widget.feed.updatePostFeedName();
-                      await widget.feed.updatePostsOpenType();
-                    } else {
-                      await widget.feed.insertToDb();
+                      await widget.feed.updatePostsFeedNameAndOpenType();
                     }
                     if (!mounted) return;
                     Navigator.pop(context);

@@ -3,14 +3,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:meread/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 
-class ThemeSettingPage extends StatefulWidget {
+class ThemeSettingPage extends StatelessWidget {
   const ThemeSettingPage({super.key});
 
-  @override
-  State<ThemeSettingPage> createState() => _ThemeSettingPageState();
-}
-
-class _ThemeSettingPageState extends State<ThemeSettingPage> {
   @override
   Widget build(BuildContext context) {
     List<String> themeMode = [

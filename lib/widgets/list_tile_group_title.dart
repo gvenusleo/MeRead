@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// [ListTile] 分组标题
 class ListTileGroupTitle extends StatelessWidget {
   final String title;
   const ListTileGroupTitle({super.key, required this.title});

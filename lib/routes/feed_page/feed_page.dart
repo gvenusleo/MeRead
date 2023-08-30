@@ -6,8 +6,8 @@ import 'package:meread/models/feed.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/routes/feed_page/edit_feed_page.dart';
 import 'package:meread/routes/read.dart';
-import 'package:meread/utils/dir.dart';
-import 'package:meread/utils/parse.dart';
+import 'package:meread/utils/font_util.dart';
+import 'package:meread/utils/parse_post_util.dart';
 import 'package:meread/widgets/post_container.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -19,11 +19,16 @@ class FeedPage extends StatefulWidget {
 }
 
 class FeedPageState extends State<FeedPage> {
+  // 文章列表
   List<Post> postList = [];
+  // 是否只显示未读文章
   bool onlyUnread = false;
+  // 是否只显示收藏文章
   bool onlyFavorite = false;
+  // 字体目录
   String? fontDir;
 
+  /* 获取文章列表 */
   Future<void> getPostList() async {
     await widget.feed.getAllPosts().then(
           (value) => setState(
@@ -34,6 +39,7 @@ class FeedPageState extends State<FeedPage> {
         );
   }
 
+  /* 获取未读文章列表 */
   Future<void> getUnreadPostList() async {
     widget.feed.getUnreadPosts().then(
           (value) => setState(
@@ -44,8 +50,9 @@ class FeedPageState extends State<FeedPage> {
         );
   }
 
+  /* 获取收藏文章列表 */
   Future<void> getFavoritePostList() async {
-    await widget.feed.getAllfavoritePosts().then(
+    await widget.feed.getFavoritePosts().then(
           (value) => setState(
             () {
               postList = value;
@@ -54,10 +61,11 @@ class FeedPageState extends State<FeedPage> {
         );
   }
 
+  /* 获取字体目录 */
   void initFontDir() {
     getFontDir().then((value) {
       setState(() {
-        fontDir = value;
+        fontDir = value.path;
       });
     });
   }
@@ -75,6 +83,7 @@ class FeedPageState extends State<FeedPage> {
       appBar: AppBar(
         title: Text(widget.feed.name),
         actions: [
+          /* 未读筛选 */
           IconButton(
             onPressed: () async {
               if (onlyUnread) {
@@ -94,6 +103,7 @@ class FeedPageState extends State<FeedPage> {
                 ? const Icon(Icons.radio_button_checked)
                 : const Icon(Icons.radio_button_unchecked),
           ),
+          /* 收藏筛选 */
           IconButton(
             onPressed: () async {
               if (onlyFavorite) {
@@ -117,6 +127,7 @@ class FeedPageState extends State<FeedPage> {
             position: PopupMenuPosition.under,
             itemBuilder: (BuildContext context) {
               return <PopupMenuEntry>[
+                /* 全标已读 */
                 PopupMenuItem(
                   onTap: () async {
                     await widget.feed.markPostsAsRead();
@@ -130,6 +141,7 @@ class FeedPageState extends State<FeedPage> {
                   },
                   child: Text(AppLocalizations.of(context)!.markAllAsRead),
                 ),
+                /* 编辑订阅源 */
                 PopupMenuItem(
                   onTap: () {
                     Future.delayed(const Duration(seconds: 0), () {
@@ -152,7 +164,7 @@ class FeedPageState extends State<FeedPage> {
                   child: Text(AppLocalizations.of(context)!.editFeed),
                 ),
                 const PopupMenuDivider(),
-                // 删除订阅源
+                /* 删除订阅源 */
                 PopupMenuItem(
                   onTap: () async {
                     await Future.delayed(const Duration(seconds: 0));
@@ -197,7 +209,8 @@ class FeedPageState extends State<FeedPage> {
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
-            bool parseFeed = await parseFeedContent(widget.feed);
+            /* 刷新订阅源 */
+            bool parseFeed = await parsePosts(widget.feed);
             if (onlyUnread) {
               getUnreadPostList();
             } else if (onlyFavorite) {
@@ -213,7 +226,6 @@ class FeedPageState extends State<FeedPage> {
             );
           },
           child: ListView.separated(
-            cacheExtent: 30, // 预加载
             itemCount: postList.length,
             padding: const EdgeInsets.all(12),
             itemBuilder: (context, index) {
@@ -231,7 +243,6 @@ class FeedPageState extends State<FeedPage> {
                       CupertinoPageRoute(
                         builder: (context) => ReadPage(
                           post: postList[index],
-                          fullText: widget.feed.fullText == 1,
                           fontDir: fontDir!,
                         ),
                       ),
@@ -244,10 +255,6 @@ class FeedPageState extends State<FeedPage> {
                         getPostList();
                       }
                     });
-                  }
-                  // 标记文章为已读
-                  if (postList[index].read == 0) {
-                    postList[index].markRead();
                   }
                 },
                 child: PostContainer(post: postList[index]),

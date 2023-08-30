@@ -8,11 +8,10 @@ import 'package:meread/routes/feed_page/add_feed_page.dart';
 import 'package:meread/routes/feed_page/feed_page.dart';
 import 'package:meread/routes/read.dart';
 import 'package:meread/routes/setting_page/setting_page.dart';
-import 'package:meread/utils/parse.dart';
+import 'package:meread/utils/font_util.dart';
+import 'package:meread/utils/parse_post_util.dart';
 import 'package:meread/widgets/post_container.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../utils/dir.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,13 +20,20 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  // 订阅源列表，按分类分组
   Map<String, List<Feed>> feedListGroupByCategory = {};
+  // 文章列表
   List<Post> postList = [];
+  // 是否只显示未读文章
   bool onlyUnread = false;
+  // 是否只显示收藏文章
   bool onlyFavorite = false;
+  // 未读文章数
   Map<int, int> unreadCount = {};
+  // 字体目录
   String? fontDir;
 
+  /* 获取订阅源列表 */
   Future<void> getFeedList() async {
     await Feed.groupByCategory().then(
       (value) => setState(
@@ -38,6 +44,7 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  /* 获取文章列表 */
   Future<void> getPostList() async {
     await Post.getAll().then(
       (value) => setState(
@@ -48,6 +55,7 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  /* 获取未读文章列表 */
   Future<void> getUnreadPost() async {
     await Post.getUnread().then(
       (value) => setState(
@@ -58,8 +66,9 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  /* 获取收藏文章列表 */
   Future<void> getFavoritePost() async {
-    await Post.getAllFavorite().then(
+    await Post.getFavorite().then(
       (value) => setState(
         () {
           postList = value;
@@ -68,6 +77,7 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  /* 获取未读文章数 */
   Future<void> getUnreadCount() async {
     await Feed.unreadPostCount().then(
       (value) => setState(
@@ -78,12 +88,16 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  /* 刷新文章列表 */
   Future<void> refresh() async {
     List<Feed> feedList = await Feed.getAll();
+
+    // 刷新失败的订阅源数量
     int failCount = 0;
+
     await Future.wait(
       feedList.map(
-        (e) => parseFeedContent(e).then(
+        (e) => parsePosts(e).then(
           (value) async {
             if (value) {
               if (onlyUnread) {
@@ -99,23 +113,19 @@ class HomePageState extends State<HomePage> {
         ),
       ),
     );
-    if (failCount > 0) {
-      if (!mounted) return;
-      Fluttertoast.showToast(
-        msg: AppLocalizations.of(context)!.updateFailedFeeds(failCount),
-      );
-    } else {
-      if (!mounted) return;
-      Fluttertoast.showToast(
-        msg: AppLocalizations.of(context)!.updateSuccess,
-      );
-    }
+    if (!mounted) return;
+    Fluttertoast.showToast(
+      msg: failCount > 0
+          ? AppLocalizations.of(context)!.updateFailedFeeds(failCount)
+          : AppLocalizations.of(context)!.updateSuccess,
+    );
   }
 
+  /* 获取字体目录 */
   void initFontDir() {
     getFontDir().then((value) {
       setState(() {
-        fontDir = value;
+        fontDir = value.path;
       });
     });
   }
@@ -136,6 +146,7 @@ class HomePageState extends State<HomePage> {
         title: Text(AppLocalizations.of(context)!.meRead),
         centerTitle: false,
         actions: [
+          /* 未读筛选 */
           IconButton(
             onPressed: () async {
               if (onlyUnread) {
@@ -155,6 +166,7 @@ class HomePageState extends State<HomePage> {
                 ? const Icon(Icons.radio_button_checked)
                 : const Icon(Icons.radio_button_unchecked),
           ),
+          /* 收藏筛选 */
           IconButton(
             onPressed: () async {
               if (onlyFavorite) {
@@ -178,6 +190,7 @@ class HomePageState extends State<HomePage> {
             position: PopupMenuPosition.under,
             itemBuilder: (BuildContext context) {
               return <PopupMenuEntry>[
+                /* 全标已读 */
                 PopupMenuItem(
                   onTap: () async {
                     await Post.markAllRead();
@@ -192,6 +205,7 @@ class HomePageState extends State<HomePage> {
                   },
                   child: Text(AppLocalizations.of(context)!.markAllAsRead),
                 ),
+                /* 添加订阅源 */
                 PopupMenuItem(
                   onTap: () {
                     // 打开订阅源添加页面，返回时刷新订阅源列表
@@ -207,6 +221,7 @@ class HomePageState extends State<HomePage> {
                   child: Text(AppLocalizations.of(context)!.addFeed),
                 ),
                 const PopupMenuDivider(),
+                /* 设置 */
                 PopupMenuItem(
                   onTap: () {
                     Future.delayed(const Duration(seconds: 0), () {
@@ -300,23 +315,20 @@ class HomePageState extends State<HomePage> {
         child: RefreshIndicator(
           onRefresh: refresh,
           child: ListView.separated(
-            cacheExtent: 30, // 预加载
             itemCount: postList.length,
             padding: const EdgeInsets.all(12),
             itemBuilder: (context, index) {
               return GestureDetector(
-                // 根据 openType 打开文章
+                /* 根据 openType 打开文章 */
                 onTap: () async {
                   if (postList[index].openType == 2) {
-                    // 系统浏览器打开
+                    /* 系统浏览器打开 */
                     await launchUrl(
                       Uri.parse(postList[index].link),
                       mode: LaunchMode.externalApplication,
                     );
                   } else {
-                    // 应用内打开：阅读器 or 标签页
-                    final bool fullText =
-                        await postList[index].getFullText() == 1;
+                    /* 应用内打开：阅读器 or 标签页 */
                     if (!mounted) return;
                     if (fontDir == null) return;
                     Navigator.push(
@@ -324,12 +336,11 @@ class HomePageState extends State<HomePage> {
                       CupertinoPageRoute(
                         builder: (context) => ReadPage(
                           post: postList[index],
-                          fullText: fullText,
                           fontDir: fontDir!,
                         ),
                       ),
                     ).then((value) {
-                      // 返回时刷新文章列表
+                      /* 返回时刷新文章列表 */
                       if (onlyUnread) {
                         getUnreadPost();
                       } else if (onlyFavorite) {
@@ -339,10 +350,6 @@ class HomePageState extends State<HomePage> {
                       }
                       getUnreadCount();
                     });
-                  }
-                  // 标记文章为已读
-                  if (postList[index].read == 0) {
-                    postList[index].markRead();
                   }
                 },
                 child: PostContainer(post: postList[index]),

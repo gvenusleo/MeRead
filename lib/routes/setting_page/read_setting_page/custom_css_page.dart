@@ -45,15 +45,20 @@ class CustomCssPageState extends State<CustomCssPage> {
               children: [
                 TextButton(
                   onPressed: () {
-                    // 从剪贴板获取，光标移到末尾
-                    Clipboard.getData('text/plain').then((value) {
-                      if (value != null) {
-                        _customCssController.text = value.text!;
-                        _customCssController.selection =
-                            TextSelection.fromPosition(
-                                TextPosition(offset: value.text!.length));
-                      }
-                    });
+                    /* 从剪贴板获取，光标移到末尾 */
+                    Clipboard.getData('text/plain').then(
+                      (value) {
+                        if (value != null) {
+                          _customCssController.text = value.text!;
+                          _customCssController.selection =
+                              TextSelection.fromPosition(
+                            TextPosition(
+                              offset: value.text!.length,
+                            ),
+                          );
+                        }
+                      },
+                    );
                   },
                   child: Text(AppLocalizations.of(context)!.paste),
                 ),

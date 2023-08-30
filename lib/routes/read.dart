@@ -16,11 +16,9 @@ class ReadPage extends StatefulWidget {
   const ReadPage({
     super.key,
     required this.post,
-    required this.fullText,
     required this.fontDir,
   });
   final Post post;
-  final bool fullText;
   final String fontDir;
 
   @override
@@ -28,31 +26,41 @@ class ReadPage extends StatefulWidget {
 }
 
 class ReadPageState extends State<ReadPage> {
-  int _index = 0; // 堆叠索引
-  String contentHtml = ''; // 内容 html
+  // 堆叠索引
+  int _index = 0;
+  // 内容 html
+  String contentHtml = '';
 
-  // 根据 url 获取 html 内容
+  /* 根据 url 获取 html 内容 */
   Future<void> initData(String url) async {
-    if (widget.fullText && widget.post.read != 2 && widget.post.openType == 0) {
+    if (widget.post.fullText &&
+        !widget.post.fullTextCache &&
+        widget.post.openType == 0) {
       setState(() {
         _index = 0;
       });
+      /* 获取全文 */
       final response = await Dio().get(url);
       final document = html_parser.parse(response.data);
       final bestElemReadability =
           readabilityMainElement(document.documentElement!);
       widget.post.content = bestElemReadability.outerHtml;
-      widget.post.read = 2;
-      widget.post.updateToDb();
       setState(() {
         contentHtml = widget.post.content;
         _index = 1;
       });
+      widget.post.updateToDb();
     } else {
       setState(() {
         contentHtml = widget.post.content;
         _index = 1;
       });
+    }
+    /* 更新文章信息 */
+    if (!widget.post.read) {
+      widget.post.read = true;
+      widget.post.fullTextCache = true;
+      widget.post.updateToDb();
     }
   }
 
@@ -142,6 +150,7 @@ ${context.watch<ReadPageProvider>().customCss}
       appBar: AppBar(
         title: Text(widget.post.feedName),
         actions: [
+          /* 在外部浏览器中打开 */
           IconButton(
             onPressed: () async {
               await launchUrl(
@@ -151,6 +160,7 @@ ${context.watch<ReadPageProvider>().customCss}
             },
             icon: const Icon(Icons.open_in_browser_outlined),
           ),
+          /* 分享 */
           IconButton(
             onPressed: () {
               Share.share(
@@ -164,28 +174,30 @@ ${context.watch<ReadPageProvider>().customCss}
             position: PopupMenuPosition.under,
             itemBuilder: (BuildContext context) {
               return <PopupMenuEntry>[
+                /* 标记为未读 */
                 PopupMenuItem(
                   onTap: () async {
-                    await widget.post.markUnread();
+                    await widget.post.markAsUnread();
                   },
                   child: Text(
                     AppLocalizations.of(context)!.markAsUnread,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
+                /* 更改收藏状态 */
                 PopupMenuItem(
                   onTap: () async {
-                    widget.post.favorite = widget.post.favorite == 0 ? 1 : 0;
                     await widget.post.changeFavorite();
                   },
                   child: Text(
-                    widget.post.favorite == 1
+                    widget.post.favorite
                         ? AppLocalizations.of(context)!.cancelCollect
                         : AppLocalizations.of(context)!.collectPost,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
                 const PopupMenuDivider(),
+                /* 复制链接 */
                 PopupMenuItem(
                   onTap: () {
                     Clipboard.setData(ClipboardData(text: widget.post.link));

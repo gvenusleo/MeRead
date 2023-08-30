@@ -16,7 +16,7 @@ import 'package:meread/routes/setting_page/language_setting_page/language_settin
 import 'package:meread/routes/setting_page/read_setting_page/read_setting_page.dart';
 import 'package:meread/routes/setting_page/text_scale_factor_setting_page/text_scale_factor_setting_page.dart';
 import 'package:meread/routes/setting_page/theme_setting_page/theme_setting_page.dart';
-import 'package:meread/utils/parse.dart';
+import 'package:meread/utils/opml_util.dart';
 import 'package:meread/widgets/list_tile_group_title.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -43,6 +43,7 @@ class _SettingPageState extends State<SettingPage> {
             ListTileGroupTitle(
               title: AppLocalizations.of(context)!.personalization,
             ),
+            /* 语言设置 */
             ListTile(
               leading: const Icon(Icons.translate_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
@@ -61,6 +62,7 @@ class _SettingPageState extends State<SettingPage> {
                 }));
               },
             ),
+            /* 颜色主题设置 */
             ListTile(
               leading: const Icon(Icons.dark_mode_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
@@ -78,6 +80,7 @@ class _SettingPageState extends State<SettingPage> {
                 }));
               },
             ),
+            /* 动态取色设置 */
             ListTile(
               leading: const Icon(Icons.color_lens_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
@@ -91,6 +94,7 @@ class _SettingPageState extends State<SettingPage> {
                 }));
               },
             ),
+            /* 全局字体设置 */
             ListTile(
               leading: const Icon(Icons.font_download_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
@@ -107,6 +111,7 @@ class _SettingPageState extends State<SettingPage> {
                 }));
               },
             ),
+            /* 全局缩放设置 */
             ListTile(
               leading: const Icon(Icons.text_fields_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
@@ -127,6 +132,7 @@ class _SettingPageState extends State<SettingPage> {
                 }));
               },
             ),
+            /* 阅读页面配置设置 */
             ListTile(
               leading: const Icon(Icons.article_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
@@ -143,6 +149,7 @@ class _SettingPageState extends State<SettingPage> {
             ListTileGroupTitle(
               title: AppLocalizations.of(context)!.dataManagement,
             ),
+            /* 屏蔽词设置 */
             ListTile(
               leading: const Icon(Icons.app_blocking_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
@@ -156,6 +163,7 @@ class _SettingPageState extends State<SettingPage> {
                 }));
               },
             ),
+            /* 导入 OPML 文件 */
             ListTile(
               leading: const Icon(Icons.file_download_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
@@ -165,6 +173,7 @@ class _SettingPageState extends State<SettingPage> {
               ),
               onTap: importOPML,
             ),
+            /* 导出 OPML 文件 */
             ListTile(
               leading: const Icon(Icons.file_upload_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
@@ -175,6 +184,7 @@ class _SettingPageState extends State<SettingPage> {
               onTap: exportOPML,
             ),
             ListTileGroupTitle(title: AppLocalizations.of(context)!.others),
+            /* 检查更新 */
             ListTile(
               leading: const Icon(Icons.update_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
@@ -182,6 +192,7 @@ class _SettingPageState extends State<SettingPage> {
               subtitle: Text(AppLocalizations.of(context)!.getLatestVersion),
               onTap: checkUpdate,
             ),
+            /* 开源许可 */
             ListTile(
               leading: const Icon(Icons.privacy_tip_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
@@ -209,6 +220,7 @@ class _SettingPageState extends State<SettingPage> {
                     '© 2022 - 2023 ${AppLocalizations.of(context)!.meRead}. All Rights Reserved.',
               ),
             ),
+            /* 关于 */
             ListTile(
               leading: const Icon(Icons.android_outlined),
               iconColor: Theme.of(context).textTheme.bodyLarge!.color,
@@ -227,9 +239,8 @@ class _SettingPageState extends State<SettingPage> {
     );
   }
 
-  // 导入 OPML 文件
+  /// 导入 OPML 文件
   Future<void> importOPML() async {
-    // 打开文件选择器
     final result = await FilePicker.platform.pickFiles(
       type: FileType.any,
       // file_picker 无法正确过滤 opml 格式文件
@@ -270,11 +281,10 @@ class _SettingPageState extends State<SettingPage> {
     }
   }
 
-  // 导出 OPML 文件
+  /// 导出 OPML 文件
   Future<void> exportOPML() async {
     final String successText = AppLocalizations.of(context)!.shareOPMLFile;
-    String opmlStr = await exportOpml();
-    // opmlStr 字符串写入 feeds.opml 文件并分享，分享后删除文件
+    String opmlStr = await exportOpmlBase();
     final Directory tempDir = await getTemporaryDirectory();
     final File file = File('${tempDir.path}/feeds-from-MeRead.xml');
     await file.writeAsString(opmlStr);
@@ -291,18 +301,18 @@ class _SettingPageState extends State<SettingPage> {
     await file.delete();
   }
 
-  // 检查更新
+  /// 检查更新
   Future<void> checkUpdate() async {
     Fluttertoast.showToast(
       msg: AppLocalizations.of(context)!.checkingForUpdates,
     );
     try {
-      // 通过访问 https://github.com/gvenusleo/MeRead/releases/latest 获取最新版本号
+      /* 通过访问 https://github.com/gvenusleo/MeRead/releases/latest 获取最新版本号 */
       final Dio dio = Dio();
       final response = await dio.get(
         'https://github.com/gvenusleo/MeRead/releases/latest',
       );
-      // 获取网页 title
+      /* 获取网页 title */
       final String title =
           response.data.split('<title>')[1].split('</title>')[0];
       final String latestVersion = title.split(' ')[1];

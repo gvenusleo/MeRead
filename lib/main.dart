@@ -1,36 +1,24 @@
-import 'dart:io';
-
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
-import 'package:meread/global/global.dart';
+import 'package:meread/global/init.dart';
 import 'package:meread/provider/read_page_provider.dart';
 import 'package:meread/provider/theme_provider.dart';
 import 'package:meread/routes/home.dart';
 import 'package:meread/theme/theme.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (Platform.isAndroid) {
-    SystemUiOverlayStyle systemUiOverlayStyle = const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      systemNavigationBarColor: Colors.transparent,
-      systemNavigationBarDividerColor: Colors.transparent,
-    );
-    SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
-  }
-  SystemChrome.setEnabledSystemUIMode(
-    SystemUiMode.edgeToEdge, // 适配 EdgeToEdge
-  );
-  await init(); // 初始化
+  await init();
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ThemeProvider()), // 主题状态管理
-        ChangeNotifierProvider(create: (_) => ReadPageProvider()), // 阅读页面状态管理
+        // 主题状态管理
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        // 阅读页面配置状态管理
+        ChangeNotifierProvider(create: (_) => ReadPageProvider()),
       ],
       child: const MyApp(),
     ),
