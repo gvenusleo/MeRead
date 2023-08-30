@@ -10,6 +10,7 @@ import 'package:meread/routes/read.dart';
 import 'package:meread/routes/setting_page/setting_page.dart';
 import 'package:meread/utils/font_util.dart';
 import 'package:meread/utils/parse_post_util.dart';
+import 'package:meread/widgets/expansion_card.dart';
 import 'package:meread/widgets/post_container.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -32,9 +33,249 @@ class HomePageState extends State<HomePage> {
   Map<int, int> unreadCount = {};
   // 字体目录
   String? fontDir;
+  // Drawer 展开状态
+  List<bool> drawerExpansionState = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getFeedListGroupByCategory();
+    getPostList();
+    getUnreadCount();
+    initFontDir();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.meRead),
+        centerTitle: false,
+        actions: [
+          /* 未读筛选 */
+          IconButton(
+            onPressed: () async {
+              if (onlyUnread) {
+                await getPostList();
+                setState(() {
+                  onlyUnread = false;
+                });
+              } else {
+                await getUnreadPost();
+                setState(() {
+                  onlyUnread = true;
+                  onlyFavorite = false;
+                });
+              }
+            },
+            icon: onlyUnread
+                ? const Icon(Icons.radio_button_checked)
+                : const Icon(Icons.radio_button_unchecked),
+          ),
+          /* 收藏筛选 */
+          IconButton(
+            onPressed: () async {
+              if (onlyFavorite) {
+                await getPostList();
+                setState(() {
+                  onlyFavorite = false;
+                });
+              } else {
+                await getFavoritePost();
+                setState(() {
+                  onlyFavorite = true;
+                  onlyUnread = false;
+                });
+              }
+            },
+            icon: onlyFavorite
+                ? const Icon(Icons.bookmark)
+                : const Icon(Icons.bookmark_border_outlined),
+          ),
+          PopupMenuButton(
+            position: PopupMenuPosition.under,
+            itemBuilder: (BuildContext context) {
+              return <PopupMenuEntry>[
+                /* 全标已读 */
+                PopupMenuItem(
+                  onTap: () async {
+                    await Post.markAllRead();
+                    if (onlyUnread) {
+                      getUnreadPost();
+                    } else if (onlyFavorite) {
+                      getFavoritePost();
+                    } else {
+                      getPostList();
+                    }
+                    getUnreadCount();
+                  },
+                  child: Text(AppLocalizations.of(context)!.markAllAsRead),
+                ),
+                /* 添加订阅源 */
+                PopupMenuItem(
+                  onTap: () {
+                    // 打开订阅源添加页面，返回时刷新订阅源列表
+                    Future.delayed(const Duration(seconds: 0), () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => const AddFeedPage(),
+                        ),
+                      ).then((value) => getFeedListGroupByCategory());
+                    });
+                  },
+                  child: Text(AppLocalizations.of(context)!.addFeed),
+                ),
+                const PopupMenuDivider(),
+                /* 设置 */
+                PopupMenuItem(
+                  onTap: () {
+                    Future.delayed(const Duration(seconds: 0), () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => const SettingPage(),
+                        ),
+                      ).then((value) {
+                        getFeedListGroupByCategory();
+                        if (onlyUnread) {
+                          getUnreadPost();
+                        } else if (onlyFavorite) {
+                          getFavoritePost();
+                        } else {
+                          getPostList();
+                        }
+                      });
+                    });
+                  },
+                  child: Text(AppLocalizations.of(context)!.settings),
+                ),
+              ];
+            },
+          ),
+        ],
+      ),
+      drawerEdgeDragWidth: MediaQuery.of(context).size.width * 0.4,
+      drawer: Drawer(
+        child: SafeArea(
+          child: ListView.builder(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            itemCount: feedListGroupByCategory.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ExpansionCard(
+                title: Text(
+                  feedListGroupByCategory.keys.toList()[index],
+                ),
+                initiallyExpanded: drawerExpansionState[index],
+                onExpansionChanged: (value) {
+                  setState(() {
+                    drawerExpansionState[index] = value;
+                  });
+                },
+                children: [
+                  Column(
+                    children: [
+                      for (Feed feed
+                          in feedListGroupByCategory.values.toList()[index])
+                        ListTile(
+                          dense: true,
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 36,
+                          ),
+                          title: Text(
+                            feed.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          trailing: Text(
+                            unreadCount[feed.id] == null
+                                ? ''
+                                : unreadCount[feed.id].toString(),
+                          ),
+                          onTap: () {
+                            if (!mounted) return;
+                            Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => FeedPage(feed: feed),
+                              ),
+                            ).then((value) {
+                              getFeedListGroupByCategory();
+                              getUnreadCount();
+                              if (onlyUnread) {
+                                getUnreadPost();
+                              } else if (onlyFavorite) {
+                                getFavoritePost();
+                              } else {
+                                getPostList();
+                              }
+                            });
+                          },
+                        ),
+                    ],
+                  )
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: refresh,
+          child: ListView.separated(
+            itemCount: postList.length,
+            padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                /* 根据 openType 打开文章 */
+                onTap: () async {
+                  if (postList[index].openType == 2) {
+                    /* 系统浏览器打开 */
+                    await launchUrl(
+                      Uri.parse(postList[index].link),
+                      mode: LaunchMode.externalApplication,
+                    );
+                  } else {
+                    /* 应用内打开：阅读器 or 标签页 */
+                    if (!mounted) return;
+                    if (fontDir == null) return;
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => ReadPage(
+                          post: postList[index],
+                          fontDir: fontDir!,
+                        ),
+                      ),
+                    ).then((value) {
+                      /* 返回时刷新文章列表 */
+                      if (onlyUnread) {
+                        getUnreadPost();
+                      } else if (onlyFavorite) {
+                        getFavoritePost();
+                      } else {
+                        getPostList();
+                      }
+                      getUnreadCount();
+                    });
+                  }
+                },
+                child: PostContainer(post: postList[index]),
+              );
+            },
+            separatorBuilder: (context, index) {
+              return const SizedBox(height: 4);
+            },
+          ),
+        ),
+      ),
+    );
+  }
 
   /* 获取订阅源列表 */
-  Future<void> getFeedList() async {
+  Future<void> getFeedListGroupByCategory() async {
     await Feed.groupByCategory().then(
       (value) => setState(
         () {
@@ -42,6 +283,12 @@ class HomePageState extends State<HomePage> {
         },
       ),
     );
+    /* 初始化 Drawer 折叠状态 */
+    if (drawerExpansionState.isEmpty) {
+      for (int i = 0; i < feedListGroupByCategory.length; i++) {
+        drawerExpansionState.add(false);
+      }
+    }
   }
 
   /* 获取文章列表 */
@@ -128,239 +375,5 @@ class HomePageState extends State<HomePage> {
         fontDir = value.path;
       });
     });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getFeedList();
-    getPostList();
-    getUnreadCount();
-    initFontDir();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.meRead),
-        centerTitle: false,
-        actions: [
-          /* 未读筛选 */
-          IconButton(
-            onPressed: () async {
-              if (onlyUnread) {
-                await getPostList();
-                setState(() {
-                  onlyUnread = false;
-                });
-              } else {
-                await getUnreadPost();
-                setState(() {
-                  onlyUnread = true;
-                  onlyFavorite = false;
-                });
-              }
-            },
-            icon: onlyUnread
-                ? const Icon(Icons.radio_button_checked)
-                : const Icon(Icons.radio_button_unchecked),
-          ),
-          /* 收藏筛选 */
-          IconButton(
-            onPressed: () async {
-              if (onlyFavorite) {
-                await getPostList();
-                setState(() {
-                  onlyFavorite = false;
-                });
-              } else {
-                await getFavoritePost();
-                setState(() {
-                  onlyFavorite = true;
-                  onlyUnread = false;
-                });
-              }
-            },
-            icon: onlyFavorite
-                ? const Icon(Icons.bookmark)
-                : const Icon(Icons.bookmark_border_outlined),
-          ),
-          PopupMenuButton(
-            position: PopupMenuPosition.under,
-            itemBuilder: (BuildContext context) {
-              return <PopupMenuEntry>[
-                /* 全标已读 */
-                PopupMenuItem(
-                  onTap: () async {
-                    await Post.markAllRead();
-                    if (onlyUnread) {
-                      getUnreadPost();
-                    } else if (onlyFavorite) {
-                      getFavoritePost();
-                    } else {
-                      getPostList();
-                    }
-                    getUnreadCount();
-                  },
-                  child: Text(AppLocalizations.of(context)!.markAllAsRead),
-                ),
-                /* 添加订阅源 */
-                PopupMenuItem(
-                  onTap: () {
-                    // 打开订阅源添加页面，返回时刷新订阅源列表
-                    Future.delayed(const Duration(seconds: 0), () {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                          builder: (context) => const AddFeedPage(),
-                        ),
-                      ).then((value) => getFeedList());
-                    });
-                  },
-                  child: Text(AppLocalizations.of(context)!.addFeed),
-                ),
-                const PopupMenuDivider(),
-                /* 设置 */
-                PopupMenuItem(
-                  onTap: () {
-                    Future.delayed(const Duration(seconds: 0), () {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                          builder: (context) => const SettingPage(),
-                        ),
-                      ).then((value) {
-                        getFeedList();
-                        if (onlyUnread) {
-                          getUnreadPost();
-                        } else if (onlyFavorite) {
-                          getFavoritePost();
-                        } else {
-                          getPostList();
-                        }
-                      });
-                    });
-                  },
-                  child: Text(AppLocalizations.of(context)!.settings),
-                ),
-              ];
-            },
-          ),
-        ],
-      ),
-      drawerEdgeDragWidth: MediaQuery.of(context).size.width * 0.4,
-      drawer: Drawer(
-        child: SafeArea(
-          child: ListView.builder(
-            padding: const EdgeInsets.symmetric(vertical: 18),
-            itemCount: feedListGroupByCategory.length,
-            itemBuilder: (BuildContext context, int index) {
-              return ExpansionTile(
-                title: Text(
-                  feedListGroupByCategory.keys.toList()[index],
-                ),
-                shape: Border.all(color: Colors.transparent),
-                children: [
-                  Column(
-                    children: [
-                      for (Feed feed
-                          in feedListGroupByCategory.values.toList()[index])
-                        ListTile(
-                          dense: true,
-                          contentPadding: const EdgeInsets.only(
-                            left: 40,
-                            right: 28,
-                          ),
-                          title: Text(
-                            feed.name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          trailing: Text(
-                            unreadCount[feed.id] == null
-                                ? ''
-                                : unreadCount[feed.id].toString(),
-                          ),
-                          onTap: () {
-                            if (!mounted) return;
-                            Navigator.pop(context);
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (context) => FeedPage(feed: feed),
-                              ),
-                            ).then((value) {
-                              getFeedList();
-                              getUnreadCount();
-                              if (onlyUnread) {
-                                getUnreadPost();
-                              } else if (onlyFavorite) {
-                                getFavoritePost();
-                              } else {
-                                getPostList();
-                              }
-                            });
-                          },
-                        ),
-                    ],
-                  )
-                ],
-              );
-            },
-          ),
-        ),
-      ),
-      body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: refresh,
-          child: ListView.separated(
-            itemCount: postList.length,
-            padding: const EdgeInsets.all(12),
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                /* 根据 openType 打开文章 */
-                onTap: () async {
-                  if (postList[index].openType == 2) {
-                    /* 系统浏览器打开 */
-                    await launchUrl(
-                      Uri.parse(postList[index].link),
-                      mode: LaunchMode.externalApplication,
-                    );
-                  } else {
-                    /* 应用内打开：阅读器 or 标签页 */
-                    if (!mounted) return;
-                    if (fontDir == null) return;
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => ReadPage(
-                          post: postList[index],
-                          fontDir: fontDir!,
-                        ),
-                      ),
-                    ).then((value) {
-                      /* 返回时刷新文章列表 */
-                      if (onlyUnread) {
-                        getUnreadPost();
-                      } else if (onlyFavorite) {
-                        getFavoritePost();
-                      } else {
-                        getPostList();
-                      }
-                      getUnreadCount();
-                    });
-                  }
-                },
-                child: PostContainer(post: postList[index]),
-              );
-            },
-            separatorBuilder: (context, index) {
-              return const SizedBox(height: 4);
-            },
-          ),
-        ),
-      ),
-    );
   }
 }

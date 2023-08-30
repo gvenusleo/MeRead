@@ -228,7 +228,7 @@ class FeedPageState extends State<FeedPage> {
           },
           child: ListView.separated(
             itemCount: postList.length,
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () async {
