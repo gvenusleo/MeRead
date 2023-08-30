@@ -1,5 +1,6 @@
 import 'package:isar/isar.dart';
 import 'package:meread/global/global.dart';
+import 'package:meread/models/feed.dart';
 
 part 'post.g.dart';
 
@@ -39,24 +40,14 @@ class Post {
     return isar.posts.where().sortByPubDateDesc().findAll();
   }
 
-  /// 查询所有未读 Post, 按照发布时间倒序
-  static Future<List<Post>> getUnread() async {
-    return isar.posts
-        .where()
-        .filter()
-        .readEqualTo(false)
-        .sortByPubDateDesc()
-        .findAll();
-  }
-
-  /// 查询所有收藏 Post, 按照发布时间倒序
-  static Future<List<Post>> getFavorite() async {
-    return isar.posts
-        .where()
-        .filter()
-        .favoriteEqualTo(true)
-        .sortByPubDateDesc()
-        .findAll();
+  /// 根据 List<Feed> 查询所有 Post，按照发布时间倒序
+  static Future<List<Post>> getAllByFeeds(List<Feed> feeds) async {
+    final List<int> feedIds = [];
+    for (var feed in feeds) {
+      feedIds.add(feed.id!);
+    }
+    final posts = await getAll();
+    return posts.where((post) => feedIds.contains(post.feedId)).toList();
   }
 
   /// 标记所有未读 Post 为已读

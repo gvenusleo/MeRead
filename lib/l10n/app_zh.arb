@@ -98,5 +98,6 @@
     "download": "下载",
     "importFailed": "导入失败",
     "fileFormatError": "文件格式错误，仅支持导入后缀名为 opml 或 xml 的文件。",
-    "copyFeedUrlSuccess": "已复制订阅源地址"
+    "copyFeedUrlSuccess": "已复制订阅源地址",
+    "allFeed": "全部订阅"
 }

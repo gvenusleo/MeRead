@@ -98,5 +98,6 @@
     "download": "Download",
     "importFailed": "Import Failed",
     "fileFormatError": "File Format Error. Please select a file with the suffix opml or xml.",
-    "copyFeedUrlSuccess": "Feed URL copied."
+    "copyFeedUrlSuccess": "Feed URL copied.",
+    "allFeed": "All Feeds"
 }

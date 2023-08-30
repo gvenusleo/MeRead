@@ -5,7 +5,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meread/models/feed.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/routes/feed_page/add_feed_page.dart';
-import 'package:meread/routes/feed_page/feed_page.dart';
 import 'package:meread/routes/read.dart';
 import 'package:meread/routes/setting_page/setting_page.dart';
 import 'package:meread/utils/font_util.dart';
@@ -23,8 +22,14 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   // 订阅源列表，按分类分组
   Map<String, List<Feed>> feedListGroupByCategory = {};
-  // 文章列表
+  // 当前状态下的订阅源列表
+  List<Feed> feedList = [];
+  // 当前状态下的全部文章列表
   List<Post> postList = [];
+  // 当前状态下的未读文章列表
+  List<Post> unreadPostList = [];
+  // 当前状态下的收藏文章列表
+  List<Post> favoritePostList = [];
   // 是否只显示未读文章
   bool onlyUnread = false;
   // 是否只显示收藏文章
@@ -35,33 +40,34 @@ class HomePageState extends State<HomePage> {
   String? fontDir;
   // Drawer 展开状态
   List<bool> drawerExpansionState = [];
+  // AppBar 标题
+  String? appBarTitle;
 
   @override
   void initState() {
     super.initState();
-    getFeedListGroupByCategory();
-    getPostList();
-    getUnreadCount();
-    initFontDir();
+    initData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.meRead),
+        title: Text(
+          appBarTitle == null
+              ? AppLocalizations.of(context)!.allFeed
+              : appBarTitle!,
+        ),
         centerTitle: false,
         actions: [
           /* 未读筛选 */
           IconButton(
             onPressed: () async {
               if (onlyUnread) {
-                await getPostList();
                 setState(() {
                   onlyUnread = false;
                 });
               } else {
-                await getUnreadPost();
                 setState(() {
                   onlyUnread = true;
                   onlyFavorite = false;
@@ -76,12 +82,10 @@ class HomePageState extends State<HomePage> {
           IconButton(
             onPressed: () async {
               if (onlyFavorite) {
-                await getPostList();
                 setState(() {
                   onlyFavorite = false;
                 });
               } else {
-                await getFavoritePost();
                 setState(() {
                   onlyFavorite = true;
                   onlyUnread = false;
@@ -100,13 +104,7 @@ class HomePageState extends State<HomePage> {
                 PopupMenuItem(
                   onTap: () async {
                     await Post.markAllRead();
-                    if (onlyUnread) {
-                      getUnreadPost();
-                    } else if (onlyFavorite) {
-                      getFavoritePost();
-                    } else {
-                      getPostList();
-                    }
+                    getAllPost();
                     getUnreadCount();
                   },
                   child: Text(AppLocalizations.of(context)!.markAllAsRead),
@@ -121,7 +119,7 @@ class HomePageState extends State<HomePage> {
                         CupertinoPageRoute(
                           builder: (context) => const AddFeedPage(),
                         ),
-                      ).then((value) => getFeedListGroupByCategory());
+                      ).then((value) => getAllFeed());
                     });
                   },
                   child: Text(AppLocalizations.of(context)!.addFeed),
@@ -137,14 +135,8 @@ class HomePageState extends State<HomePage> {
                           builder: (context) => const SettingPage(),
                         ),
                       ).then((value) {
-                        getFeedListGroupByCategory();
-                        if (onlyUnread) {
-                          getUnreadPost();
-                        } else if (onlyFavorite) {
-                          getFavoritePost();
-                        } else {
-                          getPostList();
-                        }
+                        getAllFeed();
+                        getAllPost();
                       });
                     });
                   },
@@ -160,23 +152,47 @@ class HomePageState extends State<HomePage> {
         child: SafeArea(
           child: ListView.builder(
             padding: const EdgeInsets.symmetric(vertical: 12),
-            itemCount: feedListGroupByCategory.length,
+            itemCount: feedListGroupByCategory.length + 1,
             itemBuilder: (BuildContext context, int index) {
+              if (index == 0) {
+                return ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+                  title: Text(AppLocalizations.of(context)!.allFeed),
+                  onTap: () {
+                    Navigator.pop(context);
+                    setState(() {
+                      appBarTitle = AppLocalizations.of(context)!.allFeed;
+                    });
+                    getAllFeed();
+                    getAllPost();
+                  },
+                );
+              }
               return ExpansionCard(
                 title: Text(
-                  feedListGroupByCategory.keys.toList()[index],
+                  feedListGroupByCategory.keys.toList()[index - 1],
                 ),
-                initiallyExpanded: drawerExpansionState[index],
+                initiallyExpanded: drawerExpansionState[index - 1],
                 onExpansionChanged: (value) {
                   setState(() {
-                    drawerExpansionState[index] = value;
+                    drawerExpansionState[index - 1] = value;
                   });
+                },
+                onTap: () {
+                  setState(() {
+                    appBarTitle =
+                        feedListGroupByCategory.keys.toList()[index - 1];
+                    feedList =
+                        feedListGroupByCategory.values.toList()[index - 1];
+                  });
+                  getAllPost();
+                  Navigator.pop(context);
                 },
                 children: [
                   Column(
                     children: [
                       for (Feed feed
-                          in feedListGroupByCategory.values.toList()[index])
+                          in feedListGroupByCategory.values.toList()[index - 1])
                         ListTile(
                           dense: true,
                           contentPadding: const EdgeInsets.symmetric(
@@ -193,24 +209,12 @@ class HomePageState extends State<HomePage> {
                                 : unreadCount[feed.id].toString(),
                           ),
                           onTap: () {
-                            if (!mounted) return;
-                            Navigator.pop(context);
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (context) => FeedPage(feed: feed),
-                              ),
-                            ).then((value) {
-                              getFeedListGroupByCategory();
-                              getUnreadCount();
-                              if (onlyUnread) {
-                                getUnreadPost();
-                              } else if (onlyFavorite) {
-                                getFavoritePost();
-                              } else {
-                                getPostList();
-                              }
+                            setState(() {
+                              appBarTitle = feed.name;
+                              feedList = [feed];
                             });
+                            getAllPost();
+                            Navigator.pop(context);
                           },
                         ),
                     ],
@@ -221,61 +225,16 @@ class HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: refresh,
-          child: ListView.separated(
-            itemCount: postList.length,
-            padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                /* 根据 openType 打开文章 */
-                onTap: () async {
-                  if (postList[index].openType == 2) {
-                    /* 系统浏览器打开 */
-                    await launchUrl(
-                      Uri.parse(postList[index].link),
-                      mode: LaunchMode.externalApplication,
-                    );
-                  } else {
-                    /* 应用内打开：阅读器 or 标签页 */
-                    if (!mounted) return;
-                    if (fontDir == null) return;
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => ReadPage(
-                          post: postList[index],
-                          fontDir: fontDir!,
-                        ),
-                      ),
-                    ).then((value) {
-                      /* 返回时刷新文章列表 */
-                      if (onlyUnread) {
-                        getUnreadPost();
-                      } else if (onlyFavorite) {
-                        getFavoritePost();
-                      } else {
-                        getPostList();
-                      }
-                      getUnreadCount();
-                    });
-                  }
-                },
-                child: PostContainer(post: postList[index]),
-              );
-            },
-            separatorBuilder: (context, index) {
-              return const SizedBox(height: 4);
-            },
-          ),
-        ),
+      body: buildBody(
+        onlyUnread
+            ? unreadPostList
+            : (onlyFavorite ? favoritePostList : postList),
       ),
     );
   }
 
-  /* 获取订阅源列表 */
-  Future<void> getFeedListGroupByCategory() async {
+  /* 获取分组订阅源列表和全部订阅源列表 */
+  Future<void> getAllFeed() async {
     await Feed.groupByCategory().then(
       (value) => setState(
         () {
@@ -283,6 +242,13 @@ class HomePageState extends State<HomePage> {
         },
       ),
     );
+    List<Feed> tem = [];
+    for (var feeds in feedListGroupByCategory.values) {
+      tem.addAll(feeds);
+    }
+    setState(() {
+      feedList = tem;
+    });
     /* 初始化 Drawer 折叠状态 */
     if (drawerExpansionState.isEmpty) {
       for (int i = 0; i < feedListGroupByCategory.length; i++) {
@@ -292,33 +258,13 @@ class HomePageState extends State<HomePage> {
   }
 
   /* 获取文章列表 */
-  Future<void> getPostList() async {
-    await Post.getAll().then(
+  Future<void> getAllPost() async {
+    await Post.getAllByFeeds(feedList).then(
       (value) => setState(
         () {
           postList = value;
-        },
-      ),
-    );
-  }
-
-  /* 获取未读文章列表 */
-  Future<void> getUnreadPost() async {
-    await Post.getUnread().then(
-      (value) => setState(
-        () {
-          postList = value;
-        },
-      ),
-    );
-  }
-
-  /* 获取收藏文章列表 */
-  Future<void> getFavoritePost() async {
-    await Post.getFavorite().then(
-      (value) => setState(
-        () {
-          postList = value;
+          unreadPostList = value.where((e) => !e.read).toList();
+          favoritePostList = value.where((e) => e.favorite).toList();
         },
       ),
     );
@@ -337,21 +283,14 @@ class HomePageState extends State<HomePage> {
 
   /* 刷新文章列表 */
   Future<void> refresh() async {
-    List<Feed> feedList = await Feed.getAll();
-
     // 刷新失败的订阅源数量
     int failCount = 0;
-
     await Future.wait(
       feedList.map(
         (e) => parsePosts(e).then(
           (value) async {
             if (value) {
-              if (onlyUnread) {
-                await getUnreadPost();
-              } else if (!onlyFavorite) {
-                await getPostList();
-              }
+              await getAllPost();
               await getUnreadCount();
             } else {
               failCount++;
@@ -375,5 +314,60 @@ class HomePageState extends State<HomePage> {
         fontDir = value.path;
       });
     });
+  }
+
+  /* 初始化数据 */
+  Future<void> initData() async {
+    getAllFeed();
+    getAllPost();
+    getUnreadCount();
+    initFontDir();
+  }
+
+  /* 构建 Post 列表 */
+  Widget buildBody(List<Post> posts) {
+    return SafeArea(
+      child: RefreshIndicator(
+        onRefresh: refresh,
+        child: ListView.separated(
+          itemCount: posts.length,
+          padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              /* 根据 openType 打开文章 */
+              onTap: () async {
+                if (posts[index].openType == 2) {
+                  /* 系统浏览器打开 */
+                  await launchUrl(
+                    Uri.parse(posts[index].link),
+                    mode: LaunchMode.externalApplication,
+                  );
+                } else {
+                  /* 应用内打开：阅读器 or 标签页 */
+                  if (fontDir == null) return;
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => ReadPage(
+                        post: posts[index],
+                        fontDir: fontDir!,
+                      ),
+                    ),
+                  ).then((value) {
+                    /* 返回时刷新文章列表 */
+                    getAllPost();
+                    getUnreadCount();
+                  });
+                }
+              },
+              child: PostContainer(post: posts[index]),
+            );
+          },
+          separatorBuilder: (context, index) {
+            return const SizedBox(height: 4);
+          },
+        ),
+      ),
+    );
   }
 }

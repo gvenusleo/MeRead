@@ -57,6 +57,7 @@ class ExpansionCard extends StatefulWidget {
     this.initiallyExpanded = false,
     this.maintainState = false,
     this.controller,
+    this.onTap,
   });
 
   final Widget? leading;
@@ -67,6 +68,7 @@ class ExpansionCard extends StatefulWidget {
   final bool initiallyExpanded;
   final bool maintainState;
   final ExpansionCardController? controller;
+  final VoidCallback? onTap;
 
   @override
   State<ExpansionCard> createState() => _ExpansionCardState();
@@ -179,7 +181,7 @@ class _ExpansionCardState extends State<ExpansionCard>
           hint: semanticsHint,
           onTapHint: onTapHint,
           child: ListTile(
-            // onTap: _handleTap,
+            onTap: widget.onTap,
             contentPadding: const EdgeInsets.symmetric(horizontal: 18),
             leading: widget.leading,
             title: widget.title,

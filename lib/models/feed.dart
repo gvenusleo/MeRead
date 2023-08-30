@@ -45,6 +45,11 @@ class Feed {
     return feedsGroupByCategory;
   }
 
+  /// 查询所有 Feed
+  static Future<List<Feed>> getAll() async {
+    return isar.feeds.where().findAllSync();
+  }
+
   /// 查询所有 Feed 未读 Post 数量，返回一个 Map
   static Future<Map<int, int>> unreadPostCount() async {
     final List<Feed> feeds = isar.feeds.where().findAllSync();
@@ -59,11 +64,6 @@ class Feed {
       unreadPostCount[feed.id!] = posts.length;
     }
     return unreadPostCount;
-  }
-
-  /// 查询所有 Feed
-  static Future<List<Feed>> getAll() async {
-    return isar.feeds.where().findAllSync();
   }
 
   /// 获取 Feed 下最新的 Post 的 pubDate
