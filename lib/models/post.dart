@@ -51,9 +51,7 @@ class Post {
   }
 
   /// 标记所有未读 Post 为已读
-  static Future<void> markAllRead() async {
-    final List<Post> posts =
-        await isar.posts.where().filter().readEqualTo(false).findAll();
+  static Future<void> markAllRead(List<Post> posts) async {
     for (Post post in posts) {
       post.read = true;
     }

@@ -45,11 +45,6 @@ class Feed {
     return feedsGroupByCategory;
   }
 
-  /// 查询所有 Feed
-  static Future<List<Feed>> getAll() async {
-    return isar.feeds.where().findAllSync();
-  }
-
   /// 查询所有 Feed 未读 Post 数量，返回一个 Map
   static Future<Map<int, int>> unreadPostCount() async {
     final List<Feed> feeds = isar.feeds.where().findAllSync();
@@ -95,48 +90,6 @@ class Feed {
       post.feedName = name;
       post.openType = openType;
       await post.updateToDb();
-    }
-  }
-
-  /// 查询 Feed 下的所有 Post，按照发布时间倒序
-  Future<List<Post>> getAllPosts() async {
-    return isar.posts
-        .where()
-        .filter()
-        .feedIdEqualTo(id!)
-        .sortByPubDateDesc()
-        .findAllSync();
-  }
-
-  /// 查询 Feed 下所有未读 Post, 按照发布时间倒序
-  Future<List<Post>> getUnreadPosts() async {
-    return isar.posts
-        .where()
-        .filter()
-        .feedIdEqualTo(id!)
-        .readEqualTo(false)
-        .sortByPubDateDesc()
-        .findAllSync();
-  }
-
-  /// 查询 Feed 下所有收藏 Post, 按照发布时间倒序
-  Future<List<Post>> getFavoritePosts() async {
-    return isar.posts
-        .where()
-        .filter()
-        .feedIdEqualTo(id!)
-        .favoriteEqualTo(true)
-        .sortByPubDateDesc()
-        .findAllSync();
-  }
-
-  /// 将 Feed 下所有 Post 标记为已读
-  Future<void> markPostsAsRead() async {
-    final List<Post> posts =
-        isar.posts.where().filter().feedIdEqualTo(id!).findAllSync();
-    for (var post in posts) {
-      post.read = true;
-      post.updateToDb();
     }
   }
 

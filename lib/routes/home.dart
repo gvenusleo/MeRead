@@ -103,7 +103,7 @@ class HomePageState extends State<HomePage> {
                 /* 全标已读 */
                 PopupMenuItem(
                   onTap: () async {
-                    await Post.markAllRead();
+                    await Post.markAllRead(unreadPostList);
                     getAllPost();
                     getUnreadCount();
                   },
@@ -163,8 +163,7 @@ class HomePageState extends State<HomePage> {
                     setState(() {
                       appBarTitle = AppLocalizations.of(context)!.allFeed;
                     });
-                    getAllFeed();
-                    getAllPost();
+                    getAllFeed().then((value) => getAllPost());
                   },
                 );
               }
@@ -318,8 +317,7 @@ class HomePageState extends State<HomePage> {
 
   /* 初始化数据 */
   Future<void> initData() async {
-    getAllFeed();
-    getAllPost();
+    getAllFeed().then((value) => getAllPost());
     getUnreadCount();
     initFontDir();
   }
