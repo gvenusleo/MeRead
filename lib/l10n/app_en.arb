@@ -20,7 +20,7 @@
     "save": "Save",
     "ok": "OK",
     "deleteFeed": "Delete Feed",
-    "doYouWantToDeleteThisFeed": "Do you really want to delete this feed?",
+    "doYouWantToDeleteThisFeed": "Do you really want to delete this feed? Are you sure you want to delete this feed? This will delete all articles for this feed at the same time.",
     "updateSuccess": "Update Success",
     "updateFailedFeeds": "Update Failed for {count} Feeds",
     "feedAlreadyExists": "Feed Already Exists",

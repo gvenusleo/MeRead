@@ -20,7 +20,7 @@
     "save": "保存",
     "ok": "确定",
     "deleteFeed": "删除订阅",
-    "doYouWantToDeleteThisFeed": "确定要删除这个订阅吗？",
+    "doYouWantToDeleteThisFeed": "确定要删除这个订阅源吗？这会同时删除这个订阅源的所有文章。",
     "updateSuccess": "更新成功",
     "updateFailedFeeds": "更新失败 {count} 个订阅源",
     "feedAlreadyExists": "订阅源已存在",
@@ -97,6 +97,6 @@
     "downloadNow": "是否立即前往下载？",
     "download": "下载",
     "importFailed": "导入失败",
-    "fileFormatError": "文件格式错误，请选择后缀名为 opml 或 xml 的文件。",
+    "fileFormatError": "文件格式错误，仅支持导入后缀名为 opml 或 xml 的文件。",
     "copyFeedUrlSuccess": "已复制订阅源地址"
 }

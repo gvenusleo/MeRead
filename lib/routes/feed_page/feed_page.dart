@@ -173,6 +173,7 @@ class FeedPageState extends State<FeedPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
+                          icon: const Icon(Icons.warning_amber_rounded),
                           title: Text(AppLocalizations.of(context)!.deleteFeed),
                           content: Text(
                             AppLocalizations.of(context)!

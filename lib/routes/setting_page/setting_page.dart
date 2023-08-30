@@ -254,6 +254,7 @@ class _SettingPageState extends State<SettingPage> {
           context: context,
           builder: (context) {
             return AlertDialog(
+              icon: const Icon(Icons.error_outline_outlined),
               title: Text(AppLocalizations.of(context)!.importFailed),
               content: Text(AppLocalizations.of(context)!.fileFormatError),
               actions: [
@@ -327,6 +328,7 @@ class _SettingPageState extends State<SettingPage> {
           context: context,
           builder: (context) {
             return AlertDialog(
+              icon: const Icon(Icons.system_update_rounded),
               title: Text(AppLocalizations.of(context)!.newVersionAvailable),
               content: Text(AppLocalizations.of(context)!.downloadNow),
               actions: [

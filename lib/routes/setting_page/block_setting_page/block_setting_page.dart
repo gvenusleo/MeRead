@@ -27,6 +27,7 @@ class _BlockSettingPageState extends State<BlockSettingPage> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
+                    icon: const Icon(Icons.block_outlined),
                     title: Text(AppLocalizations.of(context)!.addBlockRule),
                     content: TextField(
                       controller: controller,
