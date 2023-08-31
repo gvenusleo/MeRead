@@ -179,9 +179,16 @@ ${context.watch<ReadPageProvider>().customCss}
                   onTap: () async {
                     await widget.post.markAsUnread();
                   },
-                  child: Text(
-                    AppLocalizations.of(context)!.markAsUnread,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.visibility_off_outlined, size: 20),
+                      const SizedBox(width: 10),
+                      Text(
+                        AppLocalizations.of(context)!.markAsUnread,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ],
                   ),
                 ),
                 /* 更改收藏状态 */
@@ -189,11 +196,18 @@ ${context.watch<ReadPageProvider>().customCss}
                   onTap: () async {
                     await widget.post.changeFavorite();
                   },
-                  child: Text(
-                    widget.post.favorite
-                        ? AppLocalizations.of(context)!.cancelCollect
-                        : AppLocalizations.of(context)!.collectPost,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.bookmark_border_outlined, size: 20),
+                      const SizedBox(width: 10),
+                      Text(
+                        widget.post.favorite
+                            ? AppLocalizations.of(context)!.cancelCollect
+                            : AppLocalizations.of(context)!.collectPost,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ],
                   ),
                 ),
                 const PopupMenuDivider(),
@@ -202,9 +216,16 @@ ${context.watch<ReadPageProvider>().customCss}
                   onTap: () {
                     Clipboard.setData(ClipboardData(text: widget.post.link));
                   },
-                  child: Text(
-                    AppLocalizations.of(context)!.copyLink,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.link_outlined, size: 20),
+                      const SizedBox(width: 10),
+                      Text(
+                        AppLocalizations.of(context)!.copyLink,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ],
                   ),
                 ),
               ];
