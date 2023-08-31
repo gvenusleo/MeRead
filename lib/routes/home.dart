@@ -135,7 +135,7 @@ class HomePageState extends State<HomePage> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Icon(Icons.settings, size: 20),
+                      const Icon(Icons.settings_outlined, size: 20),
                       const SizedBox(width: 10),
                       Text(AppLocalizations.of(context)!.settings),
                     ],
