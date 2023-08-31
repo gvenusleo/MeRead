@@ -31,6 +31,9 @@ class ReadPageState extends State<ReadPage> {
   // 内容 html
   String contentHtml = '';
 
+  late InAppWebViewController webViewController;
+  GlobalKey<ScaffoldState> webViewKey = GlobalKey<ScaffoldState>();
+
   /* 根据 url 获取 html 内容 */
   Future<void> initData(String url) async {
     if (widget.post.fullText &&
@@ -146,97 +149,108 @@ table, th, td {
 }
 ${context.watch<ReadPageProvider>().customCss}
 ''';
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.post.feedName),
-        actions: [
-          /* 在外部浏览器中打开 */
-          IconButton(
-            onPressed: () async {
-              await launchUrl(
-                Uri.parse(widget.post.link),
-                mode: LaunchMode.externalApplication,
-              );
-            },
-            icon: const Icon(Icons.open_in_browser_outlined),
-          ),
-          /* 分享 */
-          IconButton(
-            onPressed: () {
-              Share.share(
-                widget.post.link,
-                subject: widget.post.title,
-              );
-            },
-            icon: const Icon(Icons.share_outlined),
-          ),
-          PopupMenuButton(
-            position: PopupMenuPosition.under,
-            itemBuilder: (BuildContext context) {
-              return <PopupMenuEntry>[
-                /* 标记为未读 */
-                PopupMenuItem(
-                  onTap: () async {
-                    await widget.post.markAsUnread();
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.visibility_off_outlined, size: 20),
-                      const SizedBox(width: 10),
-                      Text(
-                        AppLocalizations.of(context)!.markAsUnread,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
+    return WillPopScope(
+      onWillPop: () async {
+        if (await webViewController.canGoBack()) {
+          await webViewController.goBack();
+          return false;
+        } else {
+          return true;
+        }
+      },
+      child: Scaffold(
+        key: webViewKey,
+        appBar: AppBar(
+          title: Text(widget.post.feedName),
+          actions: [
+            /* 在外部浏览器中打开 */
+            IconButton(
+              onPressed: () async {
+                await launchUrl(
+                  Uri.parse(widget.post.link),
+                  mode: LaunchMode.externalApplication,
+                );
+              },
+              icon: const Icon(Icons.open_in_browser_outlined),
+            ),
+            /* 分享 */
+            IconButton(
+              onPressed: () {
+                Share.share(
+                  widget.post.link,
+                  subject: widget.post.title,
+                );
+              },
+              icon: const Icon(Icons.share_outlined),
+            ),
+            PopupMenuButton(
+              position: PopupMenuPosition.under,
+              itemBuilder: (BuildContext context) {
+                return <PopupMenuEntry>[
+                  /* 标记为未读 */
+                  PopupMenuItem(
+                    onTap: () async {
+                      await widget.post.markAsUnread();
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.visibility_off_outlined, size: 20),
+                        const SizedBox(width: 10),
+                        Text(
+                          AppLocalizations.of(context)!.markAsUnread,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                /* 更改收藏状态 */
-                PopupMenuItem(
-                  onTap: () async {
-                    await widget.post.changeFavorite();
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.bookmark_border_outlined, size: 20),
-                      const SizedBox(width: 10),
-                      Text(
-                        widget.post.favorite
-                            ? AppLocalizations.of(context)!.cancelCollect
-                            : AppLocalizations.of(context)!.collectPost,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
+                  /* 更改收藏状态 */
+                  PopupMenuItem(
+                    onTap: () async {
+                      await widget.post.changeFavorite();
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.bookmark_border_outlined, size: 20),
+                        const SizedBox(width: 10),
+                        Text(
+                          widget.post.favorite
+                              ? AppLocalizations.of(context)!.cancelCollect
+                              : AppLocalizations.of(context)!.collectPost,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const PopupMenuDivider(),
-                /* 复制链接 */
-                PopupMenuItem(
-                  onTap: () {
-                    Clipboard.setData(ClipboardData(text: widget.post.link));
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.link_outlined, size: 20),
-                      const SizedBox(width: 10),
-                      Text(
-                        AppLocalizations.of(context)!.copyLink,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
+                  const PopupMenuDivider(),
+                  /* 复制链接 */
+                  PopupMenuItem(
+                    onTap: () {
+                      Clipboard.setData(ClipboardData(text: widget.post.link));
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.link_outlined, size: 20),
+                        const SizedBox(width: 10),
+                        Text(
+                          AppLocalizations.of(context)!.copyLink,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ];
-            },
+                ];
+              },
+            ),
+          ],
+        ),
+        body: SafeArea(
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 800),
+            child: _buildBody(cssStr, titleStr),
           ),
-        ],
-      ),
-      body: SafeArea(
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 800),
-          child: _buildBody(cssStr, titleStr),
         ),
       ),
     );
@@ -297,6 +311,9 @@ $contentHtml
           transparentBackground: true,
         ),
       ),
+      onWebViewCreated: (controller) {
+        webViewController = controller;
+      },
     );
   }
 }
