@@ -134,15 +134,10 @@ ${context.watch<ReadPageProvider>().customCss}
               },
               icon: const Icon(Icons.open_in_browser_outlined),
             ),
-            /* 分享 */
+            /* 获取全文 */
             IconButton(
-              onPressed: () {
-                Share.share(
-                  widget.post.link,
-                  subject: widget.post.title,
-                );
-              },
-              icon: const Icon(Icons.share_outlined),
+              onPressed: getFullText,
+              icon: const Icon(Icons.article_outlined),
             ),
             PopupMenuButton(
               position: PopupMenuPosition.under,
@@ -183,21 +178,7 @@ ${context.watch<ReadPageProvider>().customCss}
                     ),
                   ),
                   const PopupMenuDivider(),
-                  /* 获取全文 */
-                  PopupMenuItem(
-                    onTap: getFullText,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.article_outlined, size: 20),
-                        const SizedBox(width: 10),
-                        Text(
-                          AppLocalizations.of(context)!.fullText,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const PopupMenuDivider(),
+
                   /* 复制链接 */
                   PopupMenuItem(
                     onTap: () {
@@ -210,6 +191,25 @@ ${context.watch<ReadPageProvider>().customCss}
                         const SizedBox(width: 10),
                         Text(
                           AppLocalizations.of(context)!.copyLink,
+                        ),
+                      ],
+                    ),
+                  ),
+                  /* 分享 */
+                  PopupMenuItem(
+                    onTap: () {
+                      Share.share(
+                        widget.post.link,
+                        subject: widget.post.title,
+                      );
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.share_outlined, size: 20),
+                        const SizedBox(width: 10),
+                        Text(
+                          AppLocalizations.of(context)!.sharePost,
                         ),
                       ],
                     ),
