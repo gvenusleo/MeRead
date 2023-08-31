@@ -388,7 +388,10 @@ class HomePageState extends State<HomePage> {
         CupertinoPageRoute(
           builder: (context) => const AddFeedPage(),
         ),
-      ).then((value) => getAllFeed());
+      ).then((value) {
+        getAllFeed();
+        getUnreadCount();
+      });
     });
   }
 
@@ -429,7 +432,10 @@ class HomePageState extends State<HomePage> {
                             builder: (context) => EditFeedPage(feed: feed),
                           ),
                         ).then(
-                          (value) => getAllPost(),
+                          (value) {
+                            getAllPost();
+                            getUnreadCount();
+                          },
                         );
                       });
                     },
@@ -577,7 +583,10 @@ class HomePageState extends State<HomePage> {
                                     },
                                   );
                                   getAllFeed().then(
-                                    (value) => getAllPost(),
+                                    (value) {
+                                      getAllPost();
+                                      getUnreadCount();
+                                    },
                                   );
                                 },
                                 child: Text(
@@ -609,8 +618,10 @@ class HomePageState extends State<HomePage> {
           builder: (context) => const SettingPage(),
         ),
       ).then((value) {
-        getAllFeed();
-        getAllPost();
+        getAllFeed().then((value) {
+          getUnreadCount();
+          getAllPost();
+        });
       });
     });
   }
