@@ -34,39 +34,6 @@ class ReadPageState extends State<ReadPage> {
   late InAppWebViewController webViewController;
   GlobalKey<ScaffoldState> webViewKey = GlobalKey<ScaffoldState>();
 
-  /* 根据 url 获取 html 内容 */
-  Future<void> initData(String url) async {
-    if (widget.post.fullText &&
-        !widget.post.fullTextCache &&
-        widget.post.openType == 0) {
-      setState(() {
-        _index = 0;
-      });
-      /* 获取全文 */
-      final response = await Dio().get(url);
-      final document = html_parser.parse(response.data);
-      final bestElemReadability =
-          readabilityMainElement(document.documentElement!);
-      widget.post.content = bestElemReadability.outerHtml;
-      setState(() {
-        contentHtml = widget.post.content;
-        _index = 1;
-      });
-      widget.post.updateToDb();
-    } else {
-      setState(() {
-        contentHtml = widget.post.content;
-        _index = 1;
-      });
-    }
-    /* 更新文章信息 */
-    if (!widget.post.read) {
-      widget.post.read = true;
-      widget.post.fullTextCache = true;
-      widget.post.updateToDb();
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -149,15 +116,9 @@ table, th, td {
 }
 ${context.watch<ReadPageProvider>().customCss}
 ''';
+
     return WillPopScope(
-      onWillPop: () async {
-        if (await webViewController.canGoBack()) {
-          await webViewController.goBack();
-          return false;
-        } else {
-          return true;
-        }
-      },
+      onWillPop: onBack,
       child: Scaffold(
         key: webViewKey,
         appBar: AppBar(
@@ -315,5 +276,48 @@ $contentHtml
         webViewController = controller;
       },
     );
+  }
+
+  /* 根据 url 获取 html 内容 */
+  Future<void> initData(String url) async {
+    if (widget.post.fullText &&
+        !widget.post.fullTextCache &&
+        widget.post.openType == 0) {
+      setState(() {
+        _index = 0;
+      });
+      /* 获取全文 */
+      final response = await Dio().get(url);
+      final document = html_parser.parse(response.data);
+      final bestElemReadability =
+          readabilityMainElement(document.documentElement!);
+      widget.post.content = bestElemReadability.outerHtml;
+      setState(() {
+        contentHtml = widget.post.content;
+        _index = 1;
+      });
+      widget.post.updateToDb();
+    } else {
+      setState(() {
+        contentHtml = widget.post.content;
+        _index = 1;
+      });
+    }
+    /* 更新文章信息 */
+    if (!widget.post.read) {
+      widget.post.read = true;
+      widget.post.fullTextCache = true;
+      widget.post.updateToDb();
+    }
+  }
+
+  /* 页面返回逻辑 */
+  Future<bool> onBack() async {
+    if (await webViewController.canGoBack()) {
+      await webViewController.goBack();
+      return false;
+    } else {
+      return true;
+    }
   }
 }
