@@ -153,10 +153,27 @@ class HomePageState extends State<HomePage> {
             padding: const EdgeInsets.symmetric(vertical: 12),
             itemCount: feedListGroupByCategory.length + 1,
             itemBuilder: (BuildContext context, int index) {
+              /* 计算全部未读文章数 */
+              int allUnreadCount = 0;
+              for (int count in unreadCount.values) {
+                allUnreadCount += count;
+              }
+              /* 计算分组未读文章数 */
+              Map<String, int> unreadCountByCategory = {};
+              for (String category in feedListGroupByCategory.keys) {
+                int count = 0;
+                for (Feed feed in feedListGroupByCategory[category] ?? []) {
+                  if (unreadCount[feed.id] != null) {
+                    count += unreadCount[feed.id]!;
+                  }
+                }
+                unreadCountByCategory[category] = count;
+              }
               if (index == 0) {
                 return ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+                  contentPadding: const EdgeInsets.only(left: 32, right: 28),
                   title: Text(AppLocalizations.of(context)!.allFeed),
+                  trailing: Text(allUnreadCount.toString()),
                   onTap: () {
                     Navigator.pop(context);
                     setState(() {
@@ -169,6 +186,11 @@ class HomePageState extends State<HomePage> {
               return ExpansionCard(
                 title: Text(
                   feedListGroupByCategory.keys.toList()[index - 1],
+                ),
+                trailing: Text(
+                  unreadCountByCategory[
+                          feedListGroupByCategory.keys.toList()[index - 1]]!
+                      .toString(),
                 ),
                 initiallyExpanded: drawerExpansionState[index - 1],
                 onExpansionChanged: (value) {
@@ -193,8 +215,9 @@ class HomePageState extends State<HomePage> {
                           in feedListGroupByCategory.values.toList()[index - 1])
                         ListTile(
                           dense: true,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 36,
+                          contentPadding: const EdgeInsets.only(
+                            left: 36,
+                            right: 28,
                           ),
                           title: Text(
                             feed.name,

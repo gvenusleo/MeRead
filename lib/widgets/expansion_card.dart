@@ -49,7 +49,6 @@ class ExpansionCardController {
 class ExpansionCard extends StatefulWidget {
   const ExpansionCard({
     super.key,
-    this.leading,
     required this.title,
     this.onExpansionChanged,
     this.children = const <Widget>[],
@@ -60,7 +59,6 @@ class ExpansionCard extends StatefulWidget {
     this.onTap,
   });
 
-  final Widget? leading;
   final Widget title;
   final ValueChanged<bool>? onExpansionChanged;
   final List<Widget> children;
@@ -182,13 +180,13 @@ class _ExpansionCardState extends State<ExpansionCard>
           onTapHint: onTapHint,
           child: ListTile(
             onTap: widget.onTap,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 18),
-            leading: widget.leading,
+            contentPadding: const EdgeInsets.only(left: 16, right: 28),
             title: widget.title,
-            trailing: IconButton(
+            leading: IconButton(
               onPressed: _handleTap,
               icon: _buildIcon(context),
             ),
+            trailing: widget.trailing,
           ),
         ),
         ClipRect(
