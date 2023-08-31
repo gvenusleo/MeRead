@@ -40,14 +40,15 @@ class HomePageState extends State<HomePage> {
   // 字体目录
   String? fontDir;
   // Drawer 展开状态
-  List<bool> drawerExpansionState = [];
+  Map<String, bool> drawerExpansionState = {};
   // AppBar 标题
   String? appBarTitle;
 
   @override
   void initState() {
     super.initState();
-    initData();
+    initData(setAppBar: false);
+    initFontDir();
   }
 
   @override
@@ -175,27 +176,24 @@ class HomePageState extends State<HomePage> {
                   title: Text(AppLocalizations.of(context)!.allFeed),
                   trailing: Text(allUnreadCount.toString()),
                   onTap: () {
+                    initData();
                     Navigator.pop(context);
-                    setState(() {
-                      appBarTitle = AppLocalizations.of(context)!.allFeed;
-                    });
-                    getAllFeed().then((value) => getAllPost());
                   },
                 );
               }
+              String groupTitle =
+                  feedListGroupByCategory.keys.toList()[index - 1];
               return ExpansionCard(
-                title: Text(
-                  feedListGroupByCategory.keys.toList()[index - 1],
-                ),
+                title: Text(groupTitle),
                 trailing: Text(
                   unreadCountByCategory[
                           feedListGroupByCategory.keys.toList()[index - 1]]!
                       .toString(),
                 ),
-                initiallyExpanded: drawerExpansionState[index - 1],
+                initiallyExpanded: drawerExpansionState[groupTitle] ?? false,
                 onExpansionChanged: (value) {
                   setState(() {
-                    drawerExpansionState[index - 1] = value;
+                    drawerExpansionState[groupTitle] = value;
                   });
                 },
                 onTap: () {
@@ -270,12 +268,6 @@ class HomePageState extends State<HomePage> {
     setState(() {
       feedList = tem;
     });
-    /* 初始化 Drawer 折叠状态 */
-    if (drawerExpansionState.isEmpty) {
-      for (int i = 0; i < feedListGroupByCategory.length; i++) {
-        drawerExpansionState.add(false);
-      }
-    }
   }
 
   /* 获取文章列表 */
@@ -338,13 +330,17 @@ class HomePageState extends State<HomePage> {
   }
 
   /* 初始化数据 */
-  Future<void> initData() async {
+  Future<void> initData({bool setAppBar = true}) async {
+    if (setAppBar) {
+      setState(() {
+        appBarTitle = AppLocalizations.of(context)!.allFeed;
+      });
+    }
     getAllFeed().then((value) => getAllPost());
     getUnreadCount();
-    initFontDir();
   }
 
-  /* 未读帅选 */
+  /* 未读筛选 */
   Future<void> filterUnread() async {
     if (onlyUnread) {
       setState(() {
@@ -389,8 +385,7 @@ class HomePageState extends State<HomePage> {
           builder: (context) => const AddFeedPage(),
         ),
       ).then((value) {
-        getAllFeed();
-        getUnreadCount();
+        initData();
       });
     });
   }
@@ -406,9 +401,9 @@ class HomePageState extends State<HomePage> {
               feed: feedList.first,
             ),
           ),
-        ).then(
-          (value) => getAllPost(),
-        );
+        ).then((value) {
+          initData();
+        });
       });
     } else {
       showDialog(
@@ -433,8 +428,7 @@ class HomePageState extends State<HomePage> {
                           ),
                         ).then(
                           (value) {
-                            getAllPost();
-                            getUnreadCount();
+                            initData();
                           },
                         );
                       });
@@ -485,12 +479,9 @@ class HomePageState extends State<HomePage> {
               TextButton(
                 onPressed: () async {
                   await feedList.first.deleteFromDb();
+                  initData();
                   if (!mounted) return;
                   Navigator.pop(context);
-                  setState(() {
-                    appBarTitle = AppLocalizations.of(context)!.allFeed;
-                  });
-                  getAllFeed().then((value) => getAllPost());
                 },
                 child: Text(AppLocalizations.of(context)!.ok),
               ),
@@ -574,20 +565,9 @@ class HomePageState extends State<HomePage> {
                                   for (Feed feed in deleteFeeds) {
                                     await feed.deleteFromDb();
                                   }
+                                  initData();
                                   if (!mounted) return;
                                   Navigator.pop(context);
-                                  setState(
-                                    () {
-                                      appBarTitle =
-                                          AppLocalizations.of(context)!.allFeed;
-                                    },
-                                  );
-                                  getAllFeed().then(
-                                    (value) {
-                                      getAllPost();
-                                      getUnreadCount();
-                                    },
-                                  );
                                 },
                                 child: Text(
                                   AppLocalizations.of(context)!.ok,
@@ -618,16 +598,24 @@ class HomePageState extends State<HomePage> {
           builder: (context) => const SettingPage(),
         ),
       ).then((value) {
-        getAllFeed().then((value) {
-          getUnreadCount();
-          getAllPost();
+        setState(() {
+          appBarTitle = AppLocalizations.of(context)!.allFeed;
         });
+        getAllFeed().then((value) => getAllPost());
+        getUnreadCount();
       });
     });
   }
 
   /* 构建 Post 列表 */
   Widget buildBody(List<Post> posts) {
+    if (feedList.isEmpty &&
+        appBarTitle != AppLocalizations.of(context)!.allFeed) {
+      setState(() {
+        appBarTitle = AppLocalizations.of(context)!.allFeed;
+      });
+      getAllFeed().then((value) => getAllPost());
+    }
     return SafeArea(
       child: RefreshIndicator(
         onRefresh: refresh,
