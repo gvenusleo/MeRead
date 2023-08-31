@@ -37,7 +37,7 @@ class ReadPageState extends State<ReadPage> {
   @override
   void initState() {
     super.initState();
-    initData(widget.post.link);
+    initData();
   }
 
   @override
@@ -160,7 +160,6 @@ ${context.watch<ReadPageProvider>().customCss}
                         const SizedBox(width: 10),
                         Text(
                           AppLocalizations.of(context)!.markAsUnread,
-                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
                     ),
@@ -179,7 +178,21 @@ ${context.watch<ReadPageProvider>().customCss}
                           widget.post.favorite
                               ? AppLocalizations.of(context)!.cancelCollect
                               : AppLocalizations.of(context)!.collectPost,
-                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const PopupMenuDivider(),
+                  /* 获取全文 */
+                  PopupMenuItem(
+                    onTap: getFullText,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.article_outlined, size: 20),
+                        const SizedBox(width: 10),
+                        Text(
+                          AppLocalizations.of(context)!.fullText,
                         ),
                       ],
                     ),
@@ -197,7 +210,6 @@ ${context.watch<ReadPageProvider>().customCss}
                         const SizedBox(width: 10),
                         Text(
                           AppLocalizations.of(context)!.copyLink,
-                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
                     ),
@@ -278,8 +290,26 @@ $contentHtml
     );
   }
 
+  /* 获取全文 */
+  Future<void> getFullText() async {
+    setState(() {
+      _index = 0;
+    });
+    /* 获取全文 */
+    final response = await Dio().get(widget.post.link);
+    final document = html_parser.parse(response.data);
+    final bestElemReadability =
+        readabilityMainElement(document.documentElement!);
+    widget.post.content = bestElemReadability.outerHtml;
+    setState(() {
+      contentHtml = widget.post.content;
+      _index = 1;
+    });
+    widget.post.updateToDb();
+  }
+
   /* 根据 url 获取 html 内容 */
-  Future<void> initData(String url) async {
+  Future<void> initData() async {
     if (widget.post.fullText &&
         !widget.post.fullTextCache &&
         widget.post.openType == 0) {
@@ -287,7 +317,7 @@ $contentHtml
         _index = 0;
       });
       /* 获取全文 */
-      final response = await Dio().get(url);
+      final response = await Dio().get(widget.post.link);
       final document = html_parser.parse(response.data);
       final bestElemReadability =
           readabilityMainElement(document.documentElement!);
@@ -296,6 +326,7 @@ $contentHtml
         contentHtml = widget.post.content;
         _index = 1;
       });
+      widget.post.fullTextCache = true;
       widget.post.updateToDb();
     } else {
       setState(() {
@@ -306,7 +337,6 @@ $contentHtml
     /* 更新文章信息 */
     if (!widget.post.read) {
       widget.post.read = true;
-      widget.post.fullTextCache = true;
       widget.post.updateToDb();
     }
   }

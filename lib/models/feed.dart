@@ -83,13 +83,14 @@ class Feed {
   }
 
   /// 更新 Feed 下所有 Post 中的 feedName 和 openType
-  Future<void> updatePostsFeedNameAndOpenType() async {
+  Future<void> updatePostsFeedNameAndOpenTypeAndFullText() async {
     final List<Post> posts =
         isar.posts.where().filter().feedIdEqualTo(id!).findAllSync();
     for (var post in posts) {
       post.feedName = name;
       post.openType = openType;
-      await post.updateToDb();
+      post.fullText = fullText;
+      post.updateToDb();
     }
   }
 

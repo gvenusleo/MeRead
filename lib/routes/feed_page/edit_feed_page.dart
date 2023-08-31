@@ -137,7 +137,8 @@ class EditFeedPageState extends State<EditFeedPage> {
                     await widget.feed.insertOrUpdateToDb();
                     /* 如果 feed 已存在，否则更新 feed 下的 Post */
                     if (await Feed.isExist(widget.feed.url)) {
-                      await widget.feed.updatePostsFeedNameAndOpenType();
+                      await widget.feed
+                          .updatePostsFeedNameAndOpenTypeAndFullText();
                     }
                     if (!mounted) return;
                     Navigator.pop(context);
