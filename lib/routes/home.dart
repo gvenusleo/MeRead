@@ -611,10 +611,7 @@ class HomePageState extends State<HomePage> {
   Widget buildBody(List<Post> posts) {
     if (feedList.isEmpty &&
         appBarTitle != AppLocalizations.of(context)!.allFeed) {
-      setState(() {
-        appBarTitle = AppLocalizations.of(context)!.allFeed;
-      });
-      getAllFeed().then((value) => getAllPost());
+      initData();
     }
     return SafeArea(
       child: RefreshIndicator(
