@@ -104,5 +104,8 @@
     "fileFormatError": "File Format Error. Please select a file with the suffix opml or xml.",
     "copyFeedUrlSuccess": "Feed URL copied.",
     "allFeed": "All Feeds",
-    "sharePost": "Share Post"
+    "sharePost": "Share Post",
+    "saveImage": "Save Image",
+    "saveImageInfo": "Do you want to save the picture to the album?",
+    "saveImageSuccess": "Save Image Success"
 }

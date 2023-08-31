@@ -104,5 +104,8 @@
     "fileFormatError": "文件格式错误，仅支持导入后缀名为 opml 或 xml 的文件。",
     "copyFeedUrlSuccess": "已复制订阅源地址",
     "allFeed": "全部订阅",
-    "sharePost": "分享文章"
+    "sharePost": "分享文章",
+    "saveImage": "保存图片",
+    "saveImageInfo": "是否保存图片到相册？",
+    "saveImageSuccess": "图片已保存到相册"
 }

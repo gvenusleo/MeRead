@@ -1,10 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:html/parser.dart' as html_parser;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:html_main_element/html_main_element.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/provider/read_page_provider.dart';
 import 'package:provider/provider.dart';
@@ -244,9 +246,60 @@ $contentHtml
           extensions: [
             OnImageTapExtension(
               onImageTap: (url, attributes, element) {
-                print(url);
-                print(attributes.toString());
-                print(element.toString());
+                if (url != null) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        icon: const Icon(Icons.image_outlined),
+                        title: Text(AppLocalizations.of(context)!.saveImage),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Image.network(url),
+                            const SizedBox(height: 12),
+                            Text(AppLocalizations.of(context)!.saveImageInfo),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(AppLocalizations.of(context)!.cancel),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              var response = await Dio().get(
+                                url,
+                                options: Options(
+                                  responseType: ResponseType.bytes,
+                                ),
+                              );
+                              final result = await ImageGallerySaver.saveImage(
+                                Uint8List.fromList(response.data),
+                                quality: 80,
+                                name: attributes['alt'] ?? 'image',
+                              );
+                              if (result['isSuccess']) {
+                                if (!mounted) return;
+                                Fluttertoast.showToast(
+                                  msg: AppLocalizations.of(context)!
+                                      .saveImageSuccess,
+                                );
+                              }
+                              if (!mounted) return;
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(AppLocalizations.of(context)!.ok),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
               },
             ),
           ],
