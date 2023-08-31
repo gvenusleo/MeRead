@@ -301,6 +301,7 @@ $contentHtml
     final bestElemReadability =
         readabilityMainElement(document.documentElement!);
     widget.post.content = bestElemReadability.outerHtml;
+    widget.post.fullTextCache = true;
     setState(() {
       contentHtml = widget.post.content;
       _index = 1;
