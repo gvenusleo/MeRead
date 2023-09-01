@@ -9,9 +9,9 @@ import 'package:html_main_element/html_main_element.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/provider/read_page_provider.dart';
+import 'package:meread/utils/open_url_util.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ReadPage extends StatefulWidget {
   const ReadPage({
@@ -46,13 +46,10 @@ class ReadPageState extends State<ReadPage> {
       appBar: AppBar(
         title: Text(widget.post.feedName),
         actions: [
-          /* 在外部浏览器中打开 */
+          /* 在浏览器中打开 */
           IconButton(
-            onPressed: () async {
-              await launchUrl(
-                Uri.parse(widget.post.link),
-                mode: LaunchMode.externalApplication,
-              );
+            onPressed: () {
+              openUrl(widget.post.link);
             },
             icon: const Icon(Icons.open_in_browser_outlined),
           ),
@@ -237,10 +234,7 @@ $contentHtml
           },
           onLinkTap: (url, attributes, element) {
             if (url != null) {
-              launchUrl(
-                Uri.parse(url),
-                mode: LaunchMode.externalApplication,
-              );
+              openUrl(url);
             }
           },
           extensions: [

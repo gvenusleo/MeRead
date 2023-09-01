@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:meread/global/global.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:meread/utils/open_url_util.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -66,11 +66,8 @@ class AboutPage extends StatelessWidget {
                     subtitle: Text(
                       AppLocalizations.of(context)!.viewSourceCode,
                     ),
-                    onTap: () async {
-                      await launchUrl(
-                        Uri.parse("https://github.com/gvenusleo/meread"),
-                        mode: LaunchMode.externalApplication,
-                      );
+                    onTap: () {
+                      openUrl("https://github.com/gvenusleo/meread");
                     },
                   ),
                   /* 开源许可 */
@@ -146,11 +143,8 @@ class AboutPage extends StatelessWidget {
                       AppLocalizations.of(context)!
                           .authorContactAndMoreInformation,
                     ),
-                    onTap: () async {
-                      await launchUrl(
-                        Uri.parse("https://jike.city/gvenusleo"),
-                        mode: LaunchMode.externalApplication,
-                      );
+                    onTap: () {
+                      openUrl("https://jike.city/gvenusleo");
                     },
                   ),
                 ],

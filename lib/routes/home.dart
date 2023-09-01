@@ -9,6 +9,7 @@ import 'package:meread/routes/feed_page/edit_feed_page.dart';
 import 'package:meread/routes/read.dart';
 import 'package:meread/routes/setting_page/setting_page.dart';
 import 'package:meread/utils/font_util.dart';
+import 'package:meread/utils/open_url_util.dart';
 import 'package:meread/utils/parse_post_util.dart';
 import 'package:meread/widgets/expansion_card.dart';
 import 'package:meread/widgets/post_container.dart';
@@ -248,6 +249,60 @@ class HomePageState extends State<HomePage> {
         onlyUnread
             ? unreadPostList
             : (onlyFavorite ? favoritePostList : postList),
+      ),
+    );
+  }
+
+  /* 构建 Post 列表 */
+  Widget buildBody(List<Post> posts) {
+    if (feedList.isEmpty &&
+        appBarTitle != AppLocalizations.of(context)!.allFeed) {
+      initData();
+    }
+    return SafeArea(
+      child: RefreshIndicator(
+        onRefresh: refresh,
+        child: ListView.separated(
+          itemCount: posts.length,
+          padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              /* 根据 openType 打开文章 */
+              onTap: () async {
+                if (posts[index].openType == 1) {
+                  /* 在应用内标签页中打开 */
+                  openUrl(posts[index].link);
+                } else if (posts[index].openType == 2) {
+                  /* 系统浏览器打开 */
+                  launchUrl(
+                    Uri.parse(posts[index].link),
+                    mode: LaunchMode.externalApplication,
+                  );
+                } else {
+                  /* 应用内打开：阅读器 or 标签页 */
+                  if (fontDir == null) return;
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => ReadPage(
+                        post: posts[index],
+                        fontDir: fontDir!,
+                      ),
+                    ),
+                  ).then((value) {
+                    /* 返回时刷新文章列表 */
+                    getAllPost();
+                    getUnreadCount();
+                  });
+                }
+              },
+              child: PostContainer(post: posts[index]),
+            );
+          },
+          separatorBuilder: (context, index) {
+            return const SizedBox(height: 4);
+          },
+        ),
       ),
     );
   }
@@ -605,56 +660,5 @@ class HomePageState extends State<HomePage> {
         getUnreadCount();
       });
     });
-  }
-
-  /* 构建 Post 列表 */
-  Widget buildBody(List<Post> posts) {
-    if (feedList.isEmpty &&
-        appBarTitle != AppLocalizations.of(context)!.allFeed) {
-      initData();
-    }
-    return SafeArea(
-      child: RefreshIndicator(
-        onRefresh: refresh,
-        child: ListView.separated(
-          itemCount: posts.length,
-          padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              /* 根据 openType 打开文章 */
-              onTap: () async {
-                if (posts[index].openType == 2) {
-                  /* 系统浏览器打开 */
-                  await launchUrl(
-                    Uri.parse(posts[index].link),
-                    mode: LaunchMode.externalApplication,
-                  );
-                } else {
-                  /* 应用内打开：阅读器 or 标签页 */
-                  if (fontDir == null) return;
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => ReadPage(
-                        post: posts[index],
-                        fontDir: fontDir!,
-                      ),
-                    ),
-                  ).then((value) {
-                    /* 返回时刷新文章列表 */
-                    getAllPost();
-                    getUnreadCount();
-                  });
-                }
-              },
-              child: PostContainer(post: posts[index]),
-            );
-          },
-          separatorBuilder: (context, index) {
-            return const SizedBox(height: 4);
-          },
-        ),
-      ),
-    );
   }
 }
