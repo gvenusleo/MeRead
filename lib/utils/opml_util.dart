@@ -17,13 +17,16 @@ Future<int> parseOpml(FilePickerResult result) async {
   await Future.wait(
     opml.body.map(
       (category) async {
-        final String? categoryName = category.title;
+        final String? categoryName = category.title ?? category.text;
         await Future.wait(
           category.children!.map(
             (opmlOutline) async {
               if (!await Feed.isExist(opmlOutline.xmlUrl!)) {
                 Feed? feed = await parseFeed(
-                    opmlOutline.xmlUrl!, categoryName, opmlOutline.title!);
+                  opmlOutline.xmlUrl!,
+                  categoryName,
+                  opmlOutline.title ?? opmlOutline.text,
+                );
                 if (feed != null) {
                   await feed.insertOrUpdateToDb();
                 } else {
