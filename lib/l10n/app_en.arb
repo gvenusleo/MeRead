@@ -107,5 +107,7 @@
     "sharePost": "Share Post",
     "saveImage": "Save Image",
     "saveImageInfo": "Do you want to save the picture to the album?",
-    "saveImageSuccess": "Save Image Success"
+    "saveImageSuccess": "Save Image Success",
+    "selectAll": "Select All",
+    "unSelectAll": "Cancel Select All"
 }

@@ -107,5 +107,7 @@
     "sharePost": "分享文章",
     "saveImage": "保存图片",
     "saveImageInfo": "是否保存图片到相册？",
-    "saveImageSuccess": "图片已保存到相册"
+    "saveImageSuccess": "图片已保存到相册",
+    "selectAll": "全选",
+    "unSelectAll": "取消全选"
 }

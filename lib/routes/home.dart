@@ -580,64 +580,89 @@ class HomePageState extends State<HomePage> {
                 scrollable: true,
                 contentPadding:
                     const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+                actionsAlignment: MainAxisAlignment.spaceBetween,
                 actions: [
                   TextButton(
                     onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: Text(AppLocalizations.of(context)!.cancel),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      if (deleteFeeds.isEmpty) {
-                        Navigator.pop(context);
-                        return;
+                      if (deleteFeeds == feedList) {
+                        setCheckState(() {
+                          deleteFeeds = [];
+                        });
+                      } else {
+                        setCheckState(() {
+                          deleteFeeds = feedList;
+                        });
                       }
-                      if (!mounted) return;
-                      Navigator.pop(context);
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            icon: const Icon(
-                              Icons.warning_rounded,
-                            ),
-                            title: Text(
-                              AppLocalizations.of(context)!.deleteConfirmation,
-                            ),
-                            content: Text(
-                              AppLocalizations.of(context)!
-                                  .doYouWantToDeleteTheseFeeds(
-                                deleteFeeds.length,
-                              ),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child:
-                                    Text(AppLocalizations.of(context)!.cancel),
-                              ),
-                              TextButton(
-                                onPressed: () async {
-                                  for (Feed feed in deleteFeeds) {
-                                    await feed.deleteFromDb();
-                                  }
-                                  initData();
-                                  if (!mounted) return;
-                                  Navigator.pop(context);
-                                },
-                                child: Text(
-                                  AppLocalizations.of(context)!.ok,
+                    },
+                    child: Text(
+                      deleteFeeds == feedList
+                          ? AppLocalizations.of(context)!.unSelectAll
+                          : AppLocalizations.of(context)!.selectAll,
+                    ),
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text(AppLocalizations.of(context)!.cancel),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          if (deleteFeeds.isEmpty) {
+                            Navigator.pop(context);
+                            return;
+                          }
+                          if (!mounted) return;
+                          Navigator.pop(context);
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                icon: const Icon(
+                                  Icons.warning_rounded,
                                 ),
-                              ),
-                            ],
+                                title: Text(
+                                  AppLocalizations.of(context)!
+                                      .deleteConfirmation,
+                                ),
+                                content: Text(
+                                  AppLocalizations.of(context)!
+                                      .doYouWantToDeleteTheseFeeds(
+                                    deleteFeeds.length,
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                        AppLocalizations.of(context)!.cancel),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      for (Feed feed in deleteFeeds) {
+                                        await feed.deleteFromDb();
+                                      }
+                                      initData();
+                                      if (!mounted) return;
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      AppLocalizations.of(context)!.ok,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
                           );
                         },
-                      );
-                    },
-                    child: Text(AppLocalizations.of(context)!.ok),
+                        child: Text(AppLocalizations.of(context)!.ok),
+                      ),
+                    ],
                   ),
                 ],
               );
