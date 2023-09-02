@@ -589,6 +589,10 @@ class HomePageState extends State<HomePage> {
                   ),
                   TextButton(
                     onPressed: () async {
+                      if (deleteFeeds.isEmpty) {
+                        Navigator.pop(context);
+                        return;
+                      }
                       if (!mounted) return;
                       Navigator.pop(context);
                       showDialog(
