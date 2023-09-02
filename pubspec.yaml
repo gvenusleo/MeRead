@@ -3,7 +3,7 @@ description: MeRead
 
 publish_to: "none"
 
-version: 0.6.0+22
+version: 0.6.1+23
 
 environment:
   sdk: ">=2.18.2 <3.0.0"
