@@ -109,5 +109,8 @@
     "saveImageInfo": "是否保存图片到相册？",
     "saveImageSuccess": "图片已保存到相册",
     "selectAll": "全选",
-    "unSelectAll": "取消全选"
+    "unSelectAll": "取消全选",
+    "attention": "注意",
+    "webView2Info": "「悦读」使用 Microsoft Edge WebView2 进行阅读页面的渲染，检测到您的电脑未安装 WebView2，建议您先下载安装。",
+    "downloadWebView2": "下载 WebView2 →"
 }

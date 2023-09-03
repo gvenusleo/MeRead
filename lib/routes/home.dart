@@ -11,6 +11,7 @@ import 'package:meread/utils/dir_util.dart';
 import 'package:meread/utils/notification_util.dart';
 import 'package:meread/utils/open_url_util.dart';
 import 'package:meread/utils/parse_post_util.dart';
+import 'package:meread/utils/windows_check.dart';
 import 'package:meread/widgets/expansion_card.dart';
 import 'package:meread/widgets/post_container.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -281,19 +282,25 @@ class HomePageState extends State<HomePage> {
                 } else {
                   /* 应用内打开：阅读器 or 标签页 */
                   if (fontDir == null) return;
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => ReadPage(
-                        post: posts[index],
-                        fontDir: fontDir!,
+                  bool isInstalled = await isWebView2Runtime();
+                  if (!isInstalled) {
+                    await downloadWebView2();
+                  } else {
+                    if (!mounted) return;
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => ReadPage(
+                          post: posts[index],
+                          fontDir: fontDir!,
+                        ),
                       ),
-                    ),
-                  ).then((value) {
-                    /* 返回时刷新文章列表 */
-                    getAllPost();
-                    getUnreadCount();
-                  });
+                    ).then((value) {
+                      /* 返回时刷新文章列表 */
+                      getAllPost();
+                      getUnreadCount();
+                    });
+                  }
                 }
               },
               child: PostContainer(post: posts[index]),
@@ -690,5 +697,44 @@ class HomePageState extends State<HomePage> {
         getUnreadCount();
       });
     });
+  }
+
+  /* 针对 Windows 的 WebView 检查 */
+  Future<void> downloadWebView2() async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          icon: const Icon(Icons.warning_rounded),
+          title: Text(AppLocalizations.of(context)!.attention),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(AppLocalizations.of(context)!.webView2Info),
+              const SizedBox(height: 12),
+              TextButton(
+                onPressed: () {
+                  bool isChinese =
+                      AppLocalizations.of(context)!.localeName == 'zh';
+                  String downloadUrl =
+                      "https://developer.microsoft.com/${isChinese ? 'zh-cn' : 'en-us'}/microsoft-edge/webview2/";
+                  openUrl(downloadUrl);
+                },
+                child: Text(AppLocalizations.of(context)!.downloadWebView2),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(AppLocalizations.of(context)!.cancel),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

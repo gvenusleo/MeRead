@@ -906,6 +906,14 @@ packages:
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
     version: "2.4.0"
+  webview_windows:
+    dependency: "direct main"
+    description:
+      name: webview_windows
+      sha256: "7572089e5d6fe09e790093c499fcb6d76a552250187dbcb89790987b1fb723db"
+      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+    source: hosted
+    version: "0.3.0"
   win32:
     dependency: transitive
     description:
