@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meread/models/feed.dart';
 import 'package:meread/routes/feed_page/edit_feed_page.dart';
+import 'package:meread/utils/notification_util.dart';
 import 'package:meread/utils/parse_feed_util.dart';
 
 class AddFeedPage extends StatefulWidget {
@@ -73,8 +73,9 @@ class _AddFeedPageState extends State<AddFeedPage> {
                     /* 解析订阅源地址 */
                     if (await Feed.isExist(_urlController.text)) {
                       if (!mounted) return;
-                      Fluttertoast.showToast(
-                        msg: AppLocalizations.of(context)!.feedAlreadyExists,
+                      showToastOrSnackBar(
+                        context,
+                        AppLocalizations.of(context)!.feedAlreadyExists,
                       );
                     } else {
                       Feed? feed = await parseFeed(_urlController.text);
@@ -112,8 +113,9 @@ class _AddFeedPageState extends State<AddFeedPage> {
                         });
                       } else {
                         if (!mounted) return;
-                        Fluttertoast.showToast(
-                          msg: AppLocalizations.of(context)!.unableToParseFeed,
+                        showToastOrSnackBar(
+                          context,
+                          AppLocalizations.of(context)!.unableToParseFeed,
                         );
                       }
                     }

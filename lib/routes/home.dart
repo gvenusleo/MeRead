@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meread/models/feed.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/routes/feed_page/add_feed_page.dart';
@@ -9,6 +8,7 @@ import 'package:meread/routes/feed_page/edit_feed_page.dart';
 import 'package:meread/routes/read.dart';
 import 'package:meread/routes/setting_page/setting_page.dart';
 import 'package:meread/utils/dir_util.dart';
+import 'package:meread/utils/notification_util.dart';
 import 'package:meread/utils/open_url_util.dart';
 import 'package:meread/utils/parse_post_util.dart';
 import 'package:meread/widgets/expansion_card.dart';
@@ -368,8 +368,9 @@ class HomePageState extends State<HomePage> {
       ),
     );
     if (!mounted) return;
-    Fluttertoast.showToast(
-      msg: failCount > 0
+    showToastOrSnackBar(
+      context,
+      failCount > 0
           ? AppLocalizations.of(context)!.updateFailedFeeds(failCount)
           : AppLocalizations.of(context)!.updateSuccess,
     );

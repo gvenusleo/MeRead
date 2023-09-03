@@ -5,7 +5,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meread/global/global.dart';
 import 'package:meread/provider/theme_provider.dart';
 import 'package:meread/routes/setting_page/about_page/about_page.dart';
@@ -16,6 +15,7 @@ import 'package:meread/routes/setting_page/language_setting_page/language_settin
 import 'package:meread/routes/setting_page/read_setting_page/read_setting_page.dart';
 import 'package:meread/routes/setting_page/text_scale_factor_setting_page/text_scale_factor_setting_page.dart';
 import 'package:meread/routes/setting_page/theme_setting_page/theme_setting_page.dart';
+import 'package:meread/utils/notification_util.dart';
 import 'package:meread/utils/open_url_util.dart';
 import 'package:meread/utils/opml_util.dart';
 import 'package:meread/widgets/list_tile_group_title.dart';
@@ -241,13 +241,15 @@ class _SettingPageState extends State<SettingPage> {
         return;
       }
       if (!mounted) return;
-      Fluttertoast.showToast(
-        msg: AppLocalizations.of(context)!.startBackgroundImport,
+      showToastOrSnackBar(
+        context,
+        AppLocalizations.of(context)!.startBackgroundImport,
       );
       final int failCount = await parseOpml(result);
       if (!mounted) return;
-      Fluttertoast.showToast(
-        msg: failCount == 0
+      showToastOrSnackBar(
+        context,
+        failCount == 0
             ? AppLocalizations.of(context)!.importSuccess
             : AppLocalizations.of(context)!.importFailedForFeeds(failCount),
       );
@@ -266,8 +268,9 @@ class _SettingPageState extends State<SettingPage> {
       text: successText,
     ).then((value) {
       if (value.status == ShareResultStatus.success) {
-        Fluttertoast.showToast(
-          msg: AppLocalizations.of(context)!.exportSuccess,
+        showToastOrSnackBar(
+          context,
+          AppLocalizations.of(context)!.exportSuccess,
         );
       }
     });
@@ -276,8 +279,9 @@ class _SettingPageState extends State<SettingPage> {
 
   /// 检查更新
   Future<void> checkUpdate() async {
-    Fluttertoast.showToast(
-      msg: AppLocalizations.of(context)!.checkingForUpdates,
+    showToastOrSnackBar(
+      context,
+      AppLocalizations.of(context)!.checkingForUpdates,
     );
     try {
       /* 通过访问 https://github.com/gvenusleo/MeRead/releases/latest 获取最新版本号 */
@@ -291,8 +295,9 @@ class _SettingPageState extends State<SettingPage> {
       final String latestVersion = title.split(' ')[1];
       if (latestVersion == applicationVersion) {
         if (!mounted) return;
-        Fluttertoast.showToast(
-          msg: AppLocalizations.of(context)!.alreadyLatestVersion,
+        showToastOrSnackBar(
+          context,
+          AppLocalizations.of(context)!.alreadyLatestVersion,
         );
       } else {
         if (!mounted) return;
@@ -323,8 +328,9 @@ class _SettingPageState extends State<SettingPage> {
       }
     } catch (e) {
       if (!mounted) return;
-      Fluttertoast.showToast(
-        msg: AppLocalizations.of(context)!.failedToCheckForUpdates,
+      showToastOrSnackBar(
+        context,
+        AppLocalizations.of(context)!.failedToCheckForUpdates,
       );
     }
   }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meread/models/feed.dart';
+import 'package:meread/utils/notification_util.dart';
 import 'package:meread/widgets/list_tile_group_title.dart';
 
 class EditFeedPage extends StatefulWidget {
@@ -51,8 +51,9 @@ class EditFeedPageState extends State<EditFeedPage> {
                   Clipboard.setData(
                     ClipboardData(text: widget.feed.url),
                   );
-                  Fluttertoast.showToast(
-                    msg: AppLocalizations.of(context)!.copyFeedUrlSuccess,
+                  showToastOrSnackBar(
+                    context,
+                    AppLocalizations.of(context)!.copyFeedUrlSuccess,
                   );
                 },
                 child: TextField(
