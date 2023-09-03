@@ -8,7 +8,7 @@ import 'package:meread/routes/feed_page/add_feed_page.dart';
 import 'package:meread/routes/feed_page/edit_feed_page.dart';
 import 'package:meread/routes/read.dart';
 import 'package:meread/routes/setting_page/setting_page.dart';
-import 'package:meread/utils/font_util.dart';
+import 'package:meread/utils/dir_util.dart';
 import 'package:meread/utils/open_url_util.dart';
 import 'package:meread/utils/parse_post_util.dart';
 import 'package:meread/widgets/expansion_card.dart';

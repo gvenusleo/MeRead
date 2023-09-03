@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:meread/global/global.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:meread/utils/dir_util.dart';
 
 /// 读取所有字体文件，注册到系统中
 /// 返回字体名称列表
@@ -12,8 +12,8 @@ Future<List<String>> readAllFont() async {
   final fontDir = await getFontDir();
   /* 遍历字体文件目录，将字体文件注册到系统中 */
   for (var fontFile in fontDir.listSync()) {
-    final fontName = fontFile.path.split('/').last;
-    readFont('${fontDir.path}/$fontName', fontName);
+    final fontName = fontFile.path.split(getDirSeparator()).last;
+    readFont(fontFile.path, fontName);
     fontNameList.add(fontName);
   }
   return fontNameList;
@@ -24,7 +24,8 @@ Future<void> readThemeFont() async {
   final String themeFontName = prefs.getString('themeFont') ?? '默认字体';
   if (themeFontName != '默认字体') {
     final fontFileDir = await getFontDir();
-    readFont('${fontFileDir.path}/$themeFontName', themeFontName);
+    readFont(
+        '${fontFileDir.path}${getDirSeparator()}$themeFontName', themeFontName);
   }
 }
 
@@ -42,7 +43,7 @@ Future<void> readFont(String fontFilePath, String fontName) async {
 /// 删除指定字体文件
 Future<void> deleteFont(String fontName) async {
   final fontFileDir = await getFontDir();
-  final fontFile = File('${fontFileDir.path}/$fontName');
+  final fontFile = File('${fontFileDir.path}${getDirSeparator()}$fontName');
   if (fontFile.existsSync()) {
     fontFile.deleteSync();
   }
@@ -63,8 +64,9 @@ Future<bool> loadLocalFont() async {
       /* 将字体文件导入到 app 中 */
       final fontFileDir = await getFontDir();
       for (var fontFile in fontFileList) {
-        final fontFileName = fontFile.path.split('/').last;
-        final newFontPath = '${fontFileDir.path}/$fontFileName';
+        final fontFileName = fontFile.path.split(getDirSeparator()).last;
+        final newFontPath =
+            '${fontFileDir.path}${getDirSeparator()}$fontFileName';
         await fontFile.copy(newFontPath);
         /* 删除原缓存文件 */
         await fontFile.delete();
@@ -74,15 +76,4 @@ Future<bool> loadLocalFont() async {
   } catch (e) {
     return false;
   }
-}
-
-/// 获取字体文件目录
-Future<Directory> getFontDir() async {
-  final Directory appWorkDir = await getApplicationDocumentsDirectory();
-  final String fontDirPath = '${appWorkDir.path}/fonts';
-  final Directory fontDir = Directory(fontDirPath);
-  if (!(await fontDir.exists())) {
-    await fontDir.create(recursive: true);
-  }
-  return fontDir;
 }
