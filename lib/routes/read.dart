@@ -14,7 +14,6 @@ import 'package:meread/provider/theme_provider.dart';
 import 'package:meread/utils/open_url_util.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:webview_windows/webview_windows.dart';
 
 class ReadPage extends StatefulWidget {
   const ReadPage({
@@ -34,8 +33,6 @@ class ReadPageState extends State<ReadPage> {
   int _index = 0;
   // 内容 html
   String contentHtml = '';
-  // Windows WebView 控制器
-  final windowsWebViewcontroller = WebviewController();
 
   @override
   void initState() {
