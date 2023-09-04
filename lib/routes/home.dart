@@ -11,7 +11,6 @@ import 'package:meread/utils/dir_util.dart';
 import 'package:meread/utils/notification_util.dart';
 import 'package:meread/utils/open_url_util.dart';
 import 'package:meread/utils/parse_post_util.dart';
-import 'package:meread/utils/windows_check.dart';
 import 'package:meread/widgets/expansion_card.dart';
 import 'package:meread/widgets/post_container.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -282,25 +281,19 @@ class HomePageState extends State<HomePage> {
                 } else {
                   /* 应用内打开：阅读器 or 标签页 */
                   if (fontDir == null) return;
-                  bool isInstalled = await isWebView2Runtime();
-                  if (!isInstalled) {
-                    await downloadWebView2();
-                  } else {
-                    if (!mounted) return;
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => ReadPage(
-                          post: posts[index],
-                          fontDir: fontDir!,
-                        ),
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => ReadPage(
+                        post: posts[index],
+                        fontDir: fontDir!,
                       ),
-                    ).then((value) {
-                      /* 返回时刷新文章列表 */
-                      getAllPost();
-                      getUnreadCount();
-                    });
-                  }
+                    ),
+                  ).then((value) {
+                    /* 返回时刷新文章列表 */
+                    getAllPost();
+                    getUnreadCount();
+                  });
                 }
               },
               child: PostContainer(post: posts[index]),
