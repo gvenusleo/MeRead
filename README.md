@@ -36,8 +36,18 @@
 
 ## Thanks
 
-MeRead references the open source project [spacecowboy/feeder](https://gitlab.com/spacecowboy/Feeder) in terms of functionality and design. Thank you here.
+MeRead references the open source project [spacecowboy/feeder](https://gitlab.com/spacecowboy/Feeder) in terms of functionality and design.
 
 ## License
 
 [GNU GPL-3.0](./LICENSE)
+
+## Star History
+
+<a href="https://star-history.com/#gvenusleo/MeRead&Date">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=gvenusleo/MeRead&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=gvenusleo/MeRead&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=gvenusleo/MeRead&type=Date" />
+  </picture>
+</a>
