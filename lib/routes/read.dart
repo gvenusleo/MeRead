@@ -266,7 +266,7 @@ $contentHtml
                   context.read<ReadPageProvider>().pagePadding.toDouble(),
             ),
             child: HtmlWidget(
-              '<iframe src="//player.bilibili.com/player.html?aid=660526520&#038;bvid=BV1bh4y1m7Si&#038;cid=1257757208&#038;page=1&#038;autoplay=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>',
+              html,
               renderMode: RenderMode.column,
               factoryBuilder: () => _MyFactory(),
               textStyle: TextStyle(
