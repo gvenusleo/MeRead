@@ -266,14 +266,82 @@ $contentHtml
                   context.read<ReadPageProvider>().pagePadding.toDouble(),
             ),
             child: HtmlWidget(
-              html,
+              '<iframe src="//player.bilibili.com/player.html?aid=660526520&#038;bvid=BV1bh4y1m7Si&#038;cid=1257757208&#038;page=1&#038;autoplay=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>',
+              renderMode: RenderMode.column,
+              factoryBuilder: () => _MyFactory(),
               textStyle: TextStyle(
                 fontSize: context.read<ReadPageProvider>().fontSize.toDouble(),
+                height: context.read<ReadPageProvider>().lineHeight,
               ),
               customStylesBuilder: (element) {
                 return {
                   'text-align': context.read<ReadPageProvider>().textAlign,
                 };
+              },
+              customWidgetBuilder: (element) {
+                if (element.localName == 'img') {
+                  return Center(
+                    child: Image.network(
+                      element.attributes['src']!,
+                      fit: BoxFit.fill,
+                      width: 500,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        }
+                        return Center(
+                          child: Container(
+                            height: 200,
+                            width: 200,
+                            decoration: BoxDecoration(
+                              color:
+                                  Theme.of(context).colorScheme.surfaceVariant,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Column(
+                              children: [
+                                CircularProgressIndicator(
+                                  strokeWidth: 3,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        return Center(
+                          child: Container(
+                            height: 200,
+                            width: 200,
+                            decoration: BoxDecoration(
+                              color:
+                                  Theme.of(context).colorScheme.surfaceVariant,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(Icons.broken_image_outlined),
+                                SizedBox(height: 8),
+                                Text('图片加载失败'),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }
+                return null;
+              },
+              onTapUrl: (String url) {
+                try {
+                  openUrl(url);
+                  return true;
+                } catch (e) {
+                  return false;
+                }
               },
             ),
           ),
@@ -353,4 +421,10 @@ $contentHtml
       widget.post.updateToDb();
     }
   }
+}
+
+/* 用于 iframe */
+class _MyFactory extends WidgetFactory {
+  @override
+  bool get webView => true;
 }
