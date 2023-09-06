@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:html/parser.dart' as html_parser;
 import 'package:flutter/material.dart';
@@ -10,7 +7,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:html_main_element/html_main_element.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/provider/read_page_provider.dart';
-import 'package:meread/provider/theme_provider.dart';
 import 'package:meread/utils/open_url_util.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -42,82 +38,6 @@ class ReadPageState extends State<ReadPage> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData themeData = Theme.of(context);
-    final String textColor = themeData.textTheme.bodyLarge!.color!.value
-        .toRadixString(16)
-        .substring(2);
-    final String backgroundColor =
-        themeData.scaffoldBackgroundColor.value.toRadixString(16).substring(2);
-    final String themeColor =
-        themeData.colorScheme.primary.value.toRadixString(16).substring(2);
-    final titleStr = '<h1>${widget.post.title}</h1>';
-    final String cssStr = '''
-@font-face {
-  font-family: 'customFont';
-  src: url('${widget.fontDir}/${context.watch<ThemeProvider>().themeFont}');
-}
-body {
-  font-family: 'customFont';
-  font-size: ${context.watch<ReadPageProvider>().fontSize}px;
-  line-height: ${context.watch<ReadPageProvider>().lineHeight};
-  color: #$textColor;
-  background-color: #$backgroundColor;
-  width: auto;
-  height: auto;
-  margin: 0;
-  word-wrap: break-word;
-  padding: 12px ${context.watch<ReadPageProvider>().pagePadding}px !important;
-  text-align: ${context.watch<ReadPageProvider>().textAlign};
-}
-h1 {
-  font-size: 1.5em;
-  font-weight: 700;
-}
-h2 {
-  font-size: 1.25em;
-  font-weight: 700;
-}
-h3,h4,h5,h6 {
-  font-size: 1.0em;
-  font-weight: 700;
-}
-img,figure,video,iframe {
-  max-width: 100% !important;
-  height: auto;
-  margin: 0 auto;
-  display: block;
-}
-
-a {
-  color: #$themeColor;
-  text-decoration: none;
-  border-bottom: 1px solid #$themeColor;
-  padding-bottom: 1px;
-  word-break: break-all;
-}
-blockquote {
-  margin: 0;
-  padding: 0 0 0 16px;
-  border-left: 4px solid #9e9e9e;
-}
-pre {
-  white-space: pre-wrap;
-  word-break: break-all;
-}
-table {
-  width: 100% !important;
-  table-layout: fixed;
-}
-table td {
-  padding: 0 8px;
-}
-
-table, th, td {
-  border: 1px solid #$textColor;
-  border-collapse: collapse;
-}
-''';
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.post.feedName),
@@ -216,13 +136,13 @@ table, th, td {
       body: SafeArea(
         child: AnimatedSwitcher(
           duration: const Duration(milliseconds: 800),
-          child: _buildBody(titleStr, cssStr),
+          child: _buildBody(),
         ),
       ),
     );
   }
 
-  Widget _buildBody(String titleStr, String cssStr) {
+  Widget _buildBody() {
     if (_index == 0) {
       return Center(
         child: SizedBox(
@@ -240,132 +160,99 @@ table, th, td {
         ),
       );
     }
-    String html = '''<!DOCTYPE html>
- <html>
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<style>
-$cssStr
-</style>
-</head>
+    String html = '''
 <body>
-$titleStr
+<h1>${widget.post.title}</h1>
 $contentHtml
 </body>
-</html>
 ''';
-    if (Platform.isWindows) {
-      return SelectionArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: 24,
-              horizontal:
-                  context.read<ReadPageProvider>().pagePadding.toDouble(),
+
+    return SelectionArea(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: 24,
+            horizontal: context.read<ReadPageProvider>().pagePadding.toDouble(),
+          ),
+          child: HtmlWidget(
+            html,
+            renderMode: RenderMode.column,
+            factoryBuilder: () => _MyFactory(),
+            textStyle: TextStyle(
+              fontSize: context.read<ReadPageProvider>().fontSize.toDouble(),
+              height: context.read<ReadPageProvider>().lineHeight,
             ),
-            child: HtmlWidget(
-              html,
-              renderMode: RenderMode.column,
-              factoryBuilder: () => _MyFactory(),
-              textStyle: TextStyle(
-                fontSize: context.read<ReadPageProvider>().fontSize.toDouble(),
-                height: context.read<ReadPageProvider>().lineHeight,
-              ),
-              customStylesBuilder: (element) {
-                return {
-                  'text-align': context.read<ReadPageProvider>().textAlign,
-                };
-              },
-              customWidgetBuilder: (element) {
-                if (element.localName == 'img') {
-                  return Center(
-                    child: Image.network(
-                      element.attributes['src']!,
-                      fit: BoxFit.fill,
-                      width: 500,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) {
-                          return child;
-                        }
-                        return Center(
-                          child: Container(
-                            height: 200,
-                            width: 200,
-                            decoration: BoxDecoration(
-                              color:
-                                  Theme.of(context).colorScheme.surfaceVariant,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Column(
-                              children: [
-                                CircularProgressIndicator(
-                                  strokeWidth: 3,
-                                ),
-                              ],
-                            ),
+            customStylesBuilder: (element) {
+              return {
+                'text-align': context.read<ReadPageProvider>().textAlign,
+              };
+            },
+            customWidgetBuilder: (element) {
+              if (element.localName == 'img') {
+                return Center(
+                  child: Image.network(
+                    element.attributes['src']!,
+                    fit: BoxFit.fill,
+                    width: 500,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      }
+                      return Center(
+                        child: Container(
+                          height: 200,
+                          width: 200,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surfaceVariant,
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                        );
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return Center(
-                          child: Container(
-                            height: 200,
-                            width: 200,
-                            decoration: BoxDecoration(
-                              color:
-                                  Theme.of(context).colorScheme.surfaceVariant,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Icon(Icons.broken_image_outlined),
-                                SizedBox(height: 8),
-                                Text('图片加载失败'),
-                              ],
-                            ),
+                          child: const Column(
+                            children: [
+                              CircularProgressIndicator(
+                                strokeWidth: 3,
+                              ),
+                            ],
                           ),
-                        );
-                      },
-                    ),
-                  );
-                }
-                return null;
-              },
-              onTapUrl: (String url) {
-                try {
-                  openUrl(url);
-                  return true;
-                } catch (e) {
-                  return false;
-                }
-              },
-            ),
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return Center(
+                        child: Container(
+                          height: 200,
+                          width: 200,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surfaceVariant,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(Icons.broken_image_outlined),
+                              SizedBox(height: 8),
+                              Text('图片加载失败'),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              }
+              return null;
+            },
+            onTapUrl: (String url) {
+              try {
+                openUrl(url);
+                return true;
+              } catch (e) {
+                return false;
+              }
+            },
           ),
         ),
-      );
-    }
-    return InAppWebView(
-      initialData: InAppWebViewInitialData(
-        data: html,
-        baseUrl: Uri.directory(widget.fontDir),
       ),
-      initialOptions: InAppWebViewGroupOptions(
-        android: AndroidInAppWebViewOptions(
-          useHybridComposition: true,
-        ),
-        crossPlatform: InAppWebViewOptions(
-          transparentBackground: true,
-          useShouldOverrideUrlLoading: true,
-        ),
-      ),
-      /* 点击链接时使用内置标签页打开 */
-      shouldOverrideUrlLoading: (controller, navigationAction) async {
-        openUrl(navigationAction.request.url.toString());
-        return NavigationActionPolicy.CANCEL;
-      },
     );
   }
 
