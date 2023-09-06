@@ -116,7 +116,6 @@ table, th, td {
   border: 1px solid #$textColor;
   border-collapse: collapse;
 }
-${context.watch<ReadPageProvider>().customCss}
 ''';
 
     return Scaffold(

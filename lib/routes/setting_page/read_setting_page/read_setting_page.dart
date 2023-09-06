@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:meread/provider/read_page_provider.dart';
-import 'package:meread/routes/setting_page/read_setting_page/custom_css_page.dart';
 import 'package:meread/routes/setting_page/read_setting_page/font_size_setting_page.dart';
 import 'package:meread/routes/setting_page/read_setting_page/line_height_setting_page.dart';
 import 'package:meread/routes/setting_page/read_setting_page/page_padding_setting_page.dart';
@@ -112,21 +111,6 @@ class ReadSettingPage extends StatelessWidget {
                   context,
                   CupertinoPageRoute(
                     builder: (context) => const TextAlignSettingPage(),
-                  ),
-                );
-              },
-            ),
-            /* 自定义 CSS */
-            ListTile(
-              leading: const Icon(Icons.code_outlined),
-              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
-              title: Text(AppLocalizations.of(context)!.customCSS),
-              subtitle: Text(AppLocalizations.of(context)!.readingPageCSSStyle),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => const CustomCssPage(),
                   ),
                 );
               },
