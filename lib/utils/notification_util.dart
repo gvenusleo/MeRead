@@ -11,6 +11,8 @@ void showToastOrSnackBar(BuildContext context, String msg) {
       SnackBar(
         content: Text(msg),
         showCloseIcon: true,
+        behavior: SnackBarBehavior.floating,
+        width: 400,
       ),
     );
   }
