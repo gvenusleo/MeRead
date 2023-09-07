@@ -5,7 +5,7 @@ import 'package:meread/models/feed.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/routes/feed_page/add_feed_page.dart';
 import 'package:meread/routes/feed_page/edit_feed_page.dart';
-import 'package:meread/routes/read.dart';
+import 'package:meread/routes/read_page.dart';
 import 'package:meread/routes/setting_page/setting_page.dart';
 import 'package:meread/utils/dir_util.dart';
 import 'package:meread/utils/notification_util.dart';

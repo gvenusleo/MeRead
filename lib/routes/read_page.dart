@@ -8,6 +8,7 @@ import 'package:html_main_element/html_main_element.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/provider/read_page_provider.dart';
 import 'package:meread/utils/open_url_util.dart';
+import 'package:meread/widgets/img_for_read.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -166,7 +167,6 @@ class ReadPageState extends State<ReadPage> {
 $contentHtml
 </body>
 ''';
-
     return SelectionArea(
       child: SingleChildScrollView(
         child: Padding(
@@ -188,57 +188,23 @@ $contentHtml
               };
             },
             customWidgetBuilder: (element) {
+              if (element.localName == 'figure') {
+                if (element.children.length == 1 &&
+                    element.children[0].localName == 'img') {
+                  String? imgUrl = element.children[0].attributes['src'];
+                  if (imgUrl != null) {
+                    return ImgForRead(
+                      url: element.children[0].attributes['src']!,
+                    );
+                  }
+                }
+              }
               if (element.localName == 'img') {
-                return Center(
-                  child: Image.network(
-                    element.attributes['src']!,
-                    fit: BoxFit.fill,
-                    width: 500,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child;
-                      }
-                      return Center(
-                        child: Container(
-                          height: 200,
-                          width: 200,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surfaceVariant,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Column(
-                            children: [
-                              CircularProgressIndicator(
-                                strokeWidth: 3,
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                    errorBuilder: (context, error, stackTrace) {
-                      return Center(
-                        child: Container(
-                          height: 200,
-                          width: 200,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surfaceVariant,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(Icons.broken_image_outlined),
-                              SizedBox(height: 8),
-                              Text('图片加载失败'),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                );
+                if (element.attributes['src'] != null) {
+                  return ImgForRead(
+                    url: element.attributes['src']!,
+                  );
+                }
               }
               return null;
             },
