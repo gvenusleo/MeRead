@@ -53,7 +53,33 @@ class _SettingPageState extends State<SettingPage> {
               ),
               child: buildSettingScaffold(),
             ),
-            Expanded(child: rightWidget ?? const SizedBox.shrink()),
+            buildRightWidget(),
+          ],
+        ),
+      );
+    }
+  }
+
+  Widget buildRightWidget() {
+    if (MediaQuery.of(context).size.width < 1000) {
+      return Expanded(child: rightWidget ?? const SizedBox.shrink());
+    } else {
+      return Expanded(
+        child: Row(
+          children: [
+            Container(
+              width: 600,
+              decoration: BoxDecoration(
+                border: Border(
+                  right: BorderSide(
+                    color: Theme.of(context).colorScheme.outline,
+                    width: 0.5,
+                  ),
+                ),
+              ),
+              child: rightWidget ?? const SizedBox.shrink(),
+            ),
+            const Expanded(child: SizedBox.shrink()),
           ],
         ),
       );

@@ -1,13 +1,49 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:meread/provider/read_page_provider.dart';
 import 'package:provider/provider.dart';
 
-class FontSizeSettingPage extends StatelessWidget {
+class FontSizeSettingPage extends StatefulWidget {
   const FontSizeSettingPage({Key? key}) : super(key: key);
 
   @override
+  State<FontSizeSettingPage> createState() => _FontSizeSettingPageState();
+}
+
+class _FontSizeSettingPageState extends State<FontSizeSettingPage> {
+  @override
   Widget build(BuildContext context) {
+    if (Platform.isAndroid) {
+      return buildScaffold();
+    } else {
+      if (MediaQuery.of(context).size.width < 600) {
+        return buildScaffold();
+      } else {
+        return Scaffold(
+          body: Row(
+            children: [
+              Container(
+                width: 600,
+                decoration: BoxDecoration(
+                  border: Border(
+                    right: BorderSide(
+                      color: Theme.of(context).dividerColor,
+                      width: 0.5,
+                    ),
+                  ),
+                ),
+                child: buildScaffold(),
+              )
+            ],
+          ),
+        );
+      }
+    }
+  }
+
+  Widget buildScaffold() {
     final Map<int, String> fontSizeMap = {
       14: AppLocalizations.of(context)!.minimum,
       16: AppLocalizations.of(context)!.small,
