@@ -23,7 +23,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   // 订阅源列表，按分类分组
   Map<String, List<Feed>> feedListGroupByCategory = {};
   // 当前状态下的订阅源列表
@@ -48,12 +48,27 @@ class HomePageState extends State<HomePage> {
   String? appBarTitle;
   // 当前阅读的 POst
   Post? selectedPost;
+  // 旋转动画控制器
+  late AnimationController _animationController;
+  // 旋转动画
+  late Animation<double> _animation;
 
   @override
   void initState() {
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
     super.initState();
     initData(setAppBar: false);
     initFontDir();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -88,6 +103,19 @@ class HomePageState extends State<HomePage> {
       ),
       centerTitle: false,
       actions: [
+        /* 刷新(仅 Windows) */
+        if (Platform.isWindows)
+          IconButton(
+            onPressed: () async {
+              _animationController.repeat();
+              await refresh();
+              _animationController.stop();
+            },
+            icon: RotationTransition(
+              turns: _animation,
+              child: const Icon(Icons.sync_outlined),
+            ),
+          ),
         /* 未读筛选 */
         IconButton(
           onPressed: filterUnread,
