@@ -27,14 +27,11 @@ class ReadPage extends StatefulWidget {
 
 class ReadPageState extends State<ReadPage> {
   // 堆叠索引
-  int _index = 0;
-  // 内容 html
-  String contentHtml = '';
+  int _index = 1;
 
   @override
   void initState() {
     super.initState();
-    initData();
   }
 
   @override
@@ -144,6 +141,14 @@ class ReadPageState extends State<ReadPage> {
   }
 
   Widget _buildBody() {
+    if (widget.post.fullText &&
+        !widget.post.fullTextCache &&
+        widget.post.openType == 0) {
+      setState(() {
+        _index == 0;
+      });
+      initData();
+    }
     if (_index == 0) {
       return Center(
         child: SizedBox(
@@ -164,7 +169,7 @@ class ReadPageState extends State<ReadPage> {
     String html = '''
 <body>
 <h1>${widget.post.title}</h1>
-$contentHtml
+${widget.post.content}
 </body>
 ''';
     return SelectionArea(
@@ -235,7 +240,6 @@ $contentHtml
     widget.post.content = bestElemReadability.outerHtml;
     widget.post.fullTextCache = true;
     setState(() {
-      contentHtml = widget.post.content;
       _index = 1;
     });
     widget.post.updateToDb();
@@ -243,35 +247,10 @@ $contentHtml
 
   /* 根据 url 获取 html 内容 */
   Future<void> initData() async {
-    if (widget.post.fullText &&
-        !widget.post.fullTextCache &&
-        widget.post.openType == 0) {
-      setState(() {
-        _index = 0;
-      });
-      /* 获取全文 */
-      final response = await Dio().get(widget.post.link);
-      final document = html_parser.parse(response.data);
-      final bestElemReadability =
-          readabilityMainElement(document.documentElement!);
-      widget.post.content = bestElemReadability.outerHtml;
-      setState(() {
-        contentHtml = widget.post.content;
-        _index = 1;
-      });
-      widget.post.fullTextCache = true;
-      widget.post.updateToDb();
-    } else {
-      setState(() {
-        contentHtml = widget.post.content;
-        _index = 1;
-      });
-    }
-    /* 更新文章信息 */
-    if (!widget.post.read) {
-      widget.post.read = true;
-      widget.post.updateToDb();
-    }
+    await getFullText();
+    setState(() {
+      _index = 1;
+    });
   }
 }
 
