@@ -28,11 +28,15 @@ class ImgForRead extends StatelessWidget {
               color: Theme.of(context).colorScheme.surfaceVariant,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Column(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CircularProgressIndicator(
+                const CircularProgressIndicator(
                   strokeWidth: 3,
                 ),
+                const SizedBox(height: 8),
+                Text(AppLocalizations.of(context)!.loading),
               ],
             ),
           ),
