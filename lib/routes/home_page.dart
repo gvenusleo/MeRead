@@ -208,7 +208,7 @@ class HomePageState extends State<HomePage> {
             child: buildFeedsListView(),
           ),
           Container(
-            width: 360,
+            width: 400,
             decoration: BoxDecoration(
               border: Border(
                 right: BorderSide(
