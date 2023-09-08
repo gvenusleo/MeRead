@@ -5,7 +5,8 @@ import 'package:meread/utils/font_util.dart';
 import 'package:provider/provider.dart';
 
 class FontSettingPage extends StatefulWidget {
-  const FontSettingPage({Key? key}) : super(key: key);
+  const FontSettingPage({super.key, this.needLeading = true});
+  final bool needLeading;
 
   @override
   State<FontSettingPage> createState() => _FontSettingPageState();
@@ -31,6 +32,8 @@ class _FontSettingPageState extends State<FontSettingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: widget.needLeading ? null : const SizedBox.shrink(),
+        leadingWidth: widget.needLeading ? null : 0,
         title: Text(AppLocalizations.of(context)!.globalFont),
         actions: [
           /* 添加字体 */

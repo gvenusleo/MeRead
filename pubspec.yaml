@@ -32,6 +32,7 @@ dependencies:
   isar: ^3.1.0+1
   isar_flutter_libs: ^3.1.0+1
   flutter_inappwebview: ^5.7.2+3
+  flutter_widget_from_html: ^0.10.4
 
 dev_dependencies:
   flutter_test:

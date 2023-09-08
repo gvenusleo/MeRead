@@ -3,7 +3,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:meread/global/global.dart';
 
 class BlockSettingPage extends StatefulWidget {
-  const BlockSettingPage({Key? key}) : super(key: key);
+  const BlockSettingPage({super.key, this.needLeading = true});
+  final bool needLeading;
 
   @override
   State<BlockSettingPage> createState() => _BlockSettingPageState();
@@ -17,6 +18,8 @@ class _BlockSettingPageState extends State<BlockSettingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: widget.needLeading ? null : const SizedBox.shrink(),
+        leadingWidth: widget.needLeading ? null : 0,
         title: Text(AppLocalizations.of(context)!.blockRules),
         actions: [
           // 添加屏蔽词

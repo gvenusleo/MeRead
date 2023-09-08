@@ -109,5 +109,11 @@
     "saveImageInfo": "Do you want to save the picture to the album?",
     "saveImageSuccess": "Save Image Success",
     "selectAll": "Select All",
-    "unSelectAll": "Cancel Select All"
+    "unSelectAll": "Cancel Select All",
+    "attention": "Attention",
+    "webView2Info": "MeRead uses Microsoft Edge WebView2 to render the reading page. It has detected that WebView2 is not installed on your computer. It is recommended that you download and install it first.",
+    "downloadWebView2": "Download WebView2 →",
+    "imgLoadingFailed": "Image loading failed",
+    "loading": "Loading...",
+    "noPostOpened": "No Post Opened"
 }

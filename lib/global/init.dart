@@ -38,10 +38,12 @@ Future<void> init() async {
   readThemeFont();
 
   /* 数据库迁移 */
-  int dbVersion = prefs.getInt('dbVersion') ?? 0;
+  if (Platform.isAndroid) {
+    int dbVersion = prefs.getInt('dbVersion') ?? 0;
 
-  if (dbVersion == 0) {
-    await migration();
-    await prefs.setInt('dbVersion', 1);
+    if (dbVersion == 0) {
+      await migration();
+      await prefs.setInt('dbVersion', 1);
+    }
   }
 }

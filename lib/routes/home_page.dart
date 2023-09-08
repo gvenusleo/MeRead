@@ -1,14 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meread/models/feed.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/routes/feed_page/add_feed_page.dart';
 import 'package:meread/routes/feed_page/edit_feed_page.dart';
-import 'package:meread/routes/read.dart';
+import 'package:meread/routes/read_page.dart';
 import 'package:meread/routes/setting_page/setting_page.dart';
-import 'package:meread/utils/font_util.dart';
+import 'package:meread/utils/dir_util.dart';
+import 'package:meread/utils/notification_util.dart';
 import 'package:meread/utils/open_url_util.dart';
 import 'package:meread/utils/parse_post_util.dart';
 import 'package:meread/widgets/expansion_card.dart';
@@ -21,7 +23,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   // 订阅源列表，按分类分组
   Map<String, List<Feed>> feedListGroupByCategory = {};
   // 当前状态下的订阅源列表
@@ -44,207 +46,37 @@ class HomePageState extends State<HomePage> {
   Map<String, bool> drawerExpansionState = {};
   // AppBar 标题
   String? appBarTitle;
+  // 当前阅读的 POst
+  Post? selectedPost;
+  // 旋转动画控制器
+  late AnimationController _animationController;
+  // 旋转动画
+  late Animation<double> _animation;
 
   @override
   void initState() {
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    _animation = Tween(begin: 1.0, end: 0.0).animate(_animationController);
     super.initState();
     initData(setAppBar: false);
     initFontDir();
   }
 
   @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          appBarTitle == null
-              ? AppLocalizations.of(context)!.allFeed
-              : appBarTitle!,
-        ),
-        centerTitle: false,
-        actions: [
-          /* 未读筛选 */
-          IconButton(
-            onPressed: filterUnread,
-            icon: onlyUnread
-                ? const Icon(Icons.radio_button_checked)
-                : const Icon(Icons.radio_button_unchecked),
-          ),
-          /* 收藏筛选 */
-          IconButton(
-            onPressed: filterFavorite,
-            icon: onlyFavorite
-                ? const Icon(Icons.bookmark)
-                : const Icon(Icons.bookmark_border_outlined),
-          ),
-          PopupMenuButton(
-            position: PopupMenuPosition.under,
-            itemBuilder: (BuildContext context) {
-              return <PopupMenuEntry>[
-                /* 全标已读 */
-                PopupMenuItem(
-                  onTap: markAllReadFunc,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.done_all_outlined, size: 20),
-                      const SizedBox(width: 10),
-                      Text(AppLocalizations.of(context)!.markAllAsRead),
-                    ],
-                  ),
-                ),
-                const PopupMenuDivider(),
-                /* 添加订阅源 */
-                PopupMenuItem(
-                  onTap: addFeedFunc,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.add_outlined, size: 20),
-                      const SizedBox(width: 10),
-                      Text(AppLocalizations.of(context)!.addFeed),
-                    ],
-                  ),
-                ),
-                /* 编辑订阅 */
-                PopupMenuItem(
-                  onTap: editFeedFunc,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.edit_outlined, size: 20),
-                      const SizedBox(width: 10),
-                      Text(AppLocalizations.of(context)!.editFeed),
-                    ],
-                  ),
-                ),
-                /* 删除订阅 */
-                PopupMenuItem(
-                  onTap: deleteFeedFunc,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.delete_outline, size: 20),
-                      const SizedBox(width: 10),
-                      Text(AppLocalizations.of(context)!.deleteFeed),
-                    ],
-                  ),
-                ),
-                const PopupMenuDivider(),
-                /* 设置 */
-                PopupMenuItem(
-                  onTap: settingFunc,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.settings_outlined, size: 20),
-                      const SizedBox(width: 10),
-                      Text(AppLocalizations.of(context)!.settings),
-                    ],
-                  ),
-                ),
-              ];
-            },
-          ),
-        ],
-      ),
+      appBar: buildAppBar(),
       drawerEdgeDragWidth: MediaQuery.of(context).size.width * 0.4,
-      drawer: Drawer(
-        child: SafeArea(
-          child: ListView.builder(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            itemCount: feedListGroupByCategory.length + 1,
-            itemBuilder: (BuildContext context, int index) {
-              /* 计算全部未读文章数 */
-              int allUnreadCount = 0;
-              for (int count in unreadCount.values) {
-                allUnreadCount += count;
-              }
-              /* 计算分组未读文章数 */
-              Map<String, int> unreadCountByCategory = {};
-              for (String category in feedListGroupByCategory.keys) {
-                int count = 0;
-                for (Feed feed in feedListGroupByCategory[category] ?? []) {
-                  if (unreadCount[feed.id] != null) {
-                    count += unreadCount[feed.id]!;
-                  }
-                }
-                unreadCountByCategory[category] = count;
-              }
-              if (index == 0) {
-                return ListTile(
-                  contentPadding: const EdgeInsets.only(left: 32, right: 28),
-                  title: Text(AppLocalizations.of(context)!.allFeed),
-                  trailing: Text(allUnreadCount.toString()),
-                  onTap: () {
-                    initData();
-                    Navigator.pop(context);
-                  },
-                );
-              }
-              String groupTitle =
-                  feedListGroupByCategory.keys.toList()[index - 1];
-              return ExpansionCard(
-                title: Text(groupTitle),
-                trailing: Text(
-                  unreadCountByCategory[
-                          feedListGroupByCategory.keys.toList()[index - 1]]!
-                      .toString(),
-                ),
-                initiallyExpanded: drawerExpansionState[groupTitle] ?? false,
-                onExpansionChanged: (value) {
-                  setState(() {
-                    drawerExpansionState[groupTitle] = value;
-                  });
-                },
-                onTap: () {
-                  setState(() {
-                    appBarTitle =
-                        feedListGroupByCategory.keys.toList()[index - 1];
-                    feedList =
-                        feedListGroupByCategory.values.toList()[index - 1];
-                  });
-                  getAllPost();
-                  Navigator.pop(context);
-                },
-                children: [
-                  Column(
-                    children: [
-                      for (Feed feed
-                          in feedListGroupByCategory.values.toList()[index - 1])
-                        ListTile(
-                          dense: true,
-                          contentPadding: const EdgeInsets.only(
-                            left: 36,
-                            right: 28,
-                          ),
-                          title: Text(
-                            feed.name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          trailing: Text(
-                            unreadCount[feed.id] == null
-                                ? ''
-                                : unreadCount[feed.id].toString(),
-                          ),
-                          onTap: () {
-                            setState(() {
-                              appBarTitle = feed.name;
-                              feedList = [feed];
-                            });
-                            getAllPost();
-                            Navigator.pop(context);
-                          },
-                        ),
-                    ],
-                  )
-                ],
-              );
-            },
-          ),
-        ),
-      ),
+      drawer: buildDrawer(),
       body: buildBody(
         onlyUnread
             ? unreadPostList
@@ -253,12 +85,286 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  /* 构建 AppBar */
+  PreferredSizeWidget? buildAppBar() {
+    if (Platform.isAndroid) {
+      return buildAppBarHelper();
+    } else {
+      return null;
+    }
+  }
+
+  PreferredSizeWidget buildAppBarHelper() {
+    return AppBar(
+      title: Text(
+        appBarTitle == null
+            ? AppLocalizations.of(context)!.allFeed
+            : appBarTitle!,
+      ),
+      centerTitle: false,
+      actions: [
+        /* 刷新(仅 Windows) */
+        if (Platform.isWindows)
+          IconButton(
+            onPressed: () async {
+              _animationController.repeat();
+              await refresh();
+              _animationController.stop();
+            },
+            icon: RotationTransition(
+              turns: _animation,
+              child: const Icon(Icons.sync_outlined),
+            ),
+          ),
+        /* 未读筛选 */
+        IconButton(
+          onPressed: filterUnread,
+          icon: onlyUnread
+              ? const Icon(Icons.radio_button_checked)
+              : const Icon(Icons.radio_button_unchecked),
+        ),
+        /* 收藏筛选 */
+        IconButton(
+          onPressed: filterFavorite,
+          icon: onlyFavorite
+              ? const Icon(Icons.bookmark)
+              : const Icon(Icons.bookmark_border_outlined),
+        ),
+        PopupMenuButton(
+          position: PopupMenuPosition.under,
+          itemBuilder: (BuildContext context) {
+            return <PopupMenuEntry>[
+              /* 全标已读 */
+              PopupMenuItem(
+                onTap: markAllReadFunc,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.done_all_outlined, size: 20),
+                    const SizedBox(width: 10),
+                    Text(AppLocalizations.of(context)!.markAllAsRead),
+                  ],
+                ),
+              ),
+              const PopupMenuDivider(),
+              /* 添加订阅源 */
+              PopupMenuItem(
+                onTap: addFeedFunc,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.add_outlined, size: 20),
+                    const SizedBox(width: 10),
+                    Text(AppLocalizations.of(context)!.addFeed),
+                  ],
+                ),
+              ),
+              /* 编辑订阅 */
+              PopupMenuItem(
+                onTap: editFeedFunc,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.edit_outlined, size: 20),
+                    const SizedBox(width: 10),
+                    Text(AppLocalizations.of(context)!.editFeed),
+                  ],
+                ),
+              ),
+              /* 删除订阅 */
+              PopupMenuItem(
+                onTap: deleteFeedFunc,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.delete_outline, size: 20),
+                    const SizedBox(width: 10),
+                    Text(AppLocalizations.of(context)!.deleteFeed),
+                  ],
+                ),
+              ),
+              const PopupMenuDivider(),
+              /* 设置 */
+              PopupMenuItem(
+                onTap: settingFunc,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.settings_outlined, size: 20),
+                    const SizedBox(width: 10),
+                    Text(AppLocalizations.of(context)!.settings),
+                  ],
+                ),
+              ),
+            ];
+          },
+        ),
+      ],
+    );
+  }
+
+  /* 构建 Android Drawer */
+  Widget? buildDrawer() {
+    if (Platform.isAndroid) {
+      return Drawer(child: buildFeedsListView());
+    } else {
+      return null;
+    }
+  }
+
   /* 构建 Post 列表 */
   Widget buildBody(List<Post> posts) {
     if (feedList.isEmpty &&
         appBarTitle != AppLocalizations.of(context)!.allFeed) {
       initData();
     }
+    if (Platform.isAndroid) {
+      return buildPostsListView(posts);
+    } else {
+      return Row(
+        children: [
+          Container(
+            width: 240,
+            decoration: BoxDecoration(
+              border: Border(
+                right: BorderSide(
+                  color: Theme.of(context).colorScheme.outline,
+                  width: 0.5,
+                ),
+              ),
+            ),
+            child: buildFeedsListView(),
+          ),
+          Container(
+            width: 400,
+            decoration: BoxDecoration(
+              border: Border(
+                right: BorderSide(
+                  color: Theme.of(context).colorScheme.outline,
+                  width: 0.5,
+                ),
+              ),
+            ),
+            child: Scaffold(
+              appBar: buildAppBarHelper(),
+              body: buildPostsListView(posts),
+            ),
+          ),
+          Expanded(
+            child: (selectedPost != null)
+                ? ReadPage(post: selectedPost!, fontDir: fontDir!)
+                : Center(
+                    child: Text(AppLocalizations.of(context)!.noPostOpened),
+                  ),
+          )
+        ],
+      );
+    }
+  }
+
+  /* 构建订阅源列表侧边栏 */
+  Widget buildFeedsListView() {
+    /* 计算全部未读文章数 */
+    int allUnreadCount = 0;
+    for (int count in unreadCount.values) {
+      allUnreadCount += count;
+    }
+    /* 计算分组未读文章数 */
+    Map<String, int> unreadCountByCategory = {};
+    for (String category in feedListGroupByCategory.keys) {
+      int count = 0;
+      for (Feed feed in feedListGroupByCategory[category] ?? []) {
+        if (unreadCount[feed.id] != null) {
+          count += unreadCount[feed.id]!;
+        }
+      }
+      unreadCountByCategory[category] = count;
+    }
+    return SafeArea(
+      child: ListView.builder(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        itemCount: feedListGroupByCategory.length + 1,
+        itemBuilder: (BuildContext context, int index) {
+          if (index == 0) {
+            return ListTile(
+              contentPadding: const EdgeInsets.only(left: 32, right: 28),
+              title: Text(AppLocalizations.of(context)!.allFeed),
+              trailing: Text(allUnreadCount.toString()),
+              onTap: () {
+                initData();
+                if (Platform.isAndroid) {
+                  Navigator.pop(context);
+                }
+              },
+            );
+          }
+          String groupTitle = feedListGroupByCategory.keys.toList()[index - 1];
+          return ExpansionCard(
+            title: Text(groupTitle),
+            trailing: Text(
+              unreadCountByCategory[
+                      feedListGroupByCategory.keys.toList()[index - 1]]!
+                  .toString(),
+            ),
+            initiallyExpanded: drawerExpansionState[groupTitle] ?? false,
+            onExpansionChanged: (value) {
+              setState(() {
+                drawerExpansionState[groupTitle] = value;
+              });
+            },
+            onTap: () {
+              setState(() {
+                appBarTitle = feedListGroupByCategory.keys.toList()[index - 1];
+                feedList = feedListGroupByCategory.values.toList()[index - 1];
+              });
+              getAllPost();
+              if (Platform.isAndroid) {
+                Navigator.pop(context);
+              }
+            },
+            children: [
+              Column(
+                children: [
+                  for (Feed feed
+                      in feedListGroupByCategory.values.toList()[index - 1])
+                    ListTile(
+                      dense: true,
+                      contentPadding: const EdgeInsets.only(
+                        left: 36,
+                        right: 28,
+                      ),
+                      title: Text(
+                        feed.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      trailing: Text(
+                        unreadCount[feed.id] == null
+                            ? ''
+                            : unreadCount[feed.id].toString(),
+                      ),
+                      onTap: () {
+                        setState(() {
+                          appBarTitle = feed.name;
+                          feedList = [feed];
+                        });
+                        getAllPost();
+                        if (Platform.isAndroid) {
+                          Navigator.pop(context);
+                        }
+                      },
+                    ),
+                ],
+              )
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  /* 构建 Post 列表 */
+  Widget buildPostsListView(List<Post> posts) {
     return SafeArea(
       child: RefreshIndicator(
         onRefresh: refresh,
@@ -281,19 +387,30 @@ class HomePageState extends State<HomePage> {
                 } else {
                   /* 应用内打开：阅读器 or 标签页 */
                   if (fontDir == null) return;
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => ReadPage(
-                        post: posts[index],
-                        fontDir: fontDir!,
+                  if (Platform.isAndroid) {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => ReadPage(
+                          post: posts[index],
+                          fontDir: fontDir!,
+                        ),
                       ),
-                    ),
-                  ).then((value) {
-                    /* 返回时刷新文章列表 */
-                    getAllPost();
-                    getUnreadCount();
-                  });
+                    ).then((value) {
+                      /* 返回时刷新文章列表 */
+                      getAllPost();
+                      getUnreadCount();
+                    });
+                  } else {
+                    setState(() {
+                      selectedPost = posts[index];
+                    });
+                  }
+                }
+                /* 更新文章信息 */
+                if (!posts[index].read) {
+                  posts[index].read = true;
+                  posts[index].updateToDb();
                 }
               },
               child: PostContainer(post: posts[index]),
@@ -368,8 +485,9 @@ class HomePageState extends State<HomePage> {
       ),
     );
     if (!mounted) return;
-    Fluttertoast.showToast(
-      msg: failCount > 0
+    showToastOrSnackBar(
+      context,
+      failCount > 0
           ? AppLocalizations.of(context)!.updateFailedFeeds(failCount)
           : AppLocalizations.of(context)!.updateSuccess,
     );
@@ -689,5 +807,44 @@ class HomePageState extends State<HomePage> {
         getUnreadCount();
       });
     });
+  }
+
+  /* 针对 Windows 的 WebView 检查 */
+  Future<void> downloadWebView2() async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          icon: const Icon(Icons.warning_rounded),
+          title: Text(AppLocalizations.of(context)!.attention),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(AppLocalizations.of(context)!.webView2Info),
+              const SizedBox(height: 12),
+              TextButton(
+                onPressed: () {
+                  bool isChinese =
+                      AppLocalizations.of(context)!.localeName == 'zh';
+                  String downloadUrl =
+                      "https://developer.microsoft.com/${isChinese ? 'zh-cn' : 'en-us'}/microsoft-edge/webview2/";
+                  openUrl(downloadUrl);
+                },
+                child: Text(AppLocalizations.of(context)!.downloadWebView2),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text(AppLocalizations.of(context)!.cancel),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
