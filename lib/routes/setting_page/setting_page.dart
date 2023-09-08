@@ -42,7 +42,7 @@ class _SettingPageState extends State<SettingPage> {
         body: Row(
           children: [
             Container(
-              width: 400,
+              width: 600,
               decoration: BoxDecoration(
                 border: Border(
                   right: BorderSide(
@@ -61,7 +61,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   Widget buildRightWidget() {
-    if (MediaQuery.of(context).size.width < 1000) {
+    if (MediaQuery.of(context).size.width < 1200) {
       return Expanded(child: rightWidget ?? const SizedBox.shrink());
     } else {
       return Expanded(

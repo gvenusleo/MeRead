@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -6,9 +8,16 @@ import 'package:meread/utils/notification_util.dart';
 import 'package:meread/widgets/list_tile_group_title.dart';
 
 class EditFeedPage extends StatefulWidget {
-  const EditFeedPage({Key? key, required this.feed}) : super(key: key);
+  const EditFeedPage({
+    Key? key,
+    required this.feed,
+    this.needLeading = true,
+    this.fromAddPage = false,
+  }) : super(key: key);
 
   final Feed feed;
+  final bool needLeading;
+  final bool fromAddPage;
 
   @override
   EditFeedPageState createState() => EditFeedPageState();
@@ -29,6 +38,39 @@ class EditFeedPageState extends State<EditFeedPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (Platform.isAndroid) {
+      return buildScaffold();
+    } else {
+      if (widget.fromAddPage) {
+        return buildScaffold();
+      } else {
+        if (MediaQuery.of(context).size.width < 600) {
+          return buildScaffold();
+        } else {
+          return Scaffold(
+            body: Row(
+              children: [
+                Container(
+                  width: 600,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      right: BorderSide(
+                        color: Theme.of(context).dividerColor,
+                        width: 0.5,
+                      ),
+                    ),
+                  ),
+                  child: buildScaffold(),
+                )
+              ],
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  Widget buildScaffold() {
     final List<String> openTypeList = [
       AppLocalizations.of(context)!.openInApp,
       AppLocalizations.of(context)!.openInBuiltInTab,
@@ -36,6 +78,8 @@ class EditFeedPageState extends State<EditFeedPage> {
     ];
     return Scaffold(
       appBar: AppBar(
+        leading: widget.needLeading ? null : const SizedBox.shrink(),
+        leadingWidth: widget.needLeading ? null : 0,
         title: Text(AppLocalizations.of(context)!.editFeed),
       ),
       body: SafeArea(
