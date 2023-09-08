@@ -59,7 +59,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       duration: const Duration(milliseconds: 800),
       vsync: this,
     );
-    _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
+    _animation = Tween(begin: 1.0, end: 0.0).animate(_animationController);
     super.initState();
     initData(setAppBar: false);
     initFontDir();
