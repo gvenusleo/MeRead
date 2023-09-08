@@ -4,7 +4,10 @@ import 'package:meread/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class LanguageSettingPage extends StatelessWidget {
-  const LanguageSettingPage({super.key});
+  const LanguageSettingPage({Key? key, this.needLeading = true})
+      : super(key: key);
+
+  final bool needLeading;
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +18,8 @@ class LanguageSettingPage extends StatelessWidget {
     };
     return Scaffold(
       appBar: AppBar(
+        leading: needLeading ? null : const SizedBox.shrink(),
+        leadingWidth: needLeading ? null : 0,
         title: Text(AppLocalizations.of(context)!.languageSetting),
       ),
       body: SafeArea(

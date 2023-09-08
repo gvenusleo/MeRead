@@ -31,14 +31,43 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
+  Widget? rightWidget;
+
   @override
   Widget build(BuildContext context) {
+    if (Platform.isAndroid) {
+      return buildSettingScaffold();
+    } else {
+      return Scaffold(
+        body: Row(
+          children: [
+            Container(
+              width: 400,
+              decoration: BoxDecoration(
+                border: Border(
+                  right: BorderSide(
+                    color: Theme.of(context).colorScheme.outline,
+                    width: 0.5,
+                  ),
+                ),
+              ),
+              child: buildSettingScaffold(),
+            ),
+            Expanded(child: rightWidget ?? const SizedBox.shrink()),
+          ],
+        ),
+      );
+    }
+  }
+
+  Widget buildSettingScaffold() {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.settings),
       ),
       body: SafeArea(
         child: ListView(
+          padding: const EdgeInsets.only(bottom: 24),
           children: [
             ListTileGroupTitle(
               title: AppLocalizations.of(context)!.personalization,
@@ -57,9 +86,16 @@ class _SettingPageState extends State<SettingPage> {
                     AppLocalizations.of(context)!.systemLanguage,
               ),
               onTap: () {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) {
-                  return const LanguageSettingPage();
-                }));
+                if (Platform.isAndroid) {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) {
+                    return const LanguageSettingPage();
+                  }));
+                } else {
+                  setState(() {
+                    rightWidget = const LanguageSettingPage(needLeading: false);
+                  });
+                }
               },
             ),
             /* 颜色主题设置 */
@@ -75,9 +111,16 @@ class _SettingPageState extends State<SettingPage> {
                 ][context.watch<ThemeProvider>().themeIndex],
               ),
               onTap: () {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) {
-                  return const ThemeSettingPage();
-                }));
+                if (Platform.isAndroid) {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) {
+                    return const ThemeSettingPage();
+                  }));
+                } else {
+                  setState(() {
+                    rightWidget = const ThemeSettingPage(needLeading: false);
+                  });
+                }
               },
             ),
             /* 动态取色设置 */
@@ -89,9 +132,17 @@ class _SettingPageState extends State<SettingPage> {
                   ? AppLocalizations.of(context)!.open
                   : AppLocalizations.of(context)!.close),
               onTap: () {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) {
-                  return const DynamicColorSettingPage();
-                }));
+                if (Platform.isAndroid) {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) {
+                    return const DynamicColorSettingPage();
+                  }));
+                } else {
+                  setState(() {
+                    rightWidget =
+                        const DynamicColorSettingPage(needLeading: false);
+                  });
+                }
               },
             ),
             /* 全局字体设置 */
@@ -106,9 +157,16 @@ class _SettingPageState extends State<SettingPage> {
                     : context.watch<ThemeProvider>().themeFont.split('.').first,
               ),
               onTap: () {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) {
-                  return const FontSettingPage();
-                }));
+                if (Platform.isAndroid) {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) {
+                    return const FontSettingPage();
+                  }));
+                } else {
+                  setState(() {
+                    rightWidget = const FontSettingPage(needLeading: false);
+                  });
+                }
               },
             ),
             /* 全局缩放设置 */
@@ -127,9 +185,17 @@ class _SettingPageState extends State<SettingPage> {
                     AppLocalizations.of(context)!.medium,
               ),
               onTap: () {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) {
-                  return const TextScaleFactorSettingPage();
-                }));
+                if (Platform.isAndroid) {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) {
+                    return const TextScaleFactorSettingPage();
+                  }));
+                } else {
+                  setState(() {
+                    rightWidget =
+                        const TextScaleFactorSettingPage(needLeading: false);
+                  });
+                }
               },
             ),
             /* 阅读页面配置设置 */
@@ -141,9 +207,16 @@ class _SettingPageState extends State<SettingPage> {
                 AppLocalizations.of(context)!.customPostReadingPage,
               ),
               onTap: () {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) {
-                  return const ReadSettingPage();
-                }));
+                if (Platform.isAndroid) {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) {
+                    return const ReadSettingPage();
+                  }));
+                } else {
+                  setState(() {
+                    rightWidget = const ReadSettingPage(needLeading: false);
+                  });
+                }
               },
             ),
             ListTileGroupTitle(
@@ -158,9 +231,16 @@ class _SettingPageState extends State<SettingPage> {
                 AppLocalizations.of(context)!.setPostBlockRule,
               ),
               onTap: () {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) {
-                  return const BlockSettingPage();
-                }));
+                if (Platform.isAndroid) {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) {
+                    return const BlockSettingPage();
+                  }));
+                } else {
+                  setState(() {
+                    rightWidget = const BlockSettingPage(needLeading: false);
+                  });
+                }
               },
             ),
             /* 导入 OPML 文件 */
@@ -200,9 +280,16 @@ class _SettingPageState extends State<SettingPage> {
               subtitle:
                   Text(AppLocalizations.of(context)!.contactAndOpenSource),
               onTap: () {
-                Navigator.push(context, CupertinoPageRoute(builder: (context) {
-                  return const AboutPage();
-                }));
+                if (Platform.isAndroid) {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) {
+                    return const AboutPage();
+                  }));
+                } else {
+                  setState(() {
+                    rightWidget = const AboutPage(needLeading: false);
+                  });
+                }
               },
             ),
           ],

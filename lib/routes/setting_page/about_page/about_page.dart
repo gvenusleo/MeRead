@@ -4,12 +4,15 @@ import 'package:meread/global/global.dart';
 import 'package:meread/utils/open_url_util.dart';
 
 class AboutPage extends StatelessWidget {
-  const AboutPage({super.key});
+  const AboutPage({super.key, this.needLeading = true});
+  final bool needLeading;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: needLeading ? null : const SizedBox.shrink(),
+        leadingWidth: needLeading ? null : 0,
         title: Text(AppLocalizations.of(context)!.about),
       ),
       body: SafeArea(

@@ -4,7 +4,9 @@ import 'package:meread/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class ThemeSettingPage extends StatelessWidget {
-  const ThemeSettingPage({super.key});
+  const ThemeSettingPage({super.key, this.needLeading = true});
+
+  final bool needLeading;
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +17,8 @@ class ThemeSettingPage extends StatelessWidget {
     ];
     return Scaffold(
       appBar: AppBar(
+        leading: needLeading ? null : const SizedBox.shrink(),
+        leadingWidth: needLeading ? null : 0,
         title: Text(AppLocalizations.of(context)!.themeMode),
       ),
       body: SafeArea(

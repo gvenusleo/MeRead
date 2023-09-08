@@ -9,12 +9,15 @@ import 'package:meread/routes/setting_page/read_setting_page/text_align_setting_
 import 'package:provider/provider.dart';
 
 class ReadSettingPage extends StatelessWidget {
-  const ReadSettingPage({super.key});
+  const ReadSettingPage({super.key, this.needLeading = true});
+  final bool needLeading;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: needLeading ? null : const SizedBox.shrink(),
+        leadingWidth: needLeading ? null : 0,
         title: Text(AppLocalizations.of(context)!.readingPage),
       ),
       body: SafeArea(

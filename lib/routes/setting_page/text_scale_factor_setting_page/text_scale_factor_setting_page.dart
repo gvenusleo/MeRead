@@ -4,8 +4,8 @@ import 'package:meread/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class TextScaleFactorSettingPage extends StatefulWidget {
-  const TextScaleFactorSettingPage({Key? key}) : super(key: key);
-
+  const TextScaleFactorSettingPage({super.key, this.needLeading = true});
+  final bool needLeading;
   @override
   State<TextScaleFactorSettingPage> createState() =>
       _TextScaleFactorSettingPageState();
@@ -25,6 +25,8 @@ class _TextScaleFactorSettingPageState
     };
     return Scaffold(
       appBar: AppBar(
+        leading: widget.needLeading ? null : const SizedBox.shrink(),
+        leadingWidth: widget.needLeading ? null : 0,
         title: Text(AppLocalizations.of(context)!.globalScale),
       ),
       body: SafeArea(
