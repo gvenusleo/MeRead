@@ -52,6 +52,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late AnimationController _animationController;
   // 旋转动画
   late Animation<double> _animation;
+  // 左侧 Feeds 列表宽度
+  double feedsListViewWidth = 240;
+  // 中间 Posts 列表宽度
+  double postsListViewWidth = 400;
 
   @override
   void initState() {
@@ -223,31 +227,63 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     } else {
       return Row(
         children: [
-          Container(
-            width: 240,
-            decoration: BoxDecoration(
-              border: Border(
-                right: BorderSide(
-                  color: Theme.of(context).colorScheme.outline,
-                  width: 0.5,
-                ),
-              ),
-            ),
+          SizedBox(
+            width: feedsListViewWidth,
             child: buildFeedsListView(),
           ),
-          Container(
-            width: 400,
-            decoration: BoxDecoration(
-              border: Border(
-                right: BorderSide(
-                  color: Theme.of(context).colorScheme.outline,
-                  width: 0.5,
+          GestureDetector(
+            onPanUpdate: (details) {
+              setState(() {
+                feedsListViewWidth += details.delta.dx;
+                if (feedsListViewWidth < 200) {
+                  feedsListViewWidth = 200;
+                } else if (feedsListViewWidth > 400) {
+                  feedsListViewWidth = 400;
+                }
+              });
+            },
+            child: MouseRegion(
+              cursor: SystemMouseCursors.resizeLeftRight,
+              child: SizedBox(
+                width: 8,
+                child: Center(
+                  child: VerticalDivider(
+                    color: Theme.of(context).colorScheme.outlineVariant,
+                    width: 0.5,
+                  ),
                 ),
               ),
             ),
+          ),
+          SizedBox(
+            width: postsListViewWidth,
             child: Scaffold(
               appBar: buildAppBarHelper(),
               body: buildPostsListView(posts),
+            ),
+          ),
+          GestureDetector(
+            onPanUpdate: (details) {
+              setState(() {
+                postsListViewWidth += details.delta.dx;
+                if (postsListViewWidth < 300) {
+                  postsListViewWidth = 300;
+                } else if (postsListViewWidth > 600) {
+                  postsListViewWidth = 600;
+                }
+              });
+            },
+            child: MouseRegion(
+              cursor: SystemMouseCursors.resizeLeftRight,
+              child: SizedBox(
+                width: 8,
+                child: Center(
+                  child: VerticalDivider(
+                    color: Theme.of(context).colorScheme.outlineVariant,
+                    width: 0.5,
+                  ),
+                ),
+              ),
             ),
           ),
           Expanded(
