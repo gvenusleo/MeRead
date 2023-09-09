@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:html/parser.dart' as html_parser;
@@ -177,7 +179,9 @@ ${widget.post.content}
         child: Padding(
           padding: EdgeInsets.symmetric(
             vertical: 24,
-            horizontal: context.read<ReadPageProvider>().pagePadding.toDouble(),
+            horizontal: Platform.isAndroid
+                ? context.read<ReadPageProvider>().pagePadding.toDouble()
+                : context.read<ReadPageProvider>().pagePadding.toDouble() * 2,
           ),
           child: HtmlWidget(
             html,
