@@ -187,7 +187,30 @@ ${widget.post.content}
               fontSize: context.read<ReadPageProvider>().fontSize.toDouble(),
               height: context.read<ReadPageProvider>().lineHeight,
             ),
+            onLoadingBuilder: (context, element, progress) {
+              return Center(
+                child: SizedBox(
+                  height: 200,
+                  width: 200,
+                  child: Column(
+                    children: [
+                      const CircularProgressIndicator(
+                        strokeWidth: 3,
+                      ),
+                      const SizedBox(height: 12),
+                      Text(AppLocalizations.of(context)!.loading),
+                    ],
+                  ),
+                ),
+              );
+            },
             customStylesBuilder: (element) {
+              if(element.localName == 'h1') {
+                return {
+                  'font-size': '2.0em',
+                  'text-align': context.read<ReadPageProvider>().textAlign,
+                };
+              }
               return {
                 'text-align': context.read<ReadPageProvider>().textAlign,
               };

@@ -9,7 +9,7 @@
 <a href="https://github.com/gvenusleo/MeRead/releases"><img alt="GitHub all releases" src="https://img.shields.io/github/downloads/gvenusleo/meread/total"></a>
 </p>
 
-</p>
+<p>
 <strong>A concise and easy-to-use RSS reader built with <a href='https://flutter.dev' target='_blank'>Flutter</a> and designed with <a href='https://m3.material.io/' target='_blank'>Material You</a></strong>
 </p>
 

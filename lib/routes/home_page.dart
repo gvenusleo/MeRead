@@ -808,43 +808,4 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       });
     });
   }
-
-  /* 针对 Windows 的 WebView 检查 */
-  Future<void> downloadWebView2() async {
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          icon: const Icon(Icons.warning_rounded),
-          title: Text(AppLocalizations.of(context)!.attention),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(AppLocalizations.of(context)!.webView2Info),
-              const SizedBox(height: 12),
-              TextButton(
-                onPressed: () {
-                  bool isChinese =
-                      AppLocalizations.of(context)!.localeName == 'zh';
-                  String downloadUrl =
-                      "https://developer.microsoft.com/${isChinese ? 'zh-cn' : 'en-us'}/microsoft-edge/webview2/";
-                  openUrl(downloadUrl);
-                },
-                child: Text(AppLocalizations.of(context)!.downloadWebView2),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text(AppLocalizations.of(context)!.cancel),
-            ),
-          ],
-        );
-      },
-    );
-  }
 }
