@@ -205,9 +205,10 @@ ${widget.post.content}
               );
             },
             customStylesBuilder: (element) {
-              if(element.localName == 'h1') {
+              if (element.localName == 'h1') {
                 return {
-                  'font-size': '2.0em',
+                  'font-size': '1.8em',
+                  'line-height': '1.3em',
                   'text-align': context.read<ReadPageProvider>().textAlign,
                 };
               }
