@@ -940,8 +940,8 @@ class FullTextSearchDelegate extends SearchDelegate {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
-                  onTap(results[index]);
                   Navigator.pop(context);
+                  onTap(results[index]);
                 },
                 child: PostContainer(post: results[index]),
               );
