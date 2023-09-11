@@ -115,5 +115,6 @@
     "downloadWebView2": "下载 WebView2 →",
     "imgLoadingFailed": "图片加载失败",
     "loading": "加载中……",
-    "noPostOpened": "没有打开的文章"
+    "noPostOpened": "没有打开的文章",
+    "fullTextSearch": "全文搜索"
 }

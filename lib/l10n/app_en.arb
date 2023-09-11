@@ -115,5 +115,6 @@
     "downloadWebView2": "Download WebView2 →",
     "imgLoadingFailed": "Image loading failed",
     "loading": "Loading...",
-    "noPostOpened": "No Post Opened"
+    "noPostOpened": "No Post Opened",
+    "fullTextSearch": "Full Text Search"
 }

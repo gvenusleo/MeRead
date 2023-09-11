@@ -150,6 +150,18 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ],
                 ),
               ),
+              /* 全文搜索 */
+              PopupMenuItem(
+                onTap: fullTextSearchFunc,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.search_outlined, size: 20),
+                    const SizedBox(width: 10),
+                    Text(AppLocalizations.of(context)!.fullTextSearch),
+                  ],
+                ),
+              ),
               const PopupMenuDivider(),
               /* 添加订阅源 */
               PopupMenuItem(
@@ -409,45 +421,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
           padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
           itemBuilder: (context, index) {
             return GestureDetector(
-              /* 根据 openType 打开文章 */
               onTap: () async {
-                if (posts[index].openType == 1) {
-                  /* 在应用内标签页中打开 */
-                  openUrl(posts[index].link);
-                } else if (posts[index].openType == 2) {
-                  /* 系统浏览器打开 */
-                  launchUrl(
-                    Uri.parse(posts[index].link),
-                    mode: LaunchMode.externalApplication,
-                  );
-                } else {
-                  /* 应用内打开：阅读器 or 标签页 */
-                  if (fontDir == null) return;
-                  if (Platform.isAndroid) {
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => ReadPage(
-                          post: posts[index],
-                          fontDir: fontDir!,
-                        ),
-                      ),
-                    ).then((value) {
-                      /* 返回时刷新文章列表 */
-                      getAllPost();
-                      getUnreadCount();
-                    });
-                  } else {
-                    setState(() {
-                      selectedPost = posts[index];
-                    });
-                  }
-                }
-                /* 更新文章信息 */
-                if (!posts[index].read) {
-                  posts[index].read = true;
-                  posts[index].updateToDb();
-                }
+                await openPost(posts[index]);
               },
               child: PostContainer(post: posts[index]),
             );
@@ -582,6 +557,19 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     await Post.markAllRead(unreadPostList);
     getAllPost();
     getUnreadCount();
+  }
+
+  /* 全文搜索 */
+  Future<void> fullTextSearchFunc() async {
+    List<Post> allPosts = await Post.getAll();
+    if (!mounted) return;
+    await showSearch(
+      context: context,
+      delegate: FullTextSearchDelegate(
+        postList: allPosts,
+        onTap: openPost,
+      ),
+    );
   }
 
   /* 添加订阅源 */
@@ -843,5 +831,131 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         getUnreadCount();
       });
     });
+  }
+
+  /* 打开 Post */
+  Future<void> openPost(Post post) async {
+    if (post.openType == 1) {
+      /* 在应用内标签页中打开 */
+      openUrl(post.link);
+    } else if (post.openType == 2) {
+      /* 系统浏览器打开 */
+      launchUrl(
+        Uri.parse(post.link),
+        mode: LaunchMode.externalApplication,
+      );
+    } else {
+      /* 应用内打开：阅读器 or 标签页 */
+      if (fontDir == null) return;
+      if (Platform.isAndroid) {
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (context) => ReadPage(
+              post: post,
+              fontDir: fontDir!,
+            ),
+          ),
+        ).then((value) {
+          /* 返回时刷新文章列表 */
+          getAllPost();
+          getUnreadCount();
+        });
+      } else {
+        setState(() {
+          selectedPost = post;
+        });
+      }
+    }
+    /* 更新文章信息 */
+    if (!post.read) {
+      post.read = true;
+      post.updateToDb();
+    }
+  }
+}
+
+class FullTextSearchDelegate extends SearchDelegate {
+  final List<Post> postList;
+  final Function(Post) onTap;
+
+  FullTextSearchDelegate({
+    required this.postList,
+    required this.onTap,
+  });
+
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    return Theme.of(context).copyWith(
+      inputDecorationTheme: const InputDecorationTheme(
+        border: InputBorder.none,
+      ),
+    );
+  }
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        onPressed: () {
+          query = '';
+          showSuggestions(context);
+        },
+        icon: const Icon(Icons.clear),
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      icon: const Icon(Icons.arrow_back),
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    List<Post> results = [];
+    if (query != '') {
+      for (Post post in postList) {
+        if (post.title.contains(query) || post.content.contains(query)) {
+          results.add(post);
+        }
+      }
+    }
+    return Column(
+      children: [
+        const Divider(
+          height: 1,
+          thickness: 1,
+        ),
+        Expanded(
+          child: ListView.separated(
+            itemCount: results.length,
+            padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  onTap(results[index]);
+                  Navigator.pop(context);
+                },
+                child: PostContainer(post: results[index]),
+              );
+            },
+            separatorBuilder: (context, index) {
+              return const SizedBox(height: 4);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return buildResults(context);
   }
 }
