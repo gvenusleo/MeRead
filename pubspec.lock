@@ -77,10 +77,10 @@ packages:
     dependency: transitive
     description:
       name: build_resolvers
-      sha256: a7417cc44d9edb3f2c8760000270c99dba8c72ff66d0146772b8326565780745
+      sha256: d912852cce27c9e80a93603db721c267716894462e7033165178b91138587972
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
-    version: "2.3.1"
+    version: "2.3.2"
   build_runner:
     dependency: "direct dev"
     description:
@@ -157,10 +157,10 @@ packages:
     dependency: transitive
     description:
       name: chewie
-      sha256: "60701da1f22ed20cd2d40e856fd1f2249dacf5b629d9fa50676443a18a4857b8"
+      sha256: ccfce3350ae9fd419cd336cdf3380f77a08e45171e1e3cb3d499d204de5e7ea8
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
-    version: "1.7.0"
+    version: "1.7.1"
   clock:
     dependency: transitive
     description:
@@ -213,10 +213,10 @@ packages:
     dependency: transitive
     description:
       name: csslib
-      sha256: "831883fb353c8bdc1d71979e5b342c7d88acfbc643113c14ae51e2442ea0f20f"
+      sha256: "706b5707578e0c1b4b7550f64078f0a0f19dec3f50a178ffae7006b0a9ca58fb"
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
-    version: "0.17.3"
+    version: "1.0.0"
   cupertino_icons:
     dependency: transitive
     description:
@@ -377,18 +377,18 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_widget_from_html
-      sha256: "5ce55353d029196e71cd5506737be8c887ccb28a0465a5ba6dcfd40ef33a2d58"
+      sha256: b1e35ab3137cbc313c2545c47713f3dedbcb3605b1bcf1aa82f2c2fddaaded7c
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
-    version: "0.10.4"
+    version: "0.10.5+3"
   flutter_widget_from_html_core:
     dependency: transitive
     description:
       name: flutter_widget_from_html_core
-      sha256: "719da7fba82343efb9ad3be528a768dec4a4d8f3b37ebd9eef8d93e891a1d58f"
+      sha256: a7dc9eb4bfdef4ea06d114528bf52a7efcdfc6ba46d933957c25067f17c1c6b4
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
-    version: "0.10.4"
+    version: "0.10.5"
   fluttertoast:
     dependency: "direct main"
     description:
@@ -409,50 +409,50 @@ packages:
     dependency: transitive
     description:
       name: fwfh_cached_network_image
-      sha256: "396ebb3a01978aa75cad416656abef6ffa31e12de71cf2ccf5ff4173bd35a3eb"
+      sha256: "3de22aa3a6943c968e0d9fbcba4463b3dbbf7103171d62c84b6c672fb83eebdf"
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
-    version: "0.7.0+5"
+    version: "0.7.0+7"
   fwfh_chewie:
     dependency: transitive
     description:
       name: fwfh_chewie
-      sha256: "6474630c084cc90fbd348cea007d3cb41d62478460f75364e591f2baf26abccd"
+      sha256: "0b51a1c976bb74da5e8e45d545c74cb54a7168ad3938dd77103a7aee485f55fa"
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
-    version: "0.7.1+2"
+    version: "0.7.1+4"
   fwfh_just_audio:
     dependency: transitive
     description:
       name: fwfh_just_audio
-      sha256: "7b97696c264f36f7921c2f94e95c1d4186021699d85ca19aaa280f6b9700fb35"
+      sha256: "237b93a4cb9f0495a4b51940f361adda2a5abd57231dd44f07459db00144a6cd"
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
-    version: "0.9.0+2"
+    version: "0.9.0+3"
   fwfh_svg:
     dependency: transitive
     description:
       name: fwfh_svg
-      sha256: "398e8eec980e7b2868481489fd423634f7e337bc04c37508db6f84868b982120"
+      sha256: "176b3c1e47fe88dae0a033bd893e0ace03601784ab74af7826607346e50f5718"
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
-    version: "0.8.0+2"
+    version: "0.8.0+3"
   fwfh_url_launcher:
     dependency: transitive
     description:
       name: fwfh_url_launcher
-      sha256: ff7f7a877c20fdbea24b453a0cd846a03ef1ea6b933943a7d37082388c27e849
+      sha256: e2b377dce049d58d8cb9573773d94ca3015f3372cf84f6b5dbcf089a2ea43436
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
-    version: "0.9.0+2"
+    version: "0.9.0+3"
   fwfh_webview:
     dependency: transitive
     description:
       name: fwfh_webview
-      sha256: "7ebd3dff551d7281dd3fbb9f5523a8455592665ff75459ca84871ebbebe864a8"
+      sha256: "90a8dda0695403cf57abd7e8b83f6fb1f1a12933930a0bf9cac7cafb06e06a18"
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
-    version: "0.7.0+2"
+    version: "0.9.0+2"
   glob:
     dependency: transitive
     description:
@@ -1022,18 +1022,18 @@ packages:
     dependency: "direct main"
     description:
       name: url_launcher
-      sha256: "38d8e783681bc342e92dc9799cbe4421d08c4d210a67ee9d61d0f7310491a465"
+      sha256: "47e208a6711459d813ba18af120d9663c20bdf6985d6ad39fe165d2538378d27"
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
-    version: "6.1.13"
+    version: "6.1.14"
   url_launcher_android:
     dependency: transitive
     description:
       name: url_launcher_android
-      sha256: ef7e34951ffa963fb7a65928deeb38d40fb3c5975baf93c1d631341ff7f2650a
+      sha256: b04af59516ab45762b2ca6da40fa830d72d0f6045cd97744450b73493fa76330
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
-    version: "6.0.39"
+    version: "6.1.0"
   url_launcher_ios:
     dependency: transitive
     description:
@@ -1062,10 +1062,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_platform_interface
-      sha256: "4d0dae953f80dc06fa24c58d0f8381302139c22c2dad301417787ad96f5f73bd"
+      sha256: "95465b39f83bfe95fcb9d174829d6476216f2d548b79c38ab2506e0458787618"
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
-    version: "2.1.4"
+    version: "2.1.5"
   url_launcher_web:
     dependency: transitive
     description:
@@ -1158,10 +1158,10 @@ packages:
     dependency: transitive
     description:
       name: video_player_web
-      sha256: "68bdd115389d68aea99466259b079a5ef3fa9ca7600ef12b616d8551fa1541a9"
+      sha256: "66fc0d56554143fee4c623f70e45e4272b94fd246283cb67edabb9d1e4122a4f"
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
-    version: "2.0.18"
+    version: "2.1.0"
   wakelock_plus:
     dependency: transitive
     description:
@@ -1214,18 +1214,18 @@ packages:
     dependency: transitive
     description:
       name: webview_flutter_android
-      sha256: "0d8f5ac96a155e672129bf94c7abf625de01241d44d269dbaff083f1b4deb1aa"
+      sha256: "9427774649fd3c8b7ff53523051395d13aed2ca355822b822e6493d79f5fc05a"
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
-    version: "3.9.5"
+    version: "3.10.0"
   webview_flutter_platform_interface:
     dependency: transitive
     description:
       name: webview_flutter_platform_interface
-      sha256: "9d32a63a5ee111b37482cb3eac3379b9f0992afd27a52ee30279dbf06f41918b"
+      sha256: "6d9213c65f1060116757a7c473247c60f3f7f332cac33dc417c9e362a9a13e4f"
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
-    version: "2.5.1"
+    version: "2.6.0"
   webview_flutter_wkwebview:
     dependency: transitive
     description:

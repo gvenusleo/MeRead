@@ -875,6 +875,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 }
 
+/// 全文搜索
 class FullTextSearchDelegate extends SearchDelegate {
   final List<Post> postList;
   final Function(Post) onTap;
