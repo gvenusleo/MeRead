@@ -231,6 +231,31 @@ ${widget.post.content}
                     );
                   }
                 }
+                if (element.children.length == 2 &&
+                    element.children[0].localName == 'img' &&
+                    element.children[1].localName == 'figcaption') {
+                  String? imgUrl = element.children[0].attributes['src'];
+                  if (imgUrl != null) {
+                    return Column(
+                      children: [
+                        ImgForRead(
+                          url: element.children[0].attributes['src']!,
+                        ),
+                        Text(
+                          element.children[1].text,
+                          style: TextStyle(
+                            fontSize: context
+                                    .read<ReadPageProvider>()
+                                    .fontSize
+                                    .toDouble() -
+                                2,
+                            height: context.read<ReadPageProvider>().lineHeight,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                }
               }
               if (element.localName == 'img') {
                 if (element.attributes['src'] != null) {
