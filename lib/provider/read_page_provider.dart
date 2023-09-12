@@ -11,8 +11,6 @@ class ReadPageProvider extends ChangeNotifier {
   int pagePadding = prefs.getInt('pagePadding') ?? 18;
   // 文字对齐方式
   String textAlign = prefs.getString('textAlign') ?? 'justify';
-  // 自定义 CSS
-  String customCss = prefs.getString('customCss') ?? '';
 
   Future<void> changeFontSize(int size) async {
     await prefs.setInt('fontSize', size);
@@ -39,13 +37,6 @@ class ReadPageProvider extends ChangeNotifier {
     await prefs.setString('textAlign', align);
     setState(() {
       textAlign = align;
-    });
-  }
-
-  Future<void> changeCustomCss(String css) async {
-    await prefs.setString('customCss', css);
-    setState(() {
-      customCss = css;
     });
   }
 

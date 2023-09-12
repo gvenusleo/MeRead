@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:meread/provider/network_proxy_provider.dart';
+import 'package:meread/global/global.dart';
 import 'package:meread/utils/notification_util.dart';
-import 'package:provider/provider.dart';
 
 class ProxySettingPage extends StatefulWidget {
   const ProxySettingPage({super.key, this.needLeading = true});
@@ -17,14 +14,16 @@ class ProxySettingPage extends StatefulWidget {
 }
 
 class _ProxySettingPageState extends State<ProxySettingPage> {
+  bool isProxy = prefs.getBool('isProxy') ?? false;
+
   final addressController = TextEditingController();
   final portController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    addressController.text = context.read<NetWorkProxyProvider>().proxyAddress;
-    portController.text = context.read<NetWorkProxyProvider>().proxyPort;
+    addressController.text = prefs.getString('proxyAdress') ?? '';
+    portController.text = prefs.getString('proxyPort') ?? '';
   }
 
   @override
@@ -39,14 +38,18 @@ class _ProxySettingPageState extends State<ProxySettingPage> {
         child: ListView(
           children: [
             SwitchListTile(
-              value: context.watch<NetWorkProxyProvider>().isProxy,
+              value: isProxy,
               onChanged: (bool value) async {
-                if (context.read<NetWorkProxyProvider>().proxyAddress.isEmpty ||
-                    context.read<NetWorkProxyProvider>().proxyPort.isEmpty) {
+                String proxyAddress = prefs.getString('proxyAdress') ?? '';
+                String proxyPort = prefs.getString('proxyPort') ?? '';
+                if (proxyAddress.isEmpty || proxyPort.isEmpty) {
                   showToastOrSnackBar(
                       context, AppLocalizations.of(context)!.fillProxyFirst);
                 } else {
-                  context.read<NetWorkProxyProvider>().changeIsProxy(value);
+                  await prefs.setBool('isProxy', value);
+                  setState(() {
+                    isProxy = value;
+                  });
                 }
               },
               title: Text(AppLocalizations.of(context)!.netWorkProxy),
@@ -63,12 +66,13 @@ class _ProxySettingPageState extends State<ProxySettingPage> {
                   labelText: AppLocalizations.of(context)!.proxyAddress,
                   prefixText: 'http://',
                 ),
-                onChanged: (String value) {
-                  context
-                      .read<NetWorkProxyProvider>()
-                      .changeProxyAddress(value);
+                onChanged: (String value) async {
+                  prefs.setString('proxyAdress', value);
                   if (value.isEmpty) {
-                    context.read<NetWorkProxyProvider>().changeIsProxy(false);
+                    prefs.setBool('isProxy', false);
+                    setState(() {
+                      isProxy = false;
+                    });
                   }
                 },
               ),
@@ -84,9 +88,12 @@ class _ProxySettingPageState extends State<ProxySettingPage> {
                 ),
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 onChanged: (String value) {
-                  context.read<NetWorkProxyProvider>().changeProxyPort(value);
+                  prefs.setString('proxyPort', value);
                   if (value.isEmpty) {
-                    context.read<NetWorkProxyProvider>().changeIsProxy(false);
+                    prefs.setBool('isProxy', false);
+                    setState(() {
+                      isProxy = false;
+                    });
                   }
                 },
               ),
