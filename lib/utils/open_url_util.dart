@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 /// 使用 [InAppBrowser] 打开一个 url
 void openUrl(String url) {
-  if (Platform.isWindows) {
+  if (Platform.isWindows || Platform.isLinux) {
     launchUrl(
       Uri.parse(url),
       mode: LaunchMode.externalApplication,
