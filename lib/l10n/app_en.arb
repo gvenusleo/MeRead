@@ -124,5 +124,6 @@
     "useNetworkProxyParseFeeds": "Use a network proxy to parse feeds",
     "fillProxyFirst": "Please fill in the proxy address and port first.",
     "proxyAddress": "Proxy Address",
-    "proxyPort": "Proxy Port"
+    "proxyPort": "Proxy Port",
+    "noFeed": "No Feed"
 }

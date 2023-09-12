@@ -589,7 +589,9 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   /* 编辑订阅 */
   Future<void> editFeedFunc() async {
-    if (feedList.length == 1) {
+    if (feedList.isEmpty) {
+      showToastOrSnackBar(context, AppLocalizations.of(context)!.noFeed);
+    } else if (feedList.length == 1) {
       Future.delayed(Duration.zero, () {
         Navigator.push(
           context,
@@ -654,7 +656,9 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   /* 删除订阅 */
   Future<void> deleteFeedFunc() async {
-    if (feedList.length == 1) {
+    if (feedList.isEmpty) {
+      showToastOrSnackBar(context, AppLocalizations.of(context)!.noFeed);
+    } else if (feedList.length == 1) {
       showDialog(
         context: context,
         builder: (context) {

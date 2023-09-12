@@ -124,5 +124,6 @@
     "useNetworkProxyParseFeeds": "使用网络代理解析订阅源",
     "fillProxyFirst": "请先填写代理地址与端口",
     "proxyAddress": "代理地址",
-    "proxyPort": "代理端口"
+    "proxyPort": "代理端口",
+    "noFeed": "没有订阅源"
 }
