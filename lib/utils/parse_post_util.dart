@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:meread/global/global.dart';
 import 'package:meread/models/feed.dart';
 import 'package:meread/models/post.dart';
+import 'package:meread/utils/proxy_dio_util.dart';
 import 'package:meread/webfeed/webfeed.dart';
 
 /// 解析订阅源内容，得到 [Post]，存入数据库
@@ -11,7 +12,8 @@ import 'package:meread/webfeed/webfeed.dart';
 /// 注意：如果 [Post] 已存在，则不存入数据库
 Future<bool> parsePosts(Feed feed) async {
   try {
-    final response = await Dio().get(feed.url);
+    final Dio dio = initDio();
+    final response = await dio.get(feed.url);
     final postXmlString = response.data;
     final String? feedLastUpdated = await feed.getLatesPubDate();
     try {

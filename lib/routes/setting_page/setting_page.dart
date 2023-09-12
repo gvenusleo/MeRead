@@ -12,6 +12,7 @@ import 'package:meread/routes/setting_page/block_setting_page/block_setting_page
 import 'package:meread/routes/setting_page/dynamic_color_setting_page/dynamic_color_setting_page.dart';
 import 'package:meread/routes/setting_page/font_setting_page/font_setting_page.dart';
 import 'package:meread/routes/setting_page/language_setting_page/language_setting_page.dart';
+import 'package:meread/routes/setting_page/proxy_setting_page/proxy_setting_page.dart';
 import 'package:meread/routes/setting_page/read_setting_page/read_setting_page.dart';
 import 'package:meread/routes/setting_page/text_scale_factor_setting_page/text_scale_factor_setting_page.dart';
 import 'package:meread/routes/setting_page/theme_setting_page/theme_setting_page.dart';
@@ -246,7 +247,7 @@ class _SettingPageState extends State<SettingPage> {
               },
             ),
             ListTileGroupTitle(
-              title: AppLocalizations.of(context)!.dataManagement,
+              title: AppLocalizations.of(context)!.parseSettings,
             ),
             /* 屏蔽词设置 */
             ListTile(
@@ -269,6 +270,31 @@ class _SettingPageState extends State<SettingPage> {
                 }
               },
             ),
+            /* 代理设置 */
+            ListTile(
+              leading: const Icon(Icons.smart_button_outlined),
+              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
+              title: Text(AppLocalizations.of(context)!.proxySettings),
+              subtitle: Text(
+                AppLocalizations.of(context)!.setProxyAddress,
+              ),
+              onTap: () {
+                if (Platform.isAndroid) {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) {
+                    return const ProxySettingPage();
+                  }));
+                } else {
+                  setState(() {
+                    rightWidget = const ProxySettingPage(needLeading: false);
+                  });
+                }
+              },
+            ),
+            ListTileGroupTitle(
+              title: AppLocalizations.of(context)!.dataManagement,
+            ),
+
             /* 导入 OPML 文件 */
             ListTile(
               leading: const Icon(Icons.file_download_outlined),

@@ -116,5 +116,13 @@
     "imgLoadingFailed": "图片加载失败",
     "loading": "加载中……",
     "noPostOpened": "没有打开的文章",
-    "fullTextSearch": "全文搜索"
+    "fullTextSearch": "全文搜索",
+    "proxySettings": "代理设置",
+    "setProxyAddress": "设置代理地址",
+    "parseSettings": "解析设置",
+    "netWorkProxy": "网络代理",
+    "useNetworkProxyParseFeeds": "使用网络代理解析订阅源",
+    "fillProxyFirst": "请先填写代理地址与端口",
+    "proxyAddress": "代理地址",
+    "proxyPort": "代理端口"
 }

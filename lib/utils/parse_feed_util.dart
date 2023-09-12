@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:meread/models/feed.dart';
+import 'package:meread/utils/proxy_dio_util.dart';
 import 'package:meread/webfeed/webfeed.dart';
 
 /// 解析订阅源
@@ -13,7 +14,8 @@ Future<Feed?> parseFeed(
 ]) async {
   categoryName ??= '默认分类';
   try {
-    final response = await Dio().get(url);
+    final Dio dio = initDio();
+    final response = await dio.get(url);
     final postXmlString = response.data;
     try {
       /* 使用 RSS 格式解析 */
