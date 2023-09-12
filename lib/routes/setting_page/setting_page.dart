@@ -33,6 +33,8 @@ class SettingPage extends StatefulWidget {
 
 class _SettingPageState extends State<SettingPage> {
   Widget? rightWidget;
+  double leftWidth = 400;
+  double rightWidth = 400;
 
   @override
   Widget build(BuildContext context) {
@@ -42,19 +44,60 @@ class _SettingPageState extends State<SettingPage> {
       return Scaffold(
         body: Row(
           children: [
-            Container(
-              width: 600,
-              decoration: BoxDecoration(
-                border: Border(
-                  right: BorderSide(
-                    color: Theme.of(context).colorScheme.outline,
-                    width: 0.5,
+            SizedBox(
+              width: leftWidth,
+              child: buildSettingScaffold(),
+            ),
+            GestureDetector(
+              onPanUpdate: (details) {
+                setState(() {
+                  leftWidth += details.delta.dx;
+                  if (leftWidth < 200) {
+                    leftWidth = 200;
+                  } else if (leftWidth > 800) {
+                    leftWidth = 800;
+                  }
+                });
+              },
+              child: MouseRegion(
+                cursor: SystemMouseCursors.resizeLeftRight,
+                child: SizedBox(
+                  width: 8,
+                  child: Center(
+                    child: VerticalDivider(
+                      color: Theme.of(context).colorScheme.outlineVariant,
+                      width: 0.5,
+                    ),
                   ),
                 ),
               ),
-              child: buildSettingScaffold(),
             ),
             buildRightWidget(),
+            if (rightWidget != null)
+              GestureDetector(
+                onPanUpdate: (details) {
+                  setState(() {
+                    rightWidth += details.delta.dx;
+                    if (rightWidth < 200) {
+                      rightWidth = 200;
+                    } else if (rightWidth > 800) {
+                      rightWidth = 800;
+                    }
+                  });
+                },
+                child: MouseRegion(
+                  cursor: SystemMouseCursors.resizeLeftRight,
+                  child: SizedBox(
+                    width: 8,
+                    child: Center(
+                      child: VerticalDivider(
+                        color: Theme.of(context).colorScheme.outlineVariant,
+                        width: 0.5,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
           ],
         ),
       );
@@ -62,29 +105,10 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   Widget buildRightWidget() {
-    if (MediaQuery.of(context).size.width < 1200) {
-      return Expanded(child: rightWidget ?? const SizedBox.shrink());
-    } else {
-      return Expanded(
-        child: Row(
-          children: [
-            Container(
-              width: 600,
-              decoration: BoxDecoration(
-                border: Border(
-                  right: BorderSide(
-                    color: Theme.of(context).colorScheme.outline,
-                    width: 0.5,
-                  ),
-                ),
-              ),
-              child: rightWidget ?? const SizedBox.shrink(),
-            ),
-            const Expanded(child: SizedBox.shrink()),
-          ],
-        ),
-      );
-    }
+    return SizedBox(
+      width: rightWidth,
+      child: rightWidget ?? const SizedBox.shrink(),
+    );
   }
 
   Widget buildSettingScaffold() {

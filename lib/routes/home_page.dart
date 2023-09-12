@@ -249,8 +249,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 feedsListViewWidth += details.delta.dx;
                 if (feedsListViewWidth < 200) {
                   feedsListViewWidth = 200;
-                } else if (feedsListViewWidth > 400) {
-                  feedsListViewWidth = 400;
+                } else if (feedsListViewWidth > 800) {
+                  feedsListViewWidth = 800;
                 }
               });
             },
@@ -278,10 +278,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
             onPanUpdate: (details) {
               setState(() {
                 postsListViewWidth += details.delta.dx;
-                if (postsListViewWidth < 300) {
-                  postsListViewWidth = 300;
-                } else if (postsListViewWidth > 600) {
-                  postsListViewWidth = 600;
+                if (postsListViewWidth < 200) {
+                  postsListViewWidth = 200;
+                } else if (postsListViewWidth > 800) {
+                  postsListViewWidth = 800;
                 }
               });
             },
