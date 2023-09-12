@@ -107,8 +107,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       ),
       centerTitle: false,
       actions: [
-        /* 刷新(仅 Windows) */
-        if (Platform.isWindows)
+        /* 刷新(仅桌面) */
+        if (Platform.isWindows || Platform.isLinux)
           IconButton(
             onPressed: () async {
               _animationController.repeat();
