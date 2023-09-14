@@ -1,0 +1,29 @@
+display_name: MeRead
+package_name: meread
+maintainer:
+  name: liuyuxin
+  email: gvenusleo@gmail.com
+priority: optional
+section: x11
+installed_size: 6604
+essential: false
+icon: assets/meread_round.png
+
+postinstall_scripts:
+  - echo "Thanks for installing MeRead!"
+postuninstall_scripts:
+  - echo "Thanks for using MeRead!"
+
+keywords:
+  - RSS
+  - Read
+  - Feed
+  - Application
+
+generic_name: RSS Application
+
+categories:
+  - Read
+  - News
+
+startup_notify: true
