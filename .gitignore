@@ -43,7 +43,8 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Linux Appimage
+# Linux
 /AppDir/
 /appimage-build/
 *.AppImage*
+/dist/
