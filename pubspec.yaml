@@ -13,33 +13,33 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  sqflite: ^2.1.0
-  path: ^1.8.2
-  shared_preferences: ^2.0.15
-  provider: ^6.0.4
-  share_plus: ^7.1.0
-  opml: ^0.4.0
-  url_launcher: ^6.1.6
-  path_provider: ^2.0.11
-  html: ^0.15.1
-  html_main_element: ^2.1.0
-  dio: ^5.1.1
-  dynamic_color: ^1.6.3
+  sqflite:
+  path:
+  shared_preferences:
+  provider:
+  share_plus:
+  opml:
+  url_launcher:
+  path_provider:
+  html:
+  html_main_element:
+  dio:
+  dynamic_color:
   intl: any
-  file_picker: ^5.3.4
-  xml: ^6.3.0
-  fluttertoast: ^8.2.2
-  isar: ^3.1.0+1
-  isar_flutter_libs: ^3.1.0+1
-  flutter_inappwebview: ^5.7.2+3
-  flutter_widget_from_html: ^0.10.4
+  file_picker:
+  xml:
+  fluttertoast:
+  isar:
+  isar_flutter_libs:
+  flutter_inappwebview:
+  flutter_widget_from_html:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
-  isar_generator: ^3.1.0+1
-  build_runner: ^2.4.6
+  flutter_lints:
+  isar_generator:
+  build_runner:
 
 flutter:
   uses-material-design: true
