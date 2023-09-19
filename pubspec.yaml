@@ -33,6 +33,7 @@ dependencies:
   isar_flutter_libs:
   flutter_inappwebview:
   flutter_widget_from_html:
+  window_manager:
 
 dev_dependencies:
   flutter_test:
