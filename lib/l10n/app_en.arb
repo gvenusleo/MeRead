@@ -125,5 +125,6 @@
   "fillProxyFirst": "Please fill in the proxy address and port first.",
   "proxyAddress": "Proxy Address",
   "proxyPort": "Proxy Port",
-  "noFeed": "No Feed"
+  "noFeed": "No Feed",
+  "noFeedsToRefresh": "No feeds to refresh"
 }

@@ -479,6 +479,13 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   /* 刷新文章列表 */
   Future<void> refresh() async {
+    if (feedList.isEmpty) {
+      showToastOrSnackBar(
+        context,
+        AppLocalizations.of(context)!.noFeedsToRefresh,
+      );
+      return;
+    }
     // 刷新失败的订阅源数量
     int failCount = 0;
     await Future.wait(
