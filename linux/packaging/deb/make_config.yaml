@@ -10,9 +10,9 @@ essential: false
 icon: assets/meread_round.png
 
 postinstall_scripts:
-  - echo "Thanks for installing MeRead!"
+  - echo "--------------- Welcom to MeRead ---------------\n  @author   liuyuxin\n  @email    gvenusleo@gmail.com\n  @website  https://liuyu.xin\n  @github   https://github.com/gvenusle/MeRead\n------------------------------------------------"
 postuninstall_scripts:
-  - echo "Thanks for using MeRead!"
+  - echo "-------------------- MeRead --------------------\n  @author   liuyuxin\n  @email    gvenusleo@gmail.com\n  @website  https://liuyu.xin\n  @github   https://github.com/gvenusle/MeRead\n------------------------------------------------"
 
 keywords:
   - RSS
@@ -25,5 +25,6 @@ generic_name: RSS Application
 categories:
   - Read
   - News
+  - Tools
 
 startup_notify: true
