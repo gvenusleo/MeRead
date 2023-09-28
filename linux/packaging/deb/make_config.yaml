@@ -16,15 +16,12 @@ postuninstall_scripts:
 
 keywords:
   - RSS
-  - Read
   - Feed
-  - Application
+  - Read
 
-generic_name: RSS Application
+generic_name: A RSS reader built with flutter and designed with Material You.
 
 categories:
-  - Read
-  - News
-  - Tools
+  - Utility
 
 startup_notify: true
