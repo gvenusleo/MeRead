@@ -13,7 +13,9 @@ String getDirSeparator() {
 
 /// 获取字体文件目录
 Future<Directory> getFontDir() async {
-  final Directory appWorkDir = await getApplicationDocumentsDirectory();
+  final Directory appWorkDir = Platform.isAndroid
+      ? await getApplicationDocumentsDirectory()
+      : await getApplicationSupportDirectory();
   final String fontDirPath = '${appWorkDir.path}${getDirSeparator()}fonts';
   final Directory fontDir = Directory(fontDirPath);
   if (!(await fontDir.exists())) {

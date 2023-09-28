@@ -28,8 +28,9 @@ Future<void> init() async {
 
   /* 初始化全局变量 */
   prefs = await SharedPreferences.getInstance();
-  // TODO: 桌面端换一个地址
-  final Directory dir = await getApplicationDocumentsDirectory();
+  final Directory dir = Platform.isAndroid
+      ? await getApplicationDocumentsDirectory()
+      : await getApplicationSupportDirectory();
   isar = await Isar.open(
     [FeedSchema, PostSchema],
     directory: dir.path,
