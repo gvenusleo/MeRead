@@ -10,9 +10,25 @@ import 'package:meread/models/post.dart';
 import 'package:meread/utils/font_util.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:window_manager/window_manager.dart';
 
 /// App 初始化
 Future<void> init() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await windowManager.ensureInitialized();
+  WindowOptions windowOptions = const WindowOptions(
+    size: Size.infinite,
+    minimumSize: Size(900, 400),
+    center: true,
+    backgroundColor: Colors.transparent,
+    titleBarStyle: TitleBarStyle.normal,
+    title: 'MeRead',
+  );
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
+
   /* Android 平台适配 */
   if (Platform.isAndroid) {
     SystemUiOverlayStyle systemUiOverlayStyle = const SystemUiOverlayStyle(
