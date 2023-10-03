@@ -68,8 +68,8 @@ Future<bool> loadLocalFont() async {
         final newFontPath =
             '${fontFileDir.path}${getDirSeparator()}$fontFileName';
         await fontFile.copy(newFontPath);
-        /* 删除原缓存文件 */
-        await fontFile.delete();
+        // /* 删除原缓存文件 */
+        // await fontFile.delete();
       }
     }
     return true;
