@@ -10,9 +10,9 @@ essential: false
 icon: assets/meread_round.png
 
 postinstall_scripts:
-  - echo "--------------- Welcom to MeRead ---------------\n  @author   liuyuxin\n  @email    gvenusleo@gmail.com\n  @website  https://liuyu.xin\n  @github   https://github.com/gvenusle/MeRead\n------------------------------------------------"
+  - echo "--------------- Welcom to MeRead ---------------\n  @author  liuyuxin\n  @email   gvenusleo@gmail.com\n  @website https://liuyu.xin\n  @github  https://github.com/gvenusleo/MeRead\n------------------------------------------------"
 postuninstall_scripts:
-  - echo "-------------------- MeRead --------------------\n  @author   liuyuxin\n  @email    gvenusleo@gmail.com\n  @website  https://liuyu.xin\n  @github   https://github.com/gvenusle/MeRead\n------------------------------------------------"
+  - echo "-------------------- MeRead --------------------\n  @author  liuyuxin\n  @email   gvenusleo@gmail.com\n  @website https://liuyu.xin\n  @github  https://github.com/gvenusleo/MeRead\n------------------------------------------------"
 
 keywords:
   - RSS
