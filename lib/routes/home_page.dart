@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:meread/global/global.dart';
 import 'package:meread/models/feed.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/routes/feed_page/add_feed_page.dart';
@@ -57,6 +58,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   // 中间 Posts 列表宽度
   double postsListViewWidth = 400;
 
+  final GlobalKey<RefreshIndicatorState> _refreshKey = GlobalKey();
+
   @override
   void initState() {
     _animationController = AnimationController(
@@ -67,6 +70,11 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     super.initState();
     initData(setAppBar: false);
     initFontDir();
+    if (prefs.getBool('refreshOnStartup') ?? false) {
+      Future.delayed(Duration.zero, () {
+        _refreshKey.currentState!.show();
+      });
+    }
   }
 
   @override
@@ -415,6 +423,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget buildPostsListView(List<Post> posts) {
     return SafeArea(
       child: RefreshIndicator(
+        key: _refreshKey,
         onRefresh: refresh,
         child: ListView.separated(
           itemCount: posts.length,

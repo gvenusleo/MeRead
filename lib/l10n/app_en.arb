@@ -126,5 +126,9 @@
   "proxyAddress": "Proxy Address",
   "proxyPort": "Proxy Port",
   "noFeed": "No Feed",
-  "noFeedsToRefresh": "No feeds to refresh"
+  "noFeedsToRefresh": "No feeds to refresh",
+  "refreshSettings": "Refresh Settings",
+  "refreshOnStartup": "Refresh on Startup",
+  "refreshOnStartupInfo": "Automatically refresh feeds when starting the app",
+  "setRefreshRules": "Set Refresh Rules"
 }

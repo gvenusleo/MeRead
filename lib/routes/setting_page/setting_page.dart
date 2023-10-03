@@ -14,6 +14,7 @@ import 'package:meread/routes/setting_page/font_setting_page/font_setting_page.d
 import 'package:meread/routes/setting_page/language_setting_page/language_setting_page.dart';
 import 'package:meread/routes/setting_page/proxy_setting_page/proxy_setting_page.dart';
 import 'package:meread/routes/setting_page/read_setting_page/read_setting_page.dart';
+import 'package:meread/routes/setting_page/refresh_setting_page/refresh_setting_page.dart';
 import 'package:meread/routes/setting_page/text_scale_factor_setting_page/text_scale_factor_setting_page.dart';
 import 'package:meread/routes/setting_page/theme_setting_page/theme_setting_page.dart';
 import 'package:meread/utils/notification_util.dart';
@@ -272,6 +273,27 @@ class _SettingPageState extends State<SettingPage> {
             ),
             ListTileGroupTitle(
               title: AppLocalizations.of(context)!.parseSettings,
+            ),
+            /* 刷新设置 */
+            ListTile(
+              leading: const Icon(Icons.refresh_outlined),
+              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
+              title: Text(AppLocalizations.of(context)!.refreshSettings),
+              subtitle: Text(
+                AppLocalizations.of(context)!.setRefreshRules,
+              ),
+              onTap: () {
+                if (Platform.isAndroid) {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) {
+                    return const RefreshSettingPage();
+                  }));
+                } else {
+                  setState(() {
+                    rightWidget = const RefreshSettingPage(needLeading: false);
+                  });
+                }
+              },
             ),
             /* 屏蔽词设置 */
             ListTile(

@@ -126,5 +126,9 @@
   "proxyAddress": "代理地址",
   "proxyPort": "代理端口",
   "noFeed": "没有订阅源",
-  "noFeedsToRefresh": "没有需要刷新的订阅源"
+  "noFeedsToRefresh": "没有需要刷新的订阅源",
+  "refreshSettings": "刷新设置",
+  "refreshOnStartup": "启动时刷新",
+  "refreshOnStartupInfo": "启动时自动刷新订阅源",
+  "setRefreshRules": "设置刷新规则"
 }
