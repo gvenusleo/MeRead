@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:meread/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +21,10 @@ ThemeData lightTheme(BuildContext context, ColorScheme? lightDynamic) {
     listTileTheme: const ListTileThemeData(
       contentPadding: EdgeInsets.symmetric(horizontal: 24),
     ),
+    appBarTheme: AppBarTheme(
+      surfaceTintColor:
+          (Platform.isAndroid || Platform.isIOS) ? null : Colors.transparent,
+    ),
   );
 }
 
@@ -38,6 +44,10 @@ ThemeData darkTheme(BuildContext context, ColorScheme? darkDynamic) {
     colorScheme: colorScheme,
     listTileTheme: const ListTileThemeData(
       contentPadding: EdgeInsets.symmetric(horizontal: 24),
+    ),
+    appBarTheme: AppBarTheme(
+      surfaceTintColor:
+          (Platform.isAndroid || Platform.isIOS) ? null : Colors.transparent,
     ),
   );
 }
