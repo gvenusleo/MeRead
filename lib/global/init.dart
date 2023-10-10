@@ -15,19 +15,23 @@ import 'package:window_manager/window_manager.dart';
 /// App 初始化
 Future<void> init() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await windowManager.ensureInitialized();
-  WindowOptions windowOptions = const WindowOptions(
-    size: Size.infinite,
-    minimumSize: Size(900, 400),
-    center: true,
-    backgroundColor: Colors.transparent,
-    titleBarStyle: TitleBarStyle.normal,
-    title: 'MeRead',
-  );
-  windowManager.waitUntilReadyToShow(windowOptions, () async {
-    await windowManager.show();
-    await windowManager.focus();
-  });
+
+  /* 桌面平台适配 */
+  if (!(Platform.isAndroid || Platform.isIOS)) {
+    await windowManager.ensureInitialized();
+    WindowOptions windowOptions = const WindowOptions(
+      size: Size.infinite,
+      minimumSize: Size(900, 400),
+      center: true,
+      backgroundColor: Colors.transparent,
+      titleBarStyle: TitleBarStyle.normal,
+      title: 'MeRead',
+    );
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.show();
+      await windowManager.focus();
+    });
+  }
 
   /* Android 平台适配 */
   if (Platform.isAndroid) {
