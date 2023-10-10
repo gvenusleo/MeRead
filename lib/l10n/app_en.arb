@@ -130,5 +130,7 @@
   "refreshSettings": "Refresh Settings",
   "refreshOnStartup": "Refresh on Startup",
   "refreshOnStartupInfo": "Automatically refresh feeds when starting the app",
-  "setRefreshRules": "Set Refresh Rules"
+  "setRefreshRules": "Set Refresh Rules",
+  "screenRefreshRate": "Screen Refresh Rate",
+  "screenRefreshRateInfo": "Set Screen Refresh Rate"
 }

@@ -130,5 +130,7 @@
   "refreshSettings": "刷新设置",
   "refreshOnStartup": "启动时刷新",
   "refreshOnStartupInfo": "启动时自动刷新订阅源",
-  "setRefreshRules": "设置刷新规则"
+  "setRefreshRules": "设置刷新规则",
+  "screenRefreshRate": "屏幕帧率",
+  "screenRefreshRateInfo": "设置屏幕刷新率"
 }

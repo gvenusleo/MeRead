@@ -14,6 +14,7 @@ import 'package:meread/routes/setting_page/font_setting_page/font_setting_page.d
 import 'package:meread/routes/setting_page/language_setting_page/language_setting_page.dart';
 import 'package:meread/routes/setting_page/proxy_setting_page/proxy_setting_page.dart';
 import 'package:meread/routes/setting_page/read_setting_page/read_setting_page.dart';
+import 'package:meread/routes/setting_page/refresh_rate_setting_page/refresh_rate_setting_page.dart';
 import 'package:meread/routes/setting_page/refresh_setting_page/refresh_setting_page.dart';
 import 'package:meread/routes/setting_page/text_scale_factor_setting_page/text_scale_factor_setting_page.dart';
 import 'package:meread/routes/setting_page/theme_setting_page/theme_setting_page.dart';
@@ -127,7 +128,6 @@ class _SettingPageState extends State<SettingPage> {
             /* 语言设置 */
             ListTile(
               leading: const Icon(Icons.translate_outlined),
-              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
               title: Text(AppLocalizations.of(context)!.languageSetting),
               subtitle: Text(
                 {
@@ -153,7 +153,6 @@ class _SettingPageState extends State<SettingPage> {
             /* 颜色主题设置 */
             ListTile(
               leading: const Icon(Icons.dark_mode_outlined),
-              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
               title: Text(AppLocalizations.of(context)!.themeMode),
               subtitle: Text(
                 [
@@ -178,7 +177,6 @@ class _SettingPageState extends State<SettingPage> {
             /* 动态取色设置 */
             ListTile(
               leading: const Icon(Icons.color_lens_outlined),
-              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
               title: Text(AppLocalizations.of(context)!.dynamicColor),
               subtitle: Text(context.watch<ThemeProvider>().isDynamicColor
                   ? AppLocalizations.of(context)!.open
@@ -200,7 +198,6 @@ class _SettingPageState extends State<SettingPage> {
             /* 全局字体设置 */
             ListTile(
               leading: const Icon(Icons.font_download_outlined),
-              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
               title: Text(AppLocalizations.of(context)!.globalFont),
               subtitle: Text(
                 context.watch<ThemeProvider>().themeFont.split('.').first ==
@@ -224,7 +221,6 @@ class _SettingPageState extends State<SettingPage> {
             /* 全局缩放设置 */
             ListTile(
               leading: const Icon(Icons.text_fields_outlined),
-              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
               title: Text(AppLocalizations.of(context)!.globalScale),
               subtitle: Text(
                 {
@@ -250,10 +246,29 @@ class _SettingPageState extends State<SettingPage> {
                 }
               },
             ),
+            /* 屏幕帧率 */
+            ListTile(
+              leading: const Icon(Icons.display_settings_outlined),
+              title: Text(AppLocalizations.of(context)!.screenRefreshRate),
+              subtitle:
+                  Text(AppLocalizations.of(context)!.screenRefreshRateInfo),
+              onTap: () {
+                if (Platform.isAndroid) {
+                  Navigator.push(context,
+                      CupertinoPageRoute(builder: (context) {
+                    return const RefreshRateSettingPage();
+                  }));
+                } else {
+                  setState(() {
+                    rightWidget =
+                        const RefreshRateSettingPage(needLeading: false);
+                  });
+                }
+              },
+            ),
             /* 阅读页面配置设置 */
             ListTile(
               leading: const Icon(Icons.article_outlined),
-              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
               title: Text(AppLocalizations.of(context)!.readingPage),
               subtitle: Text(
                 AppLocalizations.of(context)!.customPostReadingPage,
@@ -277,7 +292,6 @@ class _SettingPageState extends State<SettingPage> {
             /* 刷新设置 */
             ListTile(
               leading: const Icon(Icons.refresh_outlined),
-              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
               title: Text(AppLocalizations.of(context)!.refreshSettings),
               subtitle: Text(
                 AppLocalizations.of(context)!.setRefreshRules,
@@ -298,7 +312,6 @@ class _SettingPageState extends State<SettingPage> {
             /* 屏蔽词设置 */
             ListTile(
               leading: const Icon(Icons.app_blocking_outlined),
-              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
               title: Text(AppLocalizations.of(context)!.blockRules),
               subtitle: Text(
                 AppLocalizations.of(context)!.setPostBlockRule,
@@ -319,7 +332,6 @@ class _SettingPageState extends State<SettingPage> {
             /* 代理设置 */
             ListTile(
               leading: const Icon(Icons.smart_button_outlined),
-              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
               title: Text(AppLocalizations.of(context)!.proxySettings),
               subtitle: Text(
                 AppLocalizations.of(context)!.setProxyAddress,
@@ -344,7 +356,6 @@ class _SettingPageState extends State<SettingPage> {
             /* 导入 OPML 文件 */
             ListTile(
               leading: const Icon(Icons.file_download_outlined),
-              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
               title: Text(AppLocalizations.of(context)!.importOPML),
               subtitle: Text(
                 AppLocalizations.of(context)!.importFeedsFromOPML,
@@ -354,7 +365,6 @@ class _SettingPageState extends State<SettingPage> {
             /* 导出 OPML 文件 */
             ListTile(
               leading: const Icon(Icons.file_upload_outlined),
-              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
               title: Text(AppLocalizations.of(context)!.exportOPML),
               subtitle: Text(
                 AppLocalizations.of(context)!.exportFeedsToOPML,
@@ -365,7 +375,6 @@ class _SettingPageState extends State<SettingPage> {
             /* 检查更新 */
             ListTile(
               leading: const Icon(Icons.update_outlined),
-              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
               title: Text(AppLocalizations.of(context)!.checkForUpdates),
               subtitle: Text(AppLocalizations.of(context)!.getLatestVersion),
               onTap: checkUpdate,
@@ -373,7 +382,6 @@ class _SettingPageState extends State<SettingPage> {
             /* 关于 */
             ListTile(
               leading: const Icon(Icons.android_outlined),
-              iconColor: Theme.of(context).textTheme.bodyLarge!.color,
               title: Text(AppLocalizations.of(context)!.about),
               subtitle:
                   Text(AppLocalizations.of(context)!.contactAndOpenSource),
