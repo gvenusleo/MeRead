@@ -7,6 +7,7 @@ void showToastOrSnackBar(BuildContext context, String msg) {
   if (Platform.isAndroid) {
     Fluttertoast.showToast(msg: msg);
   } else {
+    ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
