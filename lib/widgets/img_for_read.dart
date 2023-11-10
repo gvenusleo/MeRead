@@ -23,7 +23,7 @@ class ImgForRead extends StatelessWidget {
         return Center(
           child: Container(
             height: 200,
-            width: 200,
+            width: double.infinity,
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surfaceVariant,
               borderRadius: BorderRadius.circular(8),
@@ -46,7 +46,7 @@ class ImgForRead extends StatelessWidget {
         return Center(
           child: Container(
             height: 200,
-            width: 200,
+            width: double.infinity,
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surfaceVariant,
               borderRadius: BorderRadius.circular(8),
