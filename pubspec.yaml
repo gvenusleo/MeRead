@@ -49,3 +49,8 @@ flutter:
     - assets/meread.png
     - assets/avatar.png
   generate: true
+
+  fonts:
+    - family: 默认字体
+      fonts:
+        - asset: assets/sarasa-ui-sc.ttf
