@@ -247,25 +247,26 @@ class _SettingPageState extends State<SettingPage> {
               },
             ),
             /* 屏幕帧率 */
-            ListTile(
-              leading: const Icon(Icons.display_settings_outlined),
-              title: Text(AppLocalizations.of(context)!.screenRefreshRate),
-              subtitle:
-                  Text(AppLocalizations.of(context)!.screenRefreshRateInfo),
-              onTap: () {
-                if (Platform.isAndroid) {
-                  Navigator.push(context,
-                      CupertinoPageRoute(builder: (context) {
-                    return const RefreshRateSettingPage();
-                  }));
-                } else {
-                  setState(() {
-                    rightWidget =
-                        const RefreshRateSettingPage(needLeading: false);
-                  });
-                }
-              },
-            ),
+            if (Platform.isAndroid)
+              ListTile(
+                leading: const Icon(Icons.display_settings_outlined),
+                title: Text(AppLocalizations.of(context)!.screenRefreshRate),
+                subtitle:
+                    Text(AppLocalizations.of(context)!.screenRefreshRateInfo),
+                onTap: () {
+                  if (Platform.isAndroid) {
+                    Navigator.push(context,
+                        CupertinoPageRoute(builder: (context) {
+                      return const RefreshRateSettingPage();
+                    }));
+                  } else {
+                    setState(() {
+                      rightWidget =
+                          const RefreshRateSettingPage(needLeading: false);
+                    });
+                  }
+                },
+              ),
             /* 阅读页面配置设置 */
             ListTile(
               leading: const Icon(Icons.article_outlined),
