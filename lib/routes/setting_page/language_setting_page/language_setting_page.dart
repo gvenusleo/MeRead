@@ -4,8 +4,7 @@ import 'package:meread/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class LanguageSettingPage extends StatelessWidget {
-  const LanguageSettingPage({Key? key, this.needLeading = true})
-      : super(key: key);
+  const LanguageSettingPage({super.key, this.needLeading = true});
 
   final bool needLeading;
 

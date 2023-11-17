@@ -3,7 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// 用于阅读页面的图片组件
 class ImgForRead extends StatelessWidget {
-  const ImgForRead({Key? key, required this.url}) : super(key: key);
+  const ImgForRead({super.key, required this.url});
 
   final String? url;
 

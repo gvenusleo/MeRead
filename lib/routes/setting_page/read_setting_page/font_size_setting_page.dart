@@ -6,7 +6,7 @@ import 'package:meread/provider/read_page_provider.dart';
 import 'package:provider/provider.dart';
 
 class FontSizeSettingPage extends StatefulWidget {
-  const FontSizeSettingPage({Key? key}) : super(key: key);
+  const FontSizeSettingPage({super.key});
 
   @override
   State<FontSizeSettingPage> createState() => _FontSizeSettingPageState();

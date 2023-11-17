@@ -3,7 +3,7 @@ import 'package:meread/models/post.dart';
 
 /// 用于展示 [Post]
 class PostContainer extends StatelessWidget {
-  const PostContainer({Key? key, required this.post}) : super(key: key);
+  const PostContainer({super.key, required this.post});
   final Post post;
 
   @override

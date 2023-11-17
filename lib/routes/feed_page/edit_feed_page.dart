@@ -9,11 +9,11 @@ import 'package:meread/widgets/list_tile_group_title.dart';
 
 class EditFeedPage extends StatefulWidget {
   const EditFeedPage({
-    Key? key,
+    super.key,
     required this.feed,
     this.needLeading = true,
     this.fromAddPage = false,
-  }) : super(key: key);
+  });
 
   final Feed feed;
   final bool needLeading;

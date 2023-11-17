@@ -6,7 +6,7 @@ import 'package:meread/provider/read_page_provider.dart';
 import 'package:provider/provider.dart';
 
 class TextAlignSettingPage extends StatefulWidget {
-  const TextAlignSettingPage({Key? key}) : super(key: key);
+  const TextAlignSettingPage({super.key});
 
   @override
   State<TextAlignSettingPage> createState() => _TextAlignSettingPageState();

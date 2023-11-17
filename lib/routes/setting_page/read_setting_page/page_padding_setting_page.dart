@@ -6,7 +6,7 @@ import 'package:meread/provider/read_page_provider.dart';
 import 'package:provider/provider.dart';
 
 class PagePaddingSettingPage extends StatefulWidget {
-  const PagePaddingSettingPage({Key? key}) : super(key: key);
+  const PagePaddingSettingPage({super.key});
 
   @override
   State<PagePaddingSettingPage> createState() => _PagePaddingSettingPageState();

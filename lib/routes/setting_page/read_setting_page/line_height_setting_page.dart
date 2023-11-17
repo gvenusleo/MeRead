@@ -6,7 +6,7 @@ import 'package:meread/provider/read_page_provider.dart';
 import 'package:provider/provider.dart';
 
 class LineHeightSettingPage extends StatefulWidget {
-  const LineHeightSettingPage({Key? key}) : super(key: key);
+  const LineHeightSettingPage({super.key});
 
   @override
   State<LineHeightSettingPage> createState() => _LineHeightSettingPageState();
