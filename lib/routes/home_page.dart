@@ -149,6 +149,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               /* 全标已读 */
               PopupMenuItem(
                 onTap: markAllReadFunc,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
