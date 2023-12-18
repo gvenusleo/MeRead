@@ -60,6 +60,7 @@ class ReadPageState extends State<ReadPage> {
               return <PopupMenuEntry>[
                 /* 标记为未读 */
                 PopupMenuItem(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   onTap: () async {
                     await widget.post.markAsUnread();
                   },
