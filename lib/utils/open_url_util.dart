@@ -13,7 +13,7 @@ void openUrl(String url) {
     return;
   }
   try {
-    ChromeSafariBrowser().open(url: Uri.parse(url));
+    ChromeSafariBrowser().open(url: WebUri.uri(Uri.parse(url)));
   } catch (e) {
     launchUrl(
       Uri.parse(url),
