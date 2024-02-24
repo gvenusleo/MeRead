@@ -1,7 +1,7 @@
 <div align='center'>
 <p><a href="README.md">English</a> | 简体中文</p>
 <img src='./assets/meread_round.png' alt='MeRead' width='100px'/>
-<h1>MeRead 悦读</h1>
+<h1>MeRead 悦读 [项目重构中！]</h1>
 
 <p>
 <a href="https://github.com/GVenusLeo/MeRead/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/github/license/gvenusleo/meread"></a>

@@ -9,48 +9,41 @@ environment:
   sdk: ">=2.18.2 <3.0.0"
 
 dependencies:
+  dart_rss: ^3.0.1
+  dio: ^5.4.1
+  dynamic_color: ^1.6.9
+  file_picker: ^6.1.1
   flutter:
     sdk: flutter
+  flutter_displaymode: ^0.6.0
+  flutter_inappwebview: ^6.0.0
   flutter_localizations:
     sdk: flutter
-  sqflite:
-  path:
-  shared_preferences:
-  provider:
-  share_plus:
-  opml:
-  url_launcher:
-  path_provider:
-  html:
-  html_main_element:
-  dio:
-  dynamic_color:
-  intl: any
-  file_picker:
-  xml:
-  fluttertoast:
-  isar:
-  isar_flutter_libs:
-  flutter_inappwebview:
-  flutter_widget_from_html:
-  window_manager:
-  flutter_displaymode:
+  flutter_swipe_action_cell: ^3.1.3
+  flutter_widget_from_html: ^0.14.11
+  get: ^4.6.6
+  html: ^0.15.4
+  html_main_element: ^2.1.0
+  intl: ^0.18.1
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+  logger: ^2.0.2+1
+  opml: ^0.4.0
+  path_provider: ^2.1.2
+  provider: ^6.1.1
+  share_plus: ^8.0.0
+  shared_preferences: ^2.2.2
+  url_launcher: ^6.2.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints:
-  isar_generator:
-  build_runner:
+  isar_generator: ^3.1.0+1
+  build_runner: ^2.4.8
+  flutter_lints: ^3.0.1
 
 flutter:
   uses-material-design: true
   assets:
     - assets/meread.png
     - assets/avatar.png
-  generate: true
-
-  fonts:
-    - family: 默认字体
-      fonts:
-        - asset: assets/sarasa-ui-sc.ttf

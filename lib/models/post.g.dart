@@ -27,48 +27,28 @@ const PostSchema = CollectionSchema(
       name: r'favorite',
       type: IsarType.bool,
     ),
-    r'feedId': PropertySchema(
-      id: 2,
-      name: r'feedId',
-      type: IsarType.long,
-    ),
-    r'feedName': PropertySchema(
-      id: 3,
-      name: r'feedName',
-      type: IsarType.string,
-    ),
     r'fullText': PropertySchema(
-      id: 4,
+      id: 2,
       name: r'fullText',
       type: IsarType.bool,
     ),
-    r'fullTextCache': PropertySchema(
-      id: 5,
-      name: r'fullTextCache',
-      type: IsarType.bool,
-    ),
     r'link': PropertySchema(
-      id: 6,
+      id: 3,
       name: r'link',
       type: IsarType.string,
     ),
-    r'openType': PropertySchema(
-      id: 7,
-      name: r'openType',
-      type: IsarType.long,
-    ),
     r'pubDate': PropertySchema(
-      id: 8,
+      id: 4,
       name: r'pubDate',
-      type: IsarType.string,
+      type: IsarType.dateTime,
     ),
     r'read': PropertySchema(
-      id: 9,
+      id: 5,
       name: r'read',
       type: IsarType.bool,
     ),
     r'title': PropertySchema(
-      id: 10,
+      id: 6,
       name: r'title',
       type: IsarType.string,
     )
@@ -79,7 +59,14 @@ const PostSchema = CollectionSchema(
   deserializeProp: _postDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {},
+  links: {
+    r'feed': LinkSchema(
+      id: 7631907602608560705,
+      name: r'feed',
+      target: r'Feed',
+      single: true,
+    )
+  },
   embeddedSchemas: {},
   getId: _postGetId,
   getLinks: _postGetLinks,
@@ -94,9 +81,7 @@ int _postEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.content.length * 3;
-  bytesCount += 3 + object.feedName.length * 3;
   bytesCount += 3 + object.link.length * 3;
-  bytesCount += 3 + object.pubDate.length * 3;
   bytesCount += 3 + object.title.length * 3;
   return bytesCount;
 }
@@ -109,15 +94,11 @@ void _postSerialize(
 ) {
   writer.writeString(offsets[0], object.content);
   writer.writeBool(offsets[1], object.favorite);
-  writer.writeLong(offsets[2], object.feedId);
-  writer.writeString(offsets[3], object.feedName);
-  writer.writeBool(offsets[4], object.fullText);
-  writer.writeBool(offsets[5], object.fullTextCache);
-  writer.writeString(offsets[6], object.link);
-  writer.writeLong(offsets[7], object.openType);
-  writer.writeString(offsets[8], object.pubDate);
-  writer.writeBool(offsets[9], object.read);
-  writer.writeString(offsets[10], object.title);
+  writer.writeBool(offsets[2], object.fullText);
+  writer.writeString(offsets[3], object.link);
+  writer.writeDateTime(offsets[4], object.pubDate);
+  writer.writeBool(offsets[5], object.read);
+  writer.writeString(offsets[6], object.title);
 }
 
 Post _postDeserialize(
@@ -129,16 +110,12 @@ Post _postDeserialize(
   final object = Post(
     content: reader.readString(offsets[0]),
     favorite: reader.readBool(offsets[1]),
-    feedId: reader.readLong(offsets[2]),
-    feedName: reader.readString(offsets[3]),
-    fullText: reader.readBool(offsets[4]),
-    fullTextCache: reader.readBool(offsets[5]),
+    fullText: reader.readBool(offsets[2]),
     id: id,
-    link: reader.readString(offsets[6]),
-    openType: reader.readLong(offsets[7]),
-    pubDate: reader.readString(offsets[8]),
-    read: reader.readBool(offsets[9]),
-    title: reader.readString(offsets[10]),
+    link: reader.readString(offsets[3]),
+    pubDate: reader.readDateTime(offsets[4]),
+    read: reader.readBool(offsets[5]),
+    title: reader.readString(offsets[6]),
   );
   return object;
 }
@@ -155,22 +132,14 @@ P _postDeserializeProp<P>(
     case 1:
       return (reader.readBool(offset)) as P;
     case 2:
-      return (reader.readLong(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
-      return (reader.readBool(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 5:
       return (reader.readBool(offset)) as P;
     case 6:
-      return (reader.readString(offset)) as P;
-    case 7:
-      return (reader.readLong(offset)) as P;
-    case 8:
-      return (reader.readString(offset)) as P;
-    case 9:
-      return (reader.readBool(offset)) as P;
-    case 10:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -182,11 +151,12 @@ Id _postGetId(Post object) {
 }
 
 List<IsarLinkBase<dynamic>> _postGetLinks(Post object) {
-  return [];
+  return [object.feed];
 }
 
 void _postAttach(IsarCollection<dynamic> col, Id id, Post object) {
   object.id = id;
+  object.feed.attach(col, col.isar.collection<Feed>(), r'feed', id);
 }
 
 extension PostQueryWhereSort on QueryBuilder<Post, Post, QWhere> {
@@ -402,201 +372,10 @@ extension PostQueryFilter on QueryBuilder<Post, Post, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Post, Post, QAfterFilterCondition> feedIdEqualTo(int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'feedId',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> feedIdGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'feedId',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> feedIdLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'feedId',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> feedIdBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'feedId',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> feedNameEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'feedName',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> feedNameGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'feedName',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> feedNameLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'feedName',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> feedNameBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'feedName',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> feedNameStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'feedName',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> feedNameEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'feedName',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> feedNameContains(String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'feedName',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> feedNameMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'feedName',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> feedNameIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'feedName',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> feedNameIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'feedName',
-        value: '',
-      ));
-    });
-  }
-
   QueryBuilder<Post, Post, QAfterFilterCondition> fullTextEqualTo(bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'fullText',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> fullTextCacheEqualTo(
-      bool value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'fullTextCache',
         value: value,
       ));
     });
@@ -798,107 +577,47 @@ extension PostQueryFilter on QueryBuilder<Post, Post, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Post, Post, QAfterFilterCondition> openTypeEqualTo(int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'openType',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> openTypeGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'openType',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> openTypeLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'openType',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> openTypeBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'openType',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
   QueryBuilder<Post, Post, QAfterFilterCondition> pubDateEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+      DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'pubDate',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Post, Post, QAfterFilterCondition> pubDateGreaterThan(
-    String value, {
+    DateTime value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'pubDate',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Post, Post, QAfterFilterCondition> pubDateLessThan(
-    String value, {
+    DateTime value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'pubDate',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Post, Post, QAfterFilterCondition> pubDateBetween(
-    String lower,
-    String upper, {
+    DateTime lower,
+    DateTime upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -907,73 +626,6 @@ extension PostQueryFilter on QueryBuilder<Post, Post, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> pubDateStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'pubDate',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> pubDateEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'pubDate',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> pubDateContains(String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'pubDate',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> pubDateMatches(String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'pubDate',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> pubDateIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'pubDate',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterFilterCondition> pubDateIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'pubDate',
-        value: '',
       ));
     });
   }
@@ -1118,7 +770,19 @@ extension PostQueryFilter on QueryBuilder<Post, Post, QFilterCondition> {
 
 extension PostQueryObject on QueryBuilder<Post, Post, QFilterCondition> {}
 
-extension PostQueryLinks on QueryBuilder<Post, Post, QFilterCondition> {}
+extension PostQueryLinks on QueryBuilder<Post, Post, QFilterCondition> {
+  QueryBuilder<Post, Post, QAfterFilterCondition> feed(FilterQuery<Feed> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'feed');
+    });
+  }
+
+  QueryBuilder<Post, Post, QAfterFilterCondition> feedIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'feed', 0, true, 0, true);
+    });
+  }
+}
 
 extension PostQuerySortBy on QueryBuilder<Post, Post, QSortBy> {
   QueryBuilder<Post, Post, QAfterSortBy> sortByContent() {
@@ -1145,30 +809,6 @@ extension PostQuerySortBy on QueryBuilder<Post, Post, QSortBy> {
     });
   }
 
-  QueryBuilder<Post, Post, QAfterSortBy> sortByFeedId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'feedId', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterSortBy> sortByFeedIdDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'feedId', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterSortBy> sortByFeedName() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'feedName', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterSortBy> sortByFeedNameDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'feedName', Sort.desc);
-    });
-  }
-
   QueryBuilder<Post, Post, QAfterSortBy> sortByFullText() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'fullText', Sort.asc);
@@ -1181,18 +821,6 @@ extension PostQuerySortBy on QueryBuilder<Post, Post, QSortBy> {
     });
   }
 
-  QueryBuilder<Post, Post, QAfterSortBy> sortByFullTextCache() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'fullTextCache', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterSortBy> sortByFullTextCacheDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'fullTextCache', Sort.desc);
-    });
-  }
-
   QueryBuilder<Post, Post, QAfterSortBy> sortByLink() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'link', Sort.asc);
@@ -1202,18 +830,6 @@ extension PostQuerySortBy on QueryBuilder<Post, Post, QSortBy> {
   QueryBuilder<Post, Post, QAfterSortBy> sortByLinkDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'link', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterSortBy> sortByOpenType() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'openType', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterSortBy> sortByOpenTypeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'openType', Sort.desc);
     });
   }
 
@@ -1279,30 +895,6 @@ extension PostQuerySortThenBy on QueryBuilder<Post, Post, QSortThenBy> {
     });
   }
 
-  QueryBuilder<Post, Post, QAfterSortBy> thenByFeedId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'feedId', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterSortBy> thenByFeedIdDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'feedId', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterSortBy> thenByFeedName() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'feedName', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterSortBy> thenByFeedNameDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'feedName', Sort.desc);
-    });
-  }
-
   QueryBuilder<Post, Post, QAfterSortBy> thenByFullText() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'fullText', Sort.asc);
@@ -1312,18 +904,6 @@ extension PostQuerySortThenBy on QueryBuilder<Post, Post, QSortThenBy> {
   QueryBuilder<Post, Post, QAfterSortBy> thenByFullTextDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'fullText', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterSortBy> thenByFullTextCache() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'fullTextCache', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterSortBy> thenByFullTextCacheDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'fullTextCache', Sort.desc);
     });
   }
 
@@ -1348,18 +928,6 @@ extension PostQuerySortThenBy on QueryBuilder<Post, Post, QSortThenBy> {
   QueryBuilder<Post, Post, QAfterSortBy> thenByLinkDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'link', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterSortBy> thenByOpenType() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'openType', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Post, Post, QAfterSortBy> thenByOpenTypeDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'openType', Sort.desc);
     });
   }
 
@@ -1414,28 +982,9 @@ extension PostQueryWhereDistinct on QueryBuilder<Post, Post, QDistinct> {
     });
   }
 
-  QueryBuilder<Post, Post, QDistinct> distinctByFeedId() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'feedId');
-    });
-  }
-
-  QueryBuilder<Post, Post, QDistinct> distinctByFeedName(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'feedName', caseSensitive: caseSensitive);
-    });
-  }
-
   QueryBuilder<Post, Post, QDistinct> distinctByFullText() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'fullText');
-    });
-  }
-
-  QueryBuilder<Post, Post, QDistinct> distinctByFullTextCache() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'fullTextCache');
     });
   }
 
@@ -1446,16 +995,9 @@ extension PostQueryWhereDistinct on QueryBuilder<Post, Post, QDistinct> {
     });
   }
 
-  QueryBuilder<Post, Post, QDistinct> distinctByOpenType() {
+  QueryBuilder<Post, Post, QDistinct> distinctByPubDate() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'openType');
-    });
-  }
-
-  QueryBuilder<Post, Post, QDistinct> distinctByPubDate(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'pubDate', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'pubDate');
     });
   }
 
@@ -1492,27 +1034,9 @@ extension PostQueryProperty on QueryBuilder<Post, Post, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Post, int, QQueryOperations> feedIdProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'feedId');
-    });
-  }
-
-  QueryBuilder<Post, String, QQueryOperations> feedNameProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'feedName');
-    });
-  }
-
   QueryBuilder<Post, bool, QQueryOperations> fullTextProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'fullText');
-    });
-  }
-
-  QueryBuilder<Post, bool, QQueryOperations> fullTextCacheProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'fullTextCache');
     });
   }
 
@@ -1522,13 +1046,7 @@ extension PostQueryProperty on QueryBuilder<Post, Post, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Post, int, QQueryOperations> openTypeProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'openType');
-    });
-  }
-
-  QueryBuilder<Post, String, QQueryOperations> pubDateProperty() {
+  QueryBuilder<Post, DateTime, QQueryOperations> pubDateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'pubDate');
     });
