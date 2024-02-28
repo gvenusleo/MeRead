@@ -19,7 +19,7 @@ class SettingView extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
           children: [
             ListItemCard(
-              icon: const Icon(Icons.language_outlined),
+              trailing: const Icon(Icons.language_outlined),
               title: 'languageSettings'.tr,
               onTap: () {
                 Get.toNamed('/setting/language');
@@ -27,7 +27,7 @@ class SettingView extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             ListItemCard(
-              icon: const Icon(Icons.color_lens_outlined),
+              trailing: const Icon(Icons.color_lens_outlined),
               title: 'appearanceSettings'.tr,
               onTap: () {
                 Get.toNamed('/setting/theme');
@@ -39,7 +39,7 @@ class SettingView extends StatelessWidget {
               endIndent: 18,
             ),
             ListItemCard(
-              icon: const Icon(Icons.display_settings_outlined),
+              trailing: const Icon(Icons.display_settings_outlined),
               title: 'screenRefreshRate'.tr,
               onTap: () {
                 Get.toNamed('/setting/screenRefreshRate');
@@ -48,7 +48,7 @@ class SettingView extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             ListItemCard(
-              icon: const Icon(Icons.article_outlined),
+              trailing: const Icon(Icons.article_outlined),
               title: 'readSettings'.tr,
               onTap: () {
                 Get.toNamed('/setting/read');
@@ -56,7 +56,7 @@ class SettingView extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             ListItemCard(
-              icon: const Icon(Icons.refresh_outlined),
+              trailing: const Icon(Icons.refresh_outlined),
               title: 'refreshSettings'.tr,
               onTap: () {
                 Get.toNamed('/setting/refresh');
@@ -68,7 +68,7 @@ class SettingView extends StatelessWidget {
               endIndent: 18,
             ),
             ListItemCard(
-              icon: const Icon(Icons.block_outlined),
+              trailing: const Icon(Icons.block_outlined),
               title: 'blockSettings'.tr,
               onTap: () {
                 Get.toNamed('/setting/block');
@@ -81,7 +81,7 @@ class SettingView extends StatelessWidget {
               endIndent: 18,
             ),
             ListItemCard(
-              icon: const Icon(Icons.smart_button_outlined),
+              trailing: const Icon(Icons.smart_button_outlined),
               title: 'proxySettings'.tr,
               onTap: () {
                 Get.toNamed('/setting/proxy');
@@ -90,7 +90,7 @@ class SettingView extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             ListItemCard(
-              icon: const Icon(Icons.file_download_outlined),
+              trailing: const Icon(Icons.file_download_outlined),
               title: 'importOPML'.tr,
               onTap: OpmlHelper.importOPML,
               bottomRadius: false,
@@ -100,14 +100,14 @@ class SettingView extends StatelessWidget {
               endIndent: 18,
             ),
             ListItemCard(
-              icon: const Icon(Icons.file_upload_outlined),
+              trailing: const Icon(Icons.file_upload_outlined),
               title: 'exportOPML'.tr,
               onTap: OpmlHelper.exportOPML,
               topRadius: false,
             ),
             const SizedBox(height: 12),
             ListItemCard(
-              icon: const Icon(Icons.update_outlined),
+              trailing: const Icon(Icons.update_outlined),
               title: 'checkUpdate'.tr,
               onTap: UpdateHelper.checkUpdate,
               bottomRadius: false,
@@ -117,7 +117,7 @@ class SettingView extends StatelessWidget {
               endIndent: 18,
             ),
             ListItemCard(
-              icon: const Icon(Icons.android_outlined),
+              trailing: const Icon(Icons.android_outlined),
               title: 'aboutApp'.tr,
               onTap: () {
                 Get.toNamed('/setting/about');

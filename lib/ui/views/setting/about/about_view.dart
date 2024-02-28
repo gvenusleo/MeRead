@@ -15,32 +15,45 @@ class AboutView extends StatelessWidget {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
+          padding: const EdgeInsets.all(12),
           child: Column(
             children: [
               Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(72),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(720),
+                    boxShadow: [
+                      BoxShadow(
+                        color:
+                            Theme.of(context).colorScheme.primary.withAlpha(10),
+                        spreadRadius: 10,
+                        blurRadius: 10,
+                        offset:
+                            const Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  clipBehavior: Clip.antiAlias,
                   child: Image.asset(
                     'assets/meread.png',
-                    width: 72,
-                    height: 72,
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    // height: 72,
                   ),
                 ),
               ),
               const SizedBox(height: 12),
               Center(
-                child: Text('MeRead'.tr, style: const TextStyle(fontSize: 18)),
+                child: Text('MeRead'.tr, style: const TextStyle(fontSize: 24)),
               ),
               Center(
                 child: Text(
                   applicationVersion,
-                  style: const TextStyle(fontSize: 14),
+                  style: const TextStyle(fontSize: 18),
                 ),
               ),
               const SizedBox(height: 36),
               ListItemCard(
-                icon: const Icon(Icons.source_outlined),
+                trailing: const Icon(Icons.source_outlined),
                 title: 'sourceAddress'.tr,
                 onTap: () {
                   launchUrl(
@@ -55,7 +68,7 @@ class AboutView extends StatelessWidget {
                 endIndent: 18,
               ),
               ListItemCard(
-                icon: const Icon(Icons.person_outline),
+                trailing: const Icon(Icons.person_outline),
                 title: 'contactAuthor'.tr,
                 onTap: () {
                   launchUrl(
