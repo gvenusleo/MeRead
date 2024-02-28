@@ -4,7 +4,7 @@ import 'package:meread/common/global.dart';
 
 class ScreenRefreshRateController extends GetxController {
   RxList modes = <DisplayMode>[].obs;
-  late Rx<DisplayMode> activeMode;
+  Rx<DisplayMode> activeMode = DisplayMode.auto.obs;
 
   @override
   void onInit() {

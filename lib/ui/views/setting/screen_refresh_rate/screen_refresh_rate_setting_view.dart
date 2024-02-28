@@ -45,7 +45,9 @@ class ScreenRefreshRateSettingView extends StatelessWidget {
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            '${mode.height}x${mode.width}  ${mode.refreshRate.toStringAsFixed(0)}Hz',
+                            mode == c.modes.first
+                                ? 'autoRate'.tr
+                                : '${mode.height}x${mode.width}  ${mode.refreshRate.toStringAsFixed(0)}Hz',
                             style: TextStyle(
                               fontSize: 16,
                               color: c.activeMode.value == mode

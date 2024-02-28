@@ -19,8 +19,8 @@ class ThemeController extends GetxController {
 
   @override
   void onInit() {
-    super.onInit();
     readAllFont();
+    super.onInit();
   }
 
   // 设置主题模式

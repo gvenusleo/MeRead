@@ -69,6 +69,7 @@ class AppTranslations extends Translations {
           'importFont': '导入字体',
           // 屏幕刷新率
           'screenRefreshRate': '屏幕帧率',
+          'autoRate': '自动',
           // 阅读设置
           'readSettings': '阅读设置',
           'fontSize': '字体大小',
