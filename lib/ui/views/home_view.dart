@@ -70,7 +70,7 @@ class _HomeViewState extends State<HomeView> {
                     ],
                   ),
                 ),
-                const PopupMenuDivider(),
+                const PopupMenuDivider(height: 0),
                 /* 全文搜索 */
                 PopupMenuItem(
                   child: SearchAnchor(
@@ -116,7 +116,7 @@ class _HomeViewState extends State<HomeView> {
                     ],
                   ),
                 ),
-                const PopupMenuDivider(),
+                const PopupMenuDivider(height: 0),
                 /* 设置 */
                 PopupMenuItem(
                   onTap: c.toSetting,

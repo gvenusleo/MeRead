@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:meread/common/helpers/prefs_helper.dart';
 
@@ -12,7 +13,12 @@ class ProxyController extends GetxController {
   // 更新是否使用代理
   Future<void> updateUseProxy(bool value) async {
     if (proxyAddress.value.isEmpty || proxyPort.value.isEmpty) {
-      Get.snackbar('info'.tr, 'addressAndPortCannotBeEmpty'.tr);
+      Get.snackbar(
+        'info'.tr,
+        'addressAndPortCannotBeEmpty'.tr,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: const EdgeInsets.all(12),
+      );
       return;
     }
     useProxy.value = value;

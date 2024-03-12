@@ -18,7 +18,11 @@ class AppTranslations extends Translations {
           'moreSettings': '更多设置',
           'allFeeds': '全部订阅',
           'refreshSuccess': '刷新成功',
-          'refreshError': '@count 个订阅源刷新失败',
+          'refreshSuccessInfo': '共刷新 @count 订阅源',
+          'refreshError': '刷新失败',
+          'refreshErrorInfo': '@count 个订阅源刷新失败',
+          'noFeeds': '暂无订阅源',
+          'noFeedsInfo': '添加订阅源后再刷新',
 
           /// 阅读
           'markAsUnread': '标记未读',

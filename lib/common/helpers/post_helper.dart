@@ -16,16 +16,16 @@ class PostHelper {
     });
   }
 
-  /// 解析 List<Feed> 返回失败数量
-  static Future<int> reslovePosts(List<Feed> feeds) async {
-    int result = 0;
+  /// 解析 List<Feed> 返回总数量和失败数量
+  static Future<List<int>> reslovePosts(List<Feed> feeds) async {
+    int errorCount = 0;
     for (final Feed feed in feeds) {
       bool res = await _reslovePost(feed);
       if (!res) {
-        result++;
+        errorCount++;
       }
     }
-    return result;
+    return [feeds.length, errorCount];
   }
 
   /// 获取所有 Post

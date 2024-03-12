@@ -74,17 +74,30 @@ class HomeController extends GetxController {
 
   // 刷新订阅源
   Future<void> refreshPosts() async {
-    int result = await PostHelper.reslovePosts(feeds);
-    getPosts();
-    if (result > 0) {
+    if (feeds.isEmpty) {
       Get.snackbar(
-        'error'.tr,
-        'refreshError'.trParams({'count': result.toString()}),
+        'noFeeds'.tr,
+        'noFeedsInfo'.tr,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: const EdgeInsets.all(12),
+      );
+      return;
+    }
+    List<int> result = await PostHelper.reslovePosts(feeds);
+    getPosts();
+    if (result[1] > 0) {
+      Get.snackbar(
+        'refreshError'.tr,
+        'refreshErrorInfo'.trParams({'count': result[1].toString()}),
+        snackPosition: SnackPosition.BOTTOM,
+        margin: const EdgeInsets.all(12),
       );
     } else {
       Get.snackbar(
-        'info'.tr,
         'refreshSuccess'.tr,
+        'refreshSuccessInfo'.trParams({'count': result[0].toString()}),
+        snackPosition: SnackPosition.BOTTOM,
+        margin: const EdgeInsets.all(12),
       );
     }
   }

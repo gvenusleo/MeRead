@@ -8,7 +8,12 @@ class UpdateHelper {
   /// 检查更新
   static Future<void> checkUpdate() async {
     logger.i('[update]: 开始检查更新');
-    Get.snackbar('info'.tr, 'checkingForUpdates'.tr);
+    Get.snackbar(
+      'info'.tr,
+      'checkingForUpdates'.tr,
+      snackPosition: SnackPosition.BOTTOM,
+      margin: const EdgeInsets.all(12),
+    );
     try {
       /* 通过访问 https://github.com/gvenusleo/MeRead/releases/latest 获取最新版本号 */
       final Dio dio = appDio.dio;
@@ -21,7 +26,12 @@ class UpdateHelper {
       final String latestVersion = title.split(' ')[1];
       if (latestVersion == applicationVersion) {
         Get.closeAllSnackbars();
-        Get.snackbar('info'.tr, 'alreadyLatestVersion'.tr);
+        Get.snackbar(
+          'info'.tr,
+          'alreadyLatestVersion'.tr,
+          snackPosition: SnackPosition.BOTTOM,
+          margin: const EdgeInsets.all(12),
+        );
         logger.i('[update]: 已经是最新版本 v$applicationVersion');
       } else {
         Get.closeAllSnackbars();

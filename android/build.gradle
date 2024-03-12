@@ -3,8 +3,9 @@ allprojects {
         google()
         mavenCentral()
         maven { url 'https://maven.aliyun.com/repository/google' }
-        maven { url 'https://maven.aliyun.com/repository/jcenter' }
         maven { url 'https://maven.aliyun.com/repository/central' }
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
     }
 }
 
@@ -19,3 +20,5 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
+
+ext.kotlin_version = '1.9.23'

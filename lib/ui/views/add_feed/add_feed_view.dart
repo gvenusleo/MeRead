@@ -61,7 +61,12 @@ class AddFeedView extends StatelessWidget {
                       onTap: () async {
                         final bool isExist = await c.isExists();
                         if (isExist) {
-                          Get.snackbar('info'.tr, 'feedExist'.tr);
+                          Get.snackbar(
+                            'info'.tr,
+                            'feedExist'.tr,
+                            snackPosition: SnackPosition.BOTTOM,
+                            margin: const EdgeInsets.all(12),
+                          );
                         }
                         Get.toNamed('/editFeed', arguments: c.feed)!
                             .then((_) => Get.back());
