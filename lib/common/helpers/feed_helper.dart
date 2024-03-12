@@ -1,5 +1,6 @@
 import 'package:dart_rss/dart_rss.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:meread/common/global.dart';
@@ -50,6 +51,8 @@ class FeedHelper {
       Get.snackbar(
         'error'.tr,
         'resolveError'.tr,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: const EdgeInsets.all(12),
       );
       logger.e('[feed] 解析订阅源失败: $e');
       return null;

@@ -63,7 +63,7 @@ class PostView extends StatelessWidget {
                     ],
                   ),
                 ),
-                const PopupMenuDivider(),
+                const PopupMenuDivider(height: 0),
                 /* 复制链接 */
                 PopupMenuItem(
                   onTap: () {

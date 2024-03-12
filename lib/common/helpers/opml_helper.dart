@@ -22,7 +22,12 @@ class OpmlHelper {
     if (result != null) {
       if (result.files.first.extension != 'opml' &&
           result.files.first.extension != 'xml') {
-        Get.snackbar('error'.tr, 'importErrorInfo'.tr);
+        Get.snackbar(
+          'error'.tr,
+          'importErrorInfo'.tr,
+          snackPosition: SnackPosition.BOTTOM,
+          margin: const EdgeInsets.all(12),
+        );
         logger.i('[opml]: 导入错误，仅支持 OPML 或 XML 文件，'
             '当前文件扩展名为: ${result.files.first.extension}');
         return;
@@ -46,11 +51,14 @@ class OpmlHelper {
           Get.back();
         }
         Get.snackbar(
-            'info'.tr,
-            'importResultInfo'.trParams({
-              'allCount': count[0].toString(),
-              'successCount': count[1].toString(),
-            }));
+          'info'.tr,
+          'importResultInfo'.trParams({
+            'allCount': count[0].toString(),
+            'successCount': count[1].toString(),
+          }),
+          snackPosition: SnackPosition.BOTTOM,
+          margin: const EdgeInsets.all(12),
+        );
         if (Get.isDialogOpen ?? false) {
           Get.back();
         }
@@ -89,7 +97,12 @@ class OpmlHelper {
       text: 'exportOPML'.tr,
     ).then((value) {
       if (value.status == ShareResultStatus.success) {
-        Get.snackbar('info'.tr, 'exportSuccess'.tr);
+        Get.snackbar(
+          'info'.tr,
+          'exportSuccess'.tr,
+          snackPosition: SnackPosition.BOTTOM,
+          margin: const EdgeInsets.all(12),
+        );
       }
     });
     await file.delete();
