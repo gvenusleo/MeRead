@@ -1,5 +1,12 @@
 VERSION := `sed -n 's/^version: \([^ ]*\).*/\1/p' pubspec.yaml`
 
+# Clean project
+clean:
+    @echo "------------------------------"
+    @echo "Cleaning project......"
+    @flutter clean
+    @flutter pub get
+
 # Build generated files
 build-isar:
     @echo "------------------------------"
@@ -9,7 +16,11 @@ build-isar:
 # Build Android apk
 build-apk:
     @echo "------------------------------"
-    @echo "Building for Android......"
+    @echo "Building Android apk......"
     @flutter build apk
-    @flutter build apk --split-per-abi
 
+# Build Android apks
+build-apks:
+    @echo "------------------------------"
+    @echo "Building Android apks......"
+    @flutter build apk --split-per-abi

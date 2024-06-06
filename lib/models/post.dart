@@ -3,18 +3,17 @@ import 'package:meread/models/feed.dart';
 
 part 'post.g.dart';
 
-/// 定义 Post 类
 @collection
 class Post {
   Id? id = Isar.autoIncrement;
   final feed = IsarLink<Feed>();
-  String title; // 标题
-  String link; // 链接
-  String content; // 内容
-  DateTime pubDate; // 发布时间
-  bool read; // 是否已读
-  bool favorite; // 是否已收藏
-  bool fullText; // 是否已经有全文
+  String title;
+  String link;
+  String content;
+  DateTime pubDate;
+  bool read;
+  bool favorite;
+  bool fullText;
 
   Post({
     this.id,

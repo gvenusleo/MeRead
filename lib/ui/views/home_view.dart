@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:get/get.dart';
-import 'package:meread/common/helpers/post_helper.dart';
-import 'package:meread/common/helpers/prefs_helper.dart';
+import 'package:meread/helpers/isar_helper.dart';
+import 'package:meread/helpers/prefs_helper.dart';
 import 'package:meread/models/feed.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/ui/viewmodels/home_controller.dart';
@@ -38,14 +38,12 @@ class _HomeViewState extends State<HomeView> {
             )),
         centerTitle: false,
         actions: [
-          /* 未读筛选 */
           IconButton(
             onPressed: c.filterUnread,
             icon: Obx(() => c.onlyUnread.value
                 ? const Icon(Icons.radio_button_checked)
                 : const Icon(Icons.radio_button_unchecked)),
           ),
-          /* 收藏筛选 */
           IconButton(
             onPressed: c.filterFavorite,
             icon: Obx(() => c.onlyFavorite.value
@@ -57,7 +55,6 @@ class _HomeViewState extends State<HomeView> {
             position: PopupMenuPosition.under,
             itemBuilder: (BuildContext context) {
               return <PopupMenuEntry>[
-                /* 全标已读 */
                 PopupMenuItem(
                   onTap: c.markAllRead,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -70,16 +67,11 @@ class _HomeViewState extends State<HomeView> {
                     ],
                   ),
                 ),
-                const PopupMenuDivider(height: 0),
-                /* 全文搜索 */
+                const PopupMenuDivider(),
                 PopupMenuItem(
                   child: SearchAnchor(
                     isFullScreen: true,
                     searchController: c.searchController,
-                    viewBackgroundColor:
-                        Theme.of(context).colorScheme.background,
-                    viewSurfaceTintColor:
-                        Theme.of(context).colorScheme.background,
                     builder: (context, controller) {
                       return Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -93,7 +85,7 @@ class _HomeViewState extends State<HomeView> {
                     suggestionsBuilder: (BuildContext context,
                         SearchController controller) async {
                       List<Post> results =
-                          await PostHelper.search(controller.text);
+                          await IsarHelper.search(controller.text);
                       return results
                           .map((e) => Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -104,7 +96,6 @@ class _HomeViewState extends State<HomeView> {
                     },
                   ),
                 ),
-                /* 添加订阅源 */
                 PopupMenuItem(
                   onTap: c.toAddFeed,
                   child: Row(
@@ -116,8 +107,7 @@ class _HomeViewState extends State<HomeView> {
                     ],
                   ),
                 ),
-                const PopupMenuDivider(height: 0),
-                /* 设置 */
+                const PopupMenuDivider(),
                 PopupMenuItem(
                   onTap: c.toSetting,
                   child: Row(
@@ -125,7 +115,7 @@ class _HomeViewState extends State<HomeView> {
                     children: [
                       const Icon(Icons.settings_outlined, size: 20),
                       const SizedBox(width: 10),
-                      Text('moreSettings'.tr),
+                      Text('moreSetting'.tr),
                     ],
                   ),
                 ),
@@ -166,7 +156,7 @@ class _HomeViewState extends State<HomeView> {
                         ),
                       ),
                       onTap: (handler) async {
-                        await c.updateReadStatus(c.postList[index]);
+                        c.updateReadStatus(c.postList[index]);
                         c.getUnreadCount();
                         await handler(false);
                       },

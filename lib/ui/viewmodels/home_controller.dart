@@ -1,27 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:meread/common/helpers/feed_helper.dart';
-import 'package:meread/common/helpers/post_helper.dart';
+import 'package:meread/helpers/isar_helper.dart';
+import 'package:meread/helpers/resolve_helper.dart';
+import 'package:meread/models/category.dart';
 import 'package:meread/models/feed.dart';
 import 'package:meread/models/post.dart';
 
 class HomeController extends GetxController {
-  // 订阅源列表，按分类分组
-  RxMap feedsGroupByCategory = <String, List<Feed>>{}.obs;
-  // 每个订阅源未读 Post 数量
+  RxList<Category> categorys = <Category>[].obs;
   RxMap<Feed, int> unreadCount = <Feed, int>{}.obs;
-  // 当前查看的订阅源
   RxList<Feed> feeds = <Feed>[].obs;
-  // 文章列表
   RxList<Post> postList = <Post>[].obs;
-  // 是否只显示未读文章
   RxBool onlyUnread = false.obs;
-  // 是否只显示收藏文章
   RxBool onlyFavorite = false.obs;
-  // AppBar 标题
   RxString appBarTitle = 'MeRead'.tr.obs;
 
-  // 搜索控制器
   final searchController = SearchController();
 
   @override
@@ -31,24 +24,14 @@ class HomeController extends GetxController {
     getUnreadCount();
   }
 
-  // 获取订阅源
   Future<void> getFeeds() async {
-    feeds.value = await FeedHelper.getFeeds();
-    final Map<String, List<Feed>> result = {};
-    for (final Feed feed in feeds) {
-      if (result.containsKey(feed.category)) {
-        result[feed.category]!.add(feed);
-      } else {
-        result[feed.category] = [feed];
-      }
-    }
-    feedsGroupByCategory.value = result;
+    feeds.value = await IsarHelper.getFeeds();
+    categorys.value = await IsarHelper.getCategorys();
     appBarTitle.value = 'MeRead'.tr;
   }
 
-  // 获取未读数量
   Future<void> getUnreadCount() async {
-    final List<Post> posts = await PostHelper.getAllPosts();
+    final List<Post> posts = await IsarHelper.getPosts();
     final Map<Feed, int> result = {};
     for (final Feed feed in feeds) {
       final int count =
@@ -58,40 +41,19 @@ class HomeController extends GetxController {
     unreadCount.value = result;
   }
 
-  // 获取分类总未读数量
-  int getCategoryUnreadCount(String category) {
-    int result = 0;
-    feedsGroupByCategory[category]?.forEach((feed) {
-      result += unreadCount[feed] ?? 0;
-    });
-    return result;
-  }
-
-  // 获取 Post
   Future<void> getPosts() async {
-    postList.value = await PostHelper.getPostsByFeeds(feeds);
+    postList.value = await IsarHelper.getPostsByFeeds(feeds);
   }
 
-  // 刷新订阅源
   Future<void> refreshPosts() async {
     if (feeds.isEmpty) {
-      Get.snackbar(
-        'noFeeds'.tr,
-        'noFeedsInfo'.tr,
-        snackPosition: SnackPosition.BOTTOM,
-        margin: const EdgeInsets.all(12),
-      );
+      // TODO： show toast
       return;
     }
-    List<int> result = await PostHelper.reslovePosts(feeds);
+    List<int> result = await ResolveHelper.reslovePosts(feeds);
     getPosts();
     if (result[1] > 0) {
-      Get.snackbar(
-        'refreshError'.tr,
-        'refreshErrorInfo'.trParams({'count': result[1].toString()}),
-        snackPosition: SnackPosition.BOTTOM,
-        margin: const EdgeInsets.all(12),
-      );
+      // TODO: show toast
     } else {
       Get.snackbar(
         'refreshSuccess'.tr,
@@ -102,12 +64,11 @@ class HomeController extends GetxController {
     }
   }
 
-  // 定位到全部订阅源
   Future<void> focusAllFeeds() async {
     List<Feed> tem = [];
-    feedsGroupByCategory.forEach((key, value) {
-      tem.addAll(value);
-    });
+    // feedsGroupByCategory.forEach((key, value) {
+    //   tem.addAll(value);
+    // });
     feeds.value = tem;
     await getPosts();
     onlyUnread.value = false;
@@ -118,7 +79,7 @@ class HomeController extends GetxController {
 
   // 定位到指定分类
   Future<void> focusCategory(String category) async {
-    feeds.value = feedsGroupByCategory[category] ?? '';
+    // feeds.value = feedsGroupByCategory[category] ?? '';
     await getPosts();
     onlyUnread.value = false;
     onlyFavorite.value = false;
@@ -144,7 +105,7 @@ class HomeController extends GetxController {
     } else {
       onlyUnread.value = true;
       onlyFavorite.value = false;
-      postList.value = (await PostHelper.getPostsByFeeds(feeds))
+      postList.value = (await IsarHelper.getPostsByFeeds(feeds))
           .where((p) => p.read == false)
           .toList();
     }
@@ -158,22 +119,22 @@ class HomeController extends GetxController {
     } else {
       onlyFavorite.value = true;
       onlyUnread.value = false;
-      postList.value = (await PostHelper.getPostsByFeeds(feeds))
+      postList.value = (await IsarHelper.getPostsByFeeds(feeds))
           .where((p) => p.favorite)
           .toList();
     }
   }
 
   // 修改单一 Post 阅读状态
-  Future<void> updateReadStatus(Post post) async {
+  void updateReadStatus(Post post) {
     final int index = postList.indexOf(post);
-    await PostHelper.updatePostReadStatus(post);
+    IsarHelper.updatePostRead(post);
     postList[index] = post;
   }
 
   // 全标已读
-  Future<void> markAllRead() async {
-    await PostHelper.mardPostsAsRead(postList);
+  void markAllRead() {
+    IsarHelper.markAllRead(postList);
     getPosts();
   }
 

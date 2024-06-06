@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
-import 'package:meread/common/helpers/prefs_helper.dart';
+import 'package:meread/helpers/prefs_helper.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/ui/viewmodels/post/post_controller.dart';
 import 'package:share_plus/share_plus.dart';
@@ -19,12 +19,10 @@ class PostView extends StatelessWidget {
       appBar: AppBar(
         title: Text(c.post.value.feed.value?.title ?? ''),
         actions: [
-          /* 在浏览器中打开 */
           IconButton(
             onPressed: c.openInBrowser,
             icon: const Icon(Icons.open_in_browser_outlined),
           ),
-          /* 获取全文 */
           IconButton(
             onPressed: c.getFullText,
             icon: const Icon(Icons.article_outlined),
@@ -34,7 +32,6 @@ class PostView extends StatelessWidget {
             position: PopupMenuPosition.under,
             itemBuilder: (BuildContext context) {
               return <PopupMenuEntry>[
-                /* 标记为未读 */
                 PopupMenuItem(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   onTap: c.markAsUnread,
@@ -47,7 +44,6 @@ class PostView extends StatelessWidget {
                     ],
                   ),
                 ),
-                /* 更改收藏状态 */
                 PopupMenuItem(
                   onTap: c.changeFavorite,
                   child: Row(
@@ -64,7 +60,6 @@ class PostView extends StatelessWidget {
                   ),
                 ),
                 const PopupMenuDivider(height: 0),
-                /* 复制链接 */
                 PopupMenuItem(
                   onTap: () {
                     Clipboard.setData(ClipboardData(text: c.post.value.link));
@@ -78,7 +73,6 @@ class PostView extends StatelessWidget {
                     ],
                   ),
                 ),
-                /* 分享 */
                 PopupMenuItem(
                   onTap: () {
                     Share.share(
@@ -222,7 +216,6 @@ class PostView extends StatelessWidget {
   }
 }
 
-/// 用于阅读页面的图片组件
 class ImgForRead extends StatelessWidget {
   const ImgForRead({super.key, required this.url});
 
@@ -246,7 +239,6 @@ class ImgForRead extends StatelessWidget {
             height: 200,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceVariant.withAlpha(80),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
@@ -269,7 +261,6 @@ class ImgForRead extends StatelessWidget {
             height: 200,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceVariant.withAlpha(80),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
