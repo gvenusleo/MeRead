@@ -40,12 +40,12 @@ const CategorySchema = CollectionSchema(
   idName: r'id',
   indexes: {},
   links: {
-    r'posts': LinkSchema(
-      id: -2358964942445175494,
-      name: r'posts',
-      target: r'Post',
+    r'feeds': LinkSchema(
+      id: 5088987566546768766,
+      name: r'feeds',
+      target: r'Feed',
       single: false,
-      linkName: r'feed',
+      linkName: r'category',
     )
   },
   embeddedSchemas: {},
@@ -114,12 +114,12 @@ Id _categoryGetId(Category object) {
 }
 
 List<IsarLinkBase<dynamic>> _categoryGetLinks(Category object) {
-  return [object.posts];
+  return [object.feeds];
 }
 
 void _categoryAttach(IsarCollection<dynamic> col, Id id, Category object) {
   object.id = id;
-  object.posts.attach(col, col.isar.collection<Post>(), r'posts', id);
+  object.feeds.attach(col, col.isar.collection<Feed>(), r'feeds', id);
 }
 
 extension CategoryQueryWhereSort on QueryBuilder<Category, Category, QWhere> {
@@ -509,52 +509,52 @@ extension CategoryQueryObject
 
 extension CategoryQueryLinks
     on QueryBuilder<Category, Category, QFilterCondition> {
-  QueryBuilder<Category, Category, QAfterFilterCondition> posts(
-      FilterQuery<Post> q) {
+  QueryBuilder<Category, Category, QAfterFilterCondition> feeds(
+      FilterQuery<Feed> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'posts');
+      return query.link(q, r'feeds');
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> postsLengthEqualTo(
+  QueryBuilder<Category, Category, QAfterFilterCondition> feedsLengthEqualTo(
       int length) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'posts', length, true, length, true);
+      return query.linkLength(r'feeds', length, true, length, true);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> postsIsEmpty() {
+  QueryBuilder<Category, Category, QAfterFilterCondition> feedsIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'posts', 0, true, 0, true);
+      return query.linkLength(r'feeds', 0, true, 0, true);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> postsIsNotEmpty() {
+  QueryBuilder<Category, Category, QAfterFilterCondition> feedsIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'posts', 0, false, 999999, true);
+      return query.linkLength(r'feeds', 0, false, 999999, true);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> postsLengthLessThan(
+  QueryBuilder<Category, Category, QAfterFilterCondition> feedsLengthLessThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'posts', 0, true, length, include);
+      return query.linkLength(r'feeds', 0, true, length, include);
     });
   }
 
   QueryBuilder<Category, Category, QAfterFilterCondition>
-      postsLengthGreaterThan(
+      feedsLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'posts', length, include, 999999, true);
+      return query.linkLength(r'feeds', length, include, 999999, true);
     });
   }
 
-  QueryBuilder<Category, Category, QAfterFilterCondition> postsLengthBetween(
+  QueryBuilder<Category, Category, QAfterFilterCondition> feedsLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -562,7 +562,7 @@ extension CategoryQueryLinks
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
-          r'posts', lower, includeLower, upper, includeUpper);
+          r'feeds', lower, includeLower, upper, includeUpper);
     });
   }
 }

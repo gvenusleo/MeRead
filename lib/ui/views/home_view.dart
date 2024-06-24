@@ -3,6 +3,7 @@ import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:get/get.dart';
 import 'package:meread/helpers/isar_helper.dart';
 import 'package:meread/helpers/prefs_helper.dart';
+import 'package:meread/models/category.dart';
 import 'package:meread/models/feed.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/ui/viewmodels/home_controller.dart';
@@ -198,9 +199,12 @@ class _HomeViewState extends State<HomeView> {
                         .secondaryContainer
                         .withAlpha(80),
                     visualDensity: VisualDensity.compact,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
                   ),
                 ),
-                for (String category in c.feedsGroupByCategory.keys)
+                for (Category category in c.categorys)
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 12),
                     child: ExpansionTile(
@@ -216,12 +220,12 @@ class _HomeViewState extends State<HomeView> {
                           c.focusCategory(category);
                         },
                         child: Text(
-                            '$category (${c.getCategoryUnreadCount(category)})'),
+                            '${category.name} (${c.getUnreadCountByCategory(category)})'),
                       ),
                       children: [
                         Column(
                           children: [
-                            for (Feed feed in c.feedsGroupByCategory[category])
+                            for (Feed feed in category.feeds)
                               ListTile(
                                 dense: true,
                                 title: Text(
@@ -236,16 +240,10 @@ class _HomeViewState extends State<HomeView> {
                                     .withAlpha(80),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(feed ==
-                                            c.feedsGroupByCategory[category]
-                                                .first
-                                        ? 24
-                                        : 0),
-                                    bottom: Radius.circular(feed ==
-                                            c.feedsGroupByCategory[category]
-                                                .last
-                                        ? 24
-                                        : 0),
+                                    top: Radius.circular(
+                                        feed == category.feeds.first ? 24 : 0),
+                                    bottom: Radius.circular(
+                                        feed == category.feeds.last ? 24 : 0),
                                   ),
                                 ),
                                 onTap: () {

@@ -77,17 +77,26 @@ class HomeController extends GetxController {
     Get.back();
   }
 
-  // 定位到指定分类
-  Future<void> focusCategory(String category) async {
-    // feeds.value = feedsGroupByCategory[category] ?? '';
+  // get unread post count by category
+  int getUnreadCountByCategory(Category category) {
+    int count = 0;
+    for (final Feed feed in category.feeds) {
+      count += unreadCount[feed] ?? 0;
+    }
+    return count;
+  }
+
+  // Focus on a category
+  Future<void> focusCategory(Category category) async {
+    feeds.value = category.feeds.toList();
     await getPosts();
     onlyUnread.value = false;
     onlyFavorite.value = false;
-    appBarTitle.value = category;
+    appBarTitle.value = category.name;
     Get.back();
   }
 
-  // 定位到指定订阅源
+  // Focus on a feed
   Future<void> focusFeed(Feed feed) async {
     feeds.value = [feed];
     await getPosts();
@@ -97,7 +106,7 @@ class HomeController extends GetxController {
     Get.back();
   }
 
-  // 未读筛选
+  // Filter unread
   Future<void> filterUnread() async {
     if (onlyUnread.value) {
       onlyUnread.value = false;
@@ -111,7 +120,7 @@ class HomeController extends GetxController {
     }
   }
 
-  // 收藏筛选
+  // Filter favorite
   Future<void> filterFavorite() async {
     if (onlyFavorite.value) {
       onlyFavorite.value = false;
@@ -125,20 +134,20 @@ class HomeController extends GetxController {
     }
   }
 
-  // 修改单一 Post 阅读状态
+  // Update a Post read status
   void updateReadStatus(Post post) {
     final int index = postList.indexOf(post);
     IsarHelper.updatePostRead(post);
     postList[index] = post;
   }
 
-  // 全标已读
+  // Mark all posts as read
   void markAllRead() {
     IsarHelper.markAllRead(postList);
     getPosts();
   }
 
-  // 添加订阅源
+  // Go to add feed view
   void toAddFeed() {
     Get.toNamed('/addFeed')?.then((_) => getFeeds().then((_) {
           getPosts();
@@ -146,7 +155,7 @@ class HomeController extends GetxController {
         }));
   }
 
-  // 应用设置
+  // Go to setting view
   void toSetting() {
     Get.toNamed('/setting')?.then((_) => getFeeds().then((_) {
           getPosts();
@@ -154,7 +163,7 @@ class HomeController extends GetxController {
         }));
   }
 
-  // 跳转编辑订阅
+  // Go to edit feed view
   void toEditFeed(Feed value) {
     Get.toNamed('/editFeed', arguments: value)
         ?.then((_) => getFeeds().then((_) {

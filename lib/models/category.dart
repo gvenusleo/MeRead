@@ -1,5 +1,5 @@
 import 'package:isar/isar.dart';
-import 'package:meread/models/post.dart';
+import 'package:meread/models/feed.dart';
 
 part 'category.g.dart';
 
@@ -9,8 +9,8 @@ class Category {
   String name;
   DateTime createdAt;
   DateTime updatedAt;
-  @Backlink(to: 'feed')
-  final posts = IsarLinks<Post>();
+  @Backlink(to: 'category')
+  final feeds = IsarLinks<Feed>();
 
   Category({
     this.id,

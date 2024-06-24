@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:meread/models/post.dart';
 
 class PostCard extends StatelessWidget {
@@ -11,6 +12,8 @@ class PostCard extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
+        color: Get.theme.colorScheme.secondaryContainer
+            .withAlpha(post.read ? 20 : 60),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
