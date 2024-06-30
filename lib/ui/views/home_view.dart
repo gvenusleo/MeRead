@@ -4,9 +4,9 @@ import 'package:get/get.dart';
 import 'package:meread/helpers/isar_helper.dart';
 import 'package:meread/helpers/prefs_helper.dart';
 import 'package:meread/models/category.dart';
-import 'package:meread/models/feed.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/ui/viewmodels/home_controller.dart';
+import 'package:meread/ui/widgets/feed_panel.dart';
 import 'package:meread/ui/widgets/post_card.dart';
 
 class HomeView extends StatefulWidget {
@@ -197,7 +197,7 @@ class _HomeViewState extends State<HomeView> {
                     tileColor: Theme.of(context)
                         .colorScheme
                         .secondaryContainer
-                        .withAlpha(80),
+                        .withAlpha(100),
                     visualDensity: VisualDensity.compact,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(24),
@@ -205,56 +205,9 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ),
                 for (Category category in c.categorys)
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 12),
-                    child: ExpansionTile(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      collapsedShape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      visualDensity: VisualDensity.compact,
-                      title: GestureDetector(
-                        onTap: () {
-                          c.focusCategory(category);
-                        },
-                        child: Text(
-                            '${category.name} (${c.getUnreadCountByCategory(category)})'),
-                      ),
-                      children: [
-                        Column(
-                          children: [
-                            for (Feed feed in category.feeds)
-                              ListTile(
-                                dense: true,
-                                title: Text(
-                                  feed.title,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                trailing: Text(c.unreadCount[feed].toString()),
-                                tileColor: Theme.of(context)
-                                    .colorScheme
-                                    .secondaryContainer
-                                    .withAlpha(80),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(
-                                        feed == category.feeds.first ? 24 : 0),
-                                    bottom: Radius.circular(
-                                        feed == category.feeds.last ? 24 : 0),
-                                  ),
-                                ),
-                                onTap: () {
-                                  c.focusFeed(feed);
-                                },
-                                onLongPress: () => c.toEditFeed(feed),
-                              ),
-                          ],
-                        ),
-                      ],
-                    ),
+                  FeedPanel(
+                    category: category,
+                    categoryOnTap: () => c.focusCategory(category),
                   ),
               ],
             ),

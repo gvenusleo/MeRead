@@ -13,6 +13,10 @@ class AppTranslation extends Translations {
           // Route: /
           'markAllAsRead': '全标已读',
           'fullTextSearch': '全文搜索',
+          'FeedIsEmpty': '订阅源为空，请添加订阅源后再尝试',
+          'refreshFailed': '@count 个订阅源更新失败',
+          'refreshSuccess': '更新成功',
+          'allFeeds': '全部订阅',
 
           // Route: /add_feed
           'addFeed': '添加订阅',

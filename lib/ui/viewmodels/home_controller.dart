@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:meread/helpers/isar_helper.dart';
 import 'package:meread/helpers/resolve_helper.dart';
@@ -47,28 +48,22 @@ class HomeController extends GetxController {
 
   Future<void> refreshPosts() async {
     if (feeds.isEmpty) {
-      // TODO： show toast
+      Fluttertoast.showToast(msg: 'FeedIsEmpty'.tr);
       return;
     }
     List<int> result = await ResolveHelper.reslovePosts(feeds);
     getPosts();
     if (result[1] > 0) {
-      // TODO: show toast
-    } else {
-      Get.snackbar(
-        'refreshSuccess'.tr,
-        'refreshSuccessInfo'.trParams({'count': result[0].toString()}),
-        snackPosition: SnackPosition.BOTTOM,
-        margin: const EdgeInsets.all(12),
+      Fluttertoast.showToast(
+        msg: 'refreshFailed'.trParams({'count': result[1].toString()}),
       );
+    } else {
+      Fluttertoast.showToast(msg: 'refreshSuccess'.tr);
     }
   }
 
   Future<void> focusAllFeeds() async {
     List<Feed> tem = [];
-    // feedsGroupByCategory.forEach((key, value) {
-    //   tem.addAll(value);
-    // });
     feeds.value = tem;
     await getPosts();
     onlyUnread.value = false;
@@ -78,13 +73,13 @@ class HomeController extends GetxController {
   }
 
   // get unread post count by category
-  int getUnreadCountByCategory(Category category) {
-    int count = 0;
-    for (final Feed feed in category.feeds) {
-      count += unreadCount[feed] ?? 0;
-    }
-    return count;
-  }
+  // int getUnreadCountByCategory(Category category) {
+  //   int count = 0;
+  //   for (final Feed feed in category.feeds) {
+  //     count += unreadCount[feed] ?? 0;
+  //   }
+  //   return count;
+  // }
 
   // Focus on a category
   Future<void> focusCategory(Category category) async {
@@ -97,14 +92,14 @@ class HomeController extends GetxController {
   }
 
   // Focus on a feed
-  Future<void> focusFeed(Feed feed) async {
-    feeds.value = [feed];
-    await getPosts();
-    onlyUnread.value = false;
-    onlyFavorite.value = false;
-    appBarTitle.value = feed.title;
-    Get.back();
-  }
+  // Future<void> focusFeed(Feed feed) async {
+  //   feeds.value = [feed];
+  //   await getPosts();
+  //   onlyUnread.value = false;
+  //   onlyFavorite.value = false;
+  //   appBarTitle.value = feed.title;
+  //   Get.back();
+  // }
 
   // Filter unread
   Future<void> filterUnread() async {
