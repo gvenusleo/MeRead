@@ -208,6 +208,7 @@ class _HomeViewState extends State<HomeView> {
                   FeedPanel(
                     category: category,
                     categoryOnTap: () => c.focusCategory(category),
+                    feedOnTap: (feed) => c.focusFeed(feed),
                   ),
               ],
             ),

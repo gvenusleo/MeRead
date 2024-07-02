@@ -63,23 +63,13 @@ class HomeController extends GetxController {
   }
 
   Future<void> focusAllFeeds() async {
-    List<Feed> tem = [];
-    feeds.value = tem;
+    feeds.value = await IsarHelper.getFeeds();
     await getPosts();
     onlyUnread.value = false;
     onlyFavorite.value = false;
     appBarTitle.value = 'MeRead'.tr;
     Get.back();
   }
-
-  // get unread post count by category
-  // int getUnreadCountByCategory(Category category) {
-  //   int count = 0;
-  //   for (final Feed feed in category.feeds) {
-  //     count += unreadCount[feed] ?? 0;
-  //   }
-  //   return count;
-  // }
 
   // Focus on a category
   Future<void> focusCategory(Category category) async {
@@ -92,14 +82,14 @@ class HomeController extends GetxController {
   }
 
   // Focus on a feed
-  // Future<void> focusFeed(Feed feed) async {
-  //   feeds.value = [feed];
-  //   await getPosts();
-  //   onlyUnread.value = false;
-  //   onlyFavorite.value = false;
-  //   appBarTitle.value = feed.title;
-  //   Get.back();
-  // }
+  Future<void> focusFeed(Feed feed) async {
+    feeds.value = [feed];
+    await getPosts();
+    onlyUnread.value = false;
+    onlyFavorite.value = false;
+    appBarTitle.value = feed.title;
+    Get.back();
+  }
 
   // Filter unread
   Future<void> filterUnread() async {

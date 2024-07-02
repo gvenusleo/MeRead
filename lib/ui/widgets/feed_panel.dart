@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:meread/models/category.dart';
+import 'package:meread/models/feed.dart';
 
 class FeedPanel extends StatefulWidget {
   final Category category;
   final Function() categoryOnTap;
+  final Function(Feed feed) feedOnTap;
+
   const FeedPanel({
     super.key,
     required this.category,
     required this.categoryOnTap,
+    required this.feedOnTap,
   });
 
   @override
@@ -61,7 +65,7 @@ class _FeedPanelState extends State<FeedPanel> {
                                 title: Text(feed.title),
                                 dense: true,
                                 visualDensity: VisualDensity.compact,
-                                onTap: () {},
+                                onTap: () => widget.feedOnTap(feed),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(24),
                                 ),
