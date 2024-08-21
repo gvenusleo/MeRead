@@ -8,7 +8,7 @@ class LogHelper {
       printer: PrettyPrinter(
         colors: true,
         printEmojis: false,
-        printTime: true,
+        dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart,
       ),
     );
   }
