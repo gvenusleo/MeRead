@@ -26,8 +26,10 @@ class RefreshSettingView extends StatelessWidget {
                 onChanged: (value) {
                   c.updateRefreshOnStartup(value);
                 },
-                tileColor:
-                    Theme.of(context).colorScheme.surfaceVariant.withAlpha(80),
+                tileColor: Theme.of(context)
+                    .colorScheme
+                    .surfaceContainerHighest
+                    .withAlpha(80),
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(12)),
                 ),

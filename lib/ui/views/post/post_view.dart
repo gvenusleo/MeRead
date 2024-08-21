@@ -246,7 +246,10 @@ class ImgForRead extends StatelessWidget {
             height: 200,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceVariant.withAlpha(80),
+              color: Theme.of(context)
+                  .colorScheme
+                  .surfaceContainerHighest
+                  .withAlpha(80),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
@@ -269,7 +272,10 @@ class ImgForRead extends StatelessWidget {
             height: 200,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceVariant.withAlpha(80),
+              color: Theme.of(context)
+                  .colorScheme
+                  .surfaceContainerHighest
+                  .withAlpha(80),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(

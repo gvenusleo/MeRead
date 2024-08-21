@@ -99,7 +99,7 @@ class ThemeSettingView extends StatelessWidget {
                       subtitle: Text('dynamicColorInfo'.tr),
                       tileColor: Theme.of(context)
                           .colorScheme
-                          .surfaceVariant
+                          .surfaceContainerHighest
                           .withAlpha(80),
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(12)),

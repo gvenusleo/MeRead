@@ -76,10 +76,8 @@ class _HomeViewState extends State<HomeView> {
                   child: SearchAnchor(
                     isFullScreen: true,
                     searchController: c.searchController,
-                    viewBackgroundColor:
-                        Theme.of(context).colorScheme.background,
-                    viewSurfaceTintColor:
-                        Theme.of(context).colorScheme.background,
+                    viewBackgroundColor: Theme.of(context).colorScheme.surface,
+                    viewSurfaceTintColor: Theme.of(context).colorScheme.surface,
                     builder: (context, controller) {
                       return Row(
                         crossAxisAlignment: CrossAxisAlignment.center,

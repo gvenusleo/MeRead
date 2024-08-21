@@ -36,7 +36,7 @@ Future<void> initApp() async {
     printer: PrettyPrinter(
       colors: true,
       printEmojis: false,
-      printTime: true,
+      dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart,
     ),
   );
   prefs = await SharedPreferences.getInstance();
