@@ -1,9 +1,9 @@
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:meread/ui/viewmodels/setting/theme/theme_controller.dart';
 import 'package:meread/ui/widgets/item_card.dart';
 import 'package:meread/ui/widgets/slide_item_card.dart';
+import 'package:meread/ui/widgets/switch_item_card.dart';
 
 class ThemeSettingView extends StatelessWidget {
   ThemeSettingView({super.key});
@@ -25,7 +25,7 @@ class ThemeSettingView extends StatelessWidget {
       body: SafeArea(
         child: ListView(
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.only(top: 4, bottom: 12),
+          padding: const EdgeInsets.fromLTRB(18, 4, 18, 12),
           children: [
             ItemCard(
               title: 'themeMode'.tr,
@@ -85,30 +85,14 @@ class ThemeSettingView extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: DynamicColorBuilder(
-                builder: (ColorScheme? light, ColorScheme? dark) {
-                  return Obx(
-                    () => SwitchListTile(
-                      value: c.useDynamicColor.value,
-                      onChanged: (value) {
-                        c.updateDynamicColor(value);
-                      },
-                      title: Text('useDynamicColor'.tr),
-                      subtitle: Text('dynamicColorInfo'.tr),
-                      tileColor: Theme.of(context)
-                          .colorScheme
-                          .surfaceContainerHighest
-                          .withAlpha(80),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                      ),
-                    ),
-                  );
-                },
-              ),
+            const SizedBox(height: 12),
+            SwitchItemCard(
+              title: Text('useDynamicColor'.tr),
+              subtitle: Text('dynamicColorInfo'.tr),
+              value: c.useDynamicColor.value,
+              onChanged: (value) => c.updateDynamicColor(value),
             ),
+            const SizedBox(height: 12),
             SlideItemCard(
               title: 'textScale'.tr,
               value: c.textScaleFactor.value,

@@ -30,8 +30,7 @@ class ListItemCard extends StatelessWidget {
       ),
       trailing: trailing,
       onTap: onTap,
-      tileColor:
-          Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(80),
+      tileColor: Theme.of(context).colorScheme.secondaryContainer.withAlpha(60),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(topRadius ? 12 : 0),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:meread/ui/viewmodels/setting/refresh/refresh_controller.dart';
+import 'package:meread/ui/widgets/switch_item_card.dart';
 
 class RefreshSettingView extends StatelessWidget {
   const RefreshSettingView({super.key});
@@ -15,27 +16,13 @@ class RefreshSettingView extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.only(top: 4, bottom: 12),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Obx(
-              () => SwitchListTile(
-                value: c.refreshOnStartup.value,
+          padding: const EdgeInsets.fromLTRB(18, 4, 18, 12),
+          child: Obx(() => SwitchItemCard(
                 title: Text('refreshOnStartup'.tr),
                 subtitle: Text('refreshOnStartupInfo'.tr),
-                onChanged: (value) {
-                  c.updateRefreshOnStartup(value);
-                },
-                tileColor: Theme.of(context)
-                    .colorScheme
-                    .surfaceContainerHighest
-                    .withAlpha(80),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(12)),
-                ),
-              ),
-            ),
-          ),
+                value: c.refreshOnStartup.value,
+                onChanged: (value) => c.updateRefreshOnStartup(value),
+              )),
         ),
       ),
     );

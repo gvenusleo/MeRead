@@ -16,7 +16,7 @@ class BlockSettingView extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.only(top: 4, bottom: 12),
+          padding: const EdgeInsets.fromLTRB(18, 4, 18, 12),
           child: ItemCard(
             title: 'blockSettings'.tr,
             item: Column(
@@ -32,7 +32,7 @@ class BlockSettingView extends StatelessWidget {
                         Container(
                           width: double.infinity,
                           height: 48,
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          padding: const EdgeInsets.only(left: 12),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
@@ -52,8 +52,8 @@ class BlockSettingView extends StatelessWidget {
                                   c.removeBlockWord(word);
                                 },
                                 icon: Icon(
-                                  Icons.delete_forever_outlined,
-                                  color: Theme.of(context).colorScheme.error,
+                                  Icons.remove_circle_outline_rounded,
+                                  color: Theme.of(context).colorScheme.outline,
                                 ),
                               ),
                             ],

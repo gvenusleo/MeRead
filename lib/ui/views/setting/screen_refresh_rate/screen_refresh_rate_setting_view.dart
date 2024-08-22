@@ -17,7 +17,7 @@ class ScreenRefreshRateSettingView extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.only(top: 4, bottom: 12),
+          padding: const EdgeInsets.fromLTRB(18, 4, 18, 12),
           child: ItemCard(
             title: 'screenRefreshRate'.tr,
             item: Obx(

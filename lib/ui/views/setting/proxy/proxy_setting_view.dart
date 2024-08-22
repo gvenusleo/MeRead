@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:meread/ui/viewmodels/setting/proxy/proxy_controller.dart';
 import 'package:meread/ui/widgets/input_item_card.dart';
+import 'package:meread/ui/widgets/switch_item_card.dart';
 
 class ProxySettingView extends StatelessWidget {
   const ProxySettingView({super.key});
@@ -19,28 +20,17 @@ class ProxySettingView extends StatelessWidget {
       body: SafeArea(
         child: ListView(
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.only(top: 4, bottom: 12),
+          padding: const EdgeInsets.fromLTRB(18, 4, 18, 12),
           children: [
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Obx(
-                () => SwitchListTile(
-                  value: c.useProxy.value,
-                  onChanged: (value) {
-                    c.updateUseProxy(value);
-                  },
-                  title: Text('useProxy'.tr),
-                  subtitle: Text('useProxyInfo'.tr),
-                  tileColor: Theme.of(context)
-                      .colorScheme
-                      .surfaceContainerHighest
-                      .withAlpha(80),
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
-                  ),
-                ),
+            Obx(
+              () => SwitchItemCard(
+                value: c.useProxy.value,
+                onChanged: (value) => c.updateUseProxy(value),
+                title: Text('useProxy'.tr),
+                subtitle: Text('useProxyInfo'.tr),
               ),
             ),
+            const SizedBox(height: 12),
             InputItemCard(
               title: 'proxyAddress'.tr,
               controller: addressController,

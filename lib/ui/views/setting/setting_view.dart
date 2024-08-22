@@ -16,7 +16,7 @@ class SettingView extends StatelessWidget {
       body: SafeArea(
         child: ListView(
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
+          padding: const EdgeInsets.fromLTRB(18, 4, 18, 12),
           children: [
             ListItemCard(
               trailing: const Icon(Icons.language_outlined),

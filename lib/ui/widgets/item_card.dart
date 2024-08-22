@@ -11,15 +11,14 @@ class ItemCard extends StatelessWidget {
     required this.title,
     this.description,
     required this.item,
-    this.margin = const EdgeInsets.symmetric(horizontal: 12),
+    this.margin,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color:
-            Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(80),
+        color: Theme.of(context).colorScheme.secondaryContainer.withAlpha(60),
         borderRadius: BorderRadius.circular(12),
       ),
       margin: margin,

@@ -17,7 +17,7 @@ class ReadSettingView extends StatelessWidget {
       body: SafeArea(
         child: ListView(
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.only(top: 4, bottom: 12),
+          padding: const EdgeInsets.fromLTRB(18, 4, 18, 12),
           children: [
             SlideItemCard(
               title: 'fontSize'.tr,
