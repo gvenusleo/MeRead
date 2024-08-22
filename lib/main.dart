@@ -23,7 +23,10 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'MeRead'.tr,
-          locale: const Locale('zh', 'CN'),
+          locale: PrefsHelper.language == 'system'
+              ? Get.deviceLocale
+              : Locale(PrefsHelper.language.split('_')[0],
+                  PrefsHelper.language.split('_')[1]),
           fallbackLocale: const Locale('en', 'US'),
           localizationsDelegates: const [
             GlobalWidgetsLocalizations.delegate,
