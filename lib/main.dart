@@ -1,11 +1,11 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:meread/common/helpers/prefs_helper.dart';
-import 'package:meread/common/init_app.dart';
-import 'package:meread/common/translations.dart';
+import 'package:meread/helpers/prefs_helper.dart';
+import 'package:meread/helpers/init_app.dart';
+import 'package:meread/translation/translations.dart';
 import 'package:meread/routes/routes.dart';
-import 'package:meread/common/theme/theme.dart';
+import 'package:meread/helpers/theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 Future<void> main() async {

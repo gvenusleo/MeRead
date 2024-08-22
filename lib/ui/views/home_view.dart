@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:get/get.dart';
-import 'package:meread/common/helpers/post_helper.dart';
-import 'package:meread/common/helpers/prefs_helper.dart';
+import 'package:meread/helpers/isar_helper.dart';
+import 'package:meread/helpers/prefs_helper.dart';
 import 'package:meread/models/feed.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/ui/viewmodels/home_controller.dart';
@@ -88,10 +88,10 @@ class _HomeViewState extends State<HomeView> {
                         ],
                       );
                     },
-                    suggestionsBuilder: (BuildContext context,
-                        SearchController controller) async {
+                    suggestionsBuilder:
+                        (BuildContext context, SearchController controller) {
                       List<Post> results =
-                          await PostHelper.search(controller.text);
+                          IsarHelper.getPostsByText(controller.text);
                       return results
                           .map((e) => Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -164,7 +164,9 @@ class _HomeViewState extends State<HomeView> {
                         ),
                       ),
                       onTap: (handler) async {
-                        await c.updateReadStatus(c.postList[index]);
+                        final Post post = c.postList[index];
+                        post.read = !post.read;
+                        IsarHelper.putPost(post);
                         c.getUnreadCount();
                         await handler(false);
                       },

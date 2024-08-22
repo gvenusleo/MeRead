@@ -3,20 +3,20 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:meread/common/global.dart';
-import 'package:meread/common/helpers/feed_helper.dart';
+import 'package:meread/helpers/feed_helper.dart';
+import 'package:meread/helpers/isar_helper.dart';
+import 'package:meread/helpers/log_helper.dart';
 import 'package:meread/models/feed.dart';
 import 'package:opml/opml.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class OpmlHelper {
-  // 导入 OPML 文件
   static Future<void> importOPML() async {
-    logger.i('[opml]: 开始导入 OPML');
+    LogHelper.i('[opml]: Start import OPML');
     final result = await FilePicker.platform.pickFiles(
       type: FileType.any,
-      // file_picker 无法正确过滤 opml 格式文件
+      // file_picker not filtering opml files correctly
       // allowedExtensions: ['opml', 'xml'],
     );
     if (result != null) {
@@ -28,8 +28,8 @@ class OpmlHelper {
           snackPosition: SnackPosition.BOTTOM,
           margin: const EdgeInsets.all(12),
         );
-        logger.i('[opml]: 导入错误，仅支持 OPML 或 XML 文件，'
-            '当前文件扩展名为: ${result.files.first.extension}');
+        LogHelper.i('[opml]: Import failed, '
+            'file format error: ${result.files.first.extension}');
         return;
       } else {
         Get.dialog(
@@ -62,12 +62,12 @@ class OpmlHelper {
         if (Get.isDialogOpen ?? false) {
           Get.back();
         }
-        logger.i('[opml]: 导入结果，共发现 ${count[0]} 个订阅源，导入成功 ${count[1]} 个');
+        LogHelper.i('[opml]: Import completed, '
+            'total: ${count[0]}, success: ${count[1]}');
       }
     }
   }
 
-  /// 导出 OPML 文件
   static Future<void> exportOPML() async {
     final Map<String, List<Feed>> feedMap = {}; // await Feed.groupByCategory();
     final head = OpmlHeadBuilder().title('Feeds From MeRead').build();
@@ -106,13 +106,11 @@ class OpmlHelper {
       }
     });
     await file.delete();
-    logger.i('[opml]: 导出成功');
+    LogHelper.i('[opml]: Export completed');
   }
 
-  /// 解析 OPML 文件
   static Future<List<int>> _parseOpml(FilePickerResult result) async {
     final file = result.files.first;
-    /* 读取文件内容，转为字符串 */
     final File opmlFile = File(file.path!);
     final String opmlString = await opmlFile.readAsString();
     int allCount = 0;
@@ -126,14 +124,14 @@ class OpmlHelper {
             category.children!.map(
               (opmlOutline) async {
                 allCount++;
-                if (await FeedHelper.isExists(opmlOutline.xmlUrl!) == null) {
+                if (IsarHelper.getFeedByUrl(opmlOutline.xmlUrl!) == null) {
                   Feed? feed = await FeedHelper.parse(
                     opmlOutline.xmlUrl!,
                     categoryName,
                     opmlOutline.title ?? opmlOutline.text,
                   );
                   if (feed != null) {
-                    await FeedHelper.saveToIsar(feed);
+                    IsarHelper.putFeed(feed);
                     successCount++;
                   }
                 }

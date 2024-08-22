@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:meread/common/helpers/feed_helper.dart';
+import 'package:meread/helpers/isar_helper.dart';
 import 'package:meread/models/feed.dart';
 
 class EditFeedCntroller extends GetxController {
@@ -40,7 +40,7 @@ class EditFeedCntroller extends GetxController {
       fullText: fullText.value,
       openType: openType.value,
     );
-    await FeedHelper.saveToIsar(newFeed);
+    IsarHelper.putFeed(newFeed);
     Get.back();
   }
 
@@ -49,7 +49,7 @@ class EditFeedCntroller extends GetxController {
     if (feed == null || feed?.id == null) {
       Get.back();
     } else {
-      await FeedHelper.deleteFeed(feed!);
+      IsarHelper.deleteFeed(feed!);
       Get.back();
     }
   }

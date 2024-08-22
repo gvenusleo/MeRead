@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:meread/common/global.dart';
-import 'package:meread/common/helpers/font_helper.dart';
-import 'package:meread/common/helpers/prefs_helper.dart';
+import 'package:meread/helpers/font_helper.dart';
+import 'package:meread/helpers/log_helper.dart';
+import 'package:meread/helpers/prefs_helper.dart';
 
 class ThemeController extends GetxController {
-  // 主题模式
-  RxInt themeMode = (PrefsHelper.themeMode).obs;
-  // 是否使用动态颜色
-  RxBool useDynamicColor = (PrefsHelper.useDynamicColor).obs;
-  // 全局缩放
-  RxDouble textScaleFactor = (PrefsHelper.textScaleFactor).obs;
-  // 主题字体
-  RxString themeFont = (PrefsHelper.themeFont).obs;
-
-  // 字体列表
-  RxList fonts = <String>[].obs;
+  final RxInt themeMode = (PrefsHelper.themeMode).obs;
+  final RxBool useDynamicColor = (PrefsHelper.useDynamicColor).obs;
+  final RxDouble textScaleFactor = (PrefsHelper.textScaleFactor).obs;
+  final RxString themeFont = (PrefsHelper.themeFont).obs;
+  final RxList<String> fonts = <String>[].obs;
 
   @override
   void onInit() {
@@ -23,50 +17,48 @@ class ThemeController extends GetxController {
     super.onInit();
   }
 
-  // 设置主题模式
   void updateThemeMode(int value) {
+    if (themeMode.value == value) return;
     themeMode.value = value;
-    PrefsHelper.updateThemeMode(value);
+    PrefsHelper.themeMode = value;
     Get.changeThemeMode(
       [ThemeMode.system, ThemeMode.light, ThemeMode.dark][value],
     );
-    logger.i('[Setting] 切换主题模式: ${[
+    LogHelper.i('[Setting] Change theme mode to: ${[
       ThemeMode.system,
       ThemeMode.light,
       ThemeMode.dark
     ][value]}');
   }
 
-  // 设置动态颜色
   void updateDynamicColor(bool value) {
+    if (useDynamicColor.value == value) return;
     useDynamicColor.value = value;
-    PrefsHelper.updateUseDynamicColor(value);
+    PrefsHelper.useDynamicColor = value;
     Get.forceAppUpdate();
-    logger.i('[Setting] 切换动态颜色: $value');
+    LogHelper.i('[Setting] Change dynamic color to: $value');
   }
 
-  // 设置全局缩放
   void updateTextScaleFactor(double value) {
+    if (textScaleFactor.value == value) return;
     textScaleFactor.value = value;
-    PrefsHelper.updateTextScaleFactor(value);
+    PrefsHelper.textScaleFactor = value;
     Get.forceAppUpdate();
-    logger.i('[Setting] 切换全局缩放: $value');
+    LogHelper.i('[Setting] Change text scale factor to: $value');
   }
 
-  // 设置主题字体
   void updateThemeFont(String value) {
+    if (themeFont.value == value) return;
     themeFont.value = value;
-    PrefsHelper.updateThemeFont(value);
+    PrefsHelper.themeFont = value;
     Get.forceAppUpdate();
-    logger.i('[Setting] 切换主题字体: $value');
+    LogHelper.i('[Setting] Change theme font to: $value');
   }
 
-  // 读取所有字体
   Future<void> readAllFont() async {
     fonts.value = await FontHelper.readAllFont();
   }
 
-  // 导入字体
   Future<void> loadLocalFont() async {
     bool statue = await FontHelper.loadLocalFont();
     if (statue) {
@@ -74,10 +66,9 @@ class ThemeController extends GetxController {
     }
   }
 
-  // 删除指定字体
   Future<void> deleteFont(String font) async {
     await FontHelper.deleteFont(font);
-    logger.i('[Setting] 删除字体: $font');
+    LogHelper.i('[Setting] Delete font: $font');
     if (themeFont.value == font) {
       updateThemeFont('defaultFont');
     }

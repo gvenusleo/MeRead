@@ -1,6 +1,5 @@
 name: meread
 description: MeRead
-
 publish_to: "none"
 
 version: 0.6.1+23

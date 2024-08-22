@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
-import 'package:meread/common/helpers/prefs_helper.dart';
+import 'package:meread/helpers/prefs_helper.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/ui/viewmodels/post/post_controller.dart';
 import 'package:share_plus/share_plus.dart';

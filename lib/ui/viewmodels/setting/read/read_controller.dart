@@ -1,37 +1,33 @@
 import 'package:get/get.dart';
-import 'package:meread/common/helpers/prefs_helper.dart';
+import 'package:meread/helpers/prefs_helper.dart';
 
 class ReadController extends GetxController {
-  // 字体大小
-  RxInt fontSize = PrefsHelper.readFontSize.obs;
-  // 行高
-  RxDouble lineHeight = PrefsHelper.readLineHeight.obs;
-  // 页面左右边距
-  RxInt pagePadding = PrefsHelper.readPagePadding.obs;
-  // 文字对齐方式
-  RxString textAlign = PrefsHelper.readTextAlign.obs;
+  final RxInt fontSize = PrefsHelper.readFontSize.obs;
+  final RxDouble lineHeight = PrefsHelper.readLineHeight.obs;
+  final RxInt pagePadding = PrefsHelper.readPagePadding.obs;
+  final RxString textAlign = PrefsHelper.readTextAlign.obs;
 
-  // 更新字体大小
-  Future<void> updateFontSize(int value) async {
+  void updateFontSize(int value) {
+    if (fontSize.value == value) return;
     fontSize.value = value;
-    await PrefsHelper.updateReadFontSize(value);
+    PrefsHelper.readFontSize = value;
   }
 
-  // 更新行高
-  Future<void> updateLineHeight(double value) async {
+  void updateLineHeight(double value) {
+    if (lineHeight.value == value) return;
     lineHeight.value = value;
-    await PrefsHelper.updateReadLineHeight(value);
+    PrefsHelper.readLineHeight = value;
   }
 
-  // 更新页面左右边距
-  Future<void> updatePagePadding(int value) async {
+  void updatePagePadding(int value) {
+    if (pagePadding.value == value) return;
     pagePadding.value = value;
-    await PrefsHelper.updateReadPagePadding(value);
+    PrefsHelper.readPagePadding = value;
   }
 
-  // 更新文字对齐方式
-  Future<void> updateTextAlign(String value) async {
+  void updateTextAlign(String value) {
+    if (textAlign.value == value) return;
     textAlign.value = value;
-    await PrefsHelper.updateReadTextAlign(value);
+    PrefsHelper.readTextAlign = value;
   }
 }

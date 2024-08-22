@@ -1,13 +1,13 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:meread/common/global.dart';
+import 'package:meread/helpers/constant_helper.dart';
+import 'package:meread/helpers/dio_helper.dart';
+import 'package:meread/helpers/log_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UpdateHelper {
-  /// 检查更新
   static Future<void> checkUpdate() async {
-    logger.i('[update]: 开始检查更新');
+    LogHelper.i('[update]: Start checking for updates');
     Get.snackbar(
       'info'.tr,
       'checkingForUpdates'.tr,
@@ -15,16 +15,15 @@ class UpdateHelper {
       margin: const EdgeInsets.all(12),
     );
     try {
-      /* 通过访问 https://github.com/gvenusleo/MeRead/releases/latest 获取最新版本号 */
-      final Dio dio = appDio.dio;
-      final response = await dio.get(
+      // Get the latest version number by visiting:
+      // https://github.com/gvenusleo/MeRead/releases/latest
+      final response = await DioHelper.get(
         'https://github.com/gvenusleo/MeRead/releases/latest',
       );
-      /* 获取网页 title */
       final String title =
           response.data.split('<title>')[1].split('</title>')[0];
       final String latestVersion = title.split(' ')[1];
-      if (latestVersion == applicationVersion) {
+      if (latestVersion == ConstantHelper.appVersion) {
         Get.closeAllSnackbars();
         Get.snackbar(
           'info'.tr,
@@ -32,7 +31,7 @@ class UpdateHelper {
           snackPosition: SnackPosition.BOTTOM,
           margin: const EdgeInsets.all(12),
         );
-        logger.i('[update]: 已经是最新版本 v$applicationVersion');
+        LogHelper.i('[update]: Already the latest version v$latestVersion');
       } else {
         Get.closeAllSnackbars();
         Get.dialog(
@@ -58,7 +57,7 @@ class UpdateHelper {
             ],
           ),
         );
-        logger.i('[update]: 发现新版本 v$latestVersion ，当前版本 v$applicationVersion');
+        LogHelper.i('[update]: New version v$latestVersion available');
       }
     } catch (e) {
       Get.snackbar('error'.tr, 'checkUpdateError'.tr);

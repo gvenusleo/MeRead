@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:meread/common/helpers/prefs_helper.dart';
+import 'package:meread/helpers/prefs_helper.dart';
 
 class ProxyController extends GetxController {
-  // 是否使用代理
-  final useProxy = PrefsHelper.useProxy.obs;
-  // 代理地址
-  final proxyAddress = PrefsHelper.proxyAddress.obs;
-  // 代理端口
-  final proxyPort = PrefsHelper.proxyPort.obs;
+  final RxBool useProxy = PrefsHelper.useProxy.obs;
+  final RxString proxyAddress = PrefsHelper.proxyAddress.obs;
+  final RxString proxyPort = PrefsHelper.proxyPort.obs;
 
-  // 更新是否使用代理
-  Future<void> updateUseProxy(bool value) async {
+  void updateUseProxy(bool value) {
+    if (useProxy.value == value) return;
     if (proxyAddress.value.isEmpty || proxyPort.value.isEmpty) {
       Get.snackbar(
         'info'.tr,
@@ -22,18 +19,18 @@ class ProxyController extends GetxController {
       return;
     }
     useProxy.value = value;
-    await PrefsHelper.updateUseProxy(value);
+    PrefsHelper.useProxy = value;
   }
 
-  // 更新代理地址
-  Future<void> updateProxyAddress(String value) async {
+  void updateProxyAddress(String value) {
+    if (proxyAddress.value == value) return;
     proxyAddress.value = value;
-    await PrefsHelper.updateProxyAddress(value);
+    PrefsHelper.proxyAddress = value;
   }
 
-  // 更新代理端口
-  Future<void> updateProxyPort(String value) async {
+  void updateProxyPort(String value) {
+    if (proxyPort.value == value) return;
     proxyPort.value = value;
-    await PrefsHelper.updateProxyPort(value);
+    PrefsHelper.proxyPort = value;
   }
 }

@@ -27,7 +27,7 @@ class ScreenRefreshRateSettingView extends StatelessWidget {
                 children: [
                   for (DisplayMode mode in c.modes) ...[
                     InkWell(
-                      onTap: () => c.changeRefreshRate(mode),
+                      onTap: () => c.updateRefreshRate(mode),
                       borderRadius: BorderRadius.circular(12),
                       child: Container(
                         width: double.infinity,

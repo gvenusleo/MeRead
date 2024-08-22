@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meread/common/helpers/prefs_helper.dart';
+import 'package:meread/helpers/prefs_helper.dart';
 
 ThemeData buildLightTheme(ColorScheme? lightColorScheme) {
   ColorScheme defaultLightColorScheme = ColorScheme.fromSeed(

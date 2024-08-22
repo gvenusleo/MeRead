@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:meread/common/helpers/opml_helper.dart';
-import 'package:meread/common/helpers/update_helper.dart';
+import 'package:meread/helpers/opml_helper.dart';
+import 'package:meread/helpers/update_helper.dart';
 import 'package:meread/ui/widgets/list_item_card.dart';
 
 class SettingView extends StatelessWidget {

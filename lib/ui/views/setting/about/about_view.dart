@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:meread/common/global.dart';
+import 'package:meread/helpers/constant_helper.dart';
 import 'package:meread/ui/widgets/list_item_card.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -47,7 +47,7 @@ class AboutView extends StatelessWidget {
               ),
               Center(
                 child: Text(
-                  applicationVersion,
+                  ConstantHelper.appVersion,
                   style: const TextStyle(fontSize: 18),
                 ),
               ),

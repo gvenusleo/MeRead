@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:meread/common/global.dart';
-import 'package:meread/common/helpers/prefs_helper.dart';
+import 'package:meread/helpers/log_helper.dart';
+import 'package:meread/helpers/prefs_helper.dart';
 
 class LanguageController extends GetxController {
   RxString language = PrefsHelper.language.obs;
 
-  Future<void> updateLanguage(String value) async {
+  void updateLanguage(String value) {
+    if (language.value == value) return;
     language.value = value;
     Get.updateLocale(
       {
@@ -17,7 +18,7 @@ class LanguageController extends GetxController {
           Get.deviceLocale ??
           const Locale('en', 'US'),
     );
-    await PrefsHelper.updateLanguage(value);
-    logger.i('[Setting] 切换语言: $value');
+    PrefsHelper.language = value;
+    LogHelper.i('[Setting] Change language to: $value');
   }
 }
