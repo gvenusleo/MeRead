@@ -119,7 +119,7 @@ class OpmlHelper {
     await Future.wait(
       opml.body.map(
         (category) async {
-          final String? categoryName = category.title ?? category.text;
+          // final String? categoryName = category.title ?? category.text;
           await Future.wait(
             category.children!.map(
               (opmlOutline) async {
@@ -127,8 +127,8 @@ class OpmlHelper {
                 if (IsarHelper.getFeedByUrl(opmlOutline.xmlUrl!) == null) {
                   Feed? feed = await FeedHelper.parse(
                     opmlOutline.xmlUrl!,
-                    categoryName,
-                    opmlOutline.title ?? opmlOutline.text,
+                    // categoryName,
+                    feedTitle: opmlOutline.title ?? opmlOutline.text,
                   );
                   if (feed != null) {
                     IsarHelper.putFeed(feed);

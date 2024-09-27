@@ -17,10 +17,10 @@ const FeedSchema = CollectionSchema(
   name: r'Feed',
   id: 8879644747771893978,
   properties: {
-    r'category': PropertySchema(
+    r'createdAt': PropertySchema(
       id: 0,
-      name: r'category',
-      type: IsarType.string,
+      name: r'createdAt',
+      type: IsarType.dateTime,
     ),
     r'description': PropertySchema(
       id: 1,
@@ -54,7 +54,21 @@ const FeedSchema = CollectionSchema(
   deserializeProp: _feedDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {},
+  links: {
+    r'folder': LinkSchema(
+      id: -1130562992311837690,
+      name: r'folder',
+      target: r'Folder',
+      single: true,
+    ),
+    r'post': LinkSchema(
+      id: -2358964942445175494,
+      name: r'post',
+      target: r'Post',
+      single: false,
+      linkName: r'feed',
+    )
+  },
   embeddedSchemas: {},
   getId: _feedGetId,
   getLinks: _feedGetLinks,
@@ -68,7 +82,6 @@ int _feedEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.category.length * 3;
   bytesCount += 3 + object.description.length * 3;
   bytesCount += 3 + object.title.length * 3;
   bytesCount += 3 + object.url.length * 3;
@@ -81,7 +94,7 @@ void _feedSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.category);
+  writer.writeDateTime(offsets[0], object.createdAt);
   writer.writeString(offsets[1], object.description);
   writer.writeBool(offsets[2], object.fullText);
   writer.writeLong(offsets[3], object.openType);
@@ -96,7 +109,7 @@ Feed _feedDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Feed(
-    category: reader.readString(offsets[0]),
+    createdAt: reader.readDateTime(offsets[0]),
     description: reader.readString(offsets[1]),
     fullText: reader.readBool(offsets[2]),
     id: id,
@@ -115,7 +128,7 @@ P _feedDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
@@ -136,11 +149,13 @@ Id _feedGetId(Feed object) {
 }
 
 List<IsarLinkBase<dynamic>> _feedGetLinks(Feed object) {
-  return [];
+  return [object.folder, object.post];
 }
 
 void _feedAttach(IsarCollection<dynamic> col, Id id, Feed object) {
   object.id = id;
+  object.folder.attach(col, col.isar.collection<Folder>(), r'folder', id);
+  object.post.attach(col, col.isar.collection<Post>(), r'post', id);
 }
 
 extension FeedQueryWhereSort on QueryBuilder<Feed, Feed, QWhere> {
@@ -219,131 +234,55 @@ extension FeedQueryWhere on QueryBuilder<Feed, Feed, QWhereClause> {
 }
 
 extension FeedQueryFilter on QueryBuilder<Feed, Feed, QFilterCondition> {
-  QueryBuilder<Feed, Feed, QAfterFilterCondition> categoryEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<Feed, Feed, QAfterFilterCondition> createdAtEqualTo(
+      DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'category',
+        property: r'createdAt',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Feed, Feed, QAfterFilterCondition> categoryGreaterThan(
-    String value, {
+  QueryBuilder<Feed, Feed, QAfterFilterCondition> createdAtGreaterThan(
+    DateTime value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'category',
+        property: r'createdAt',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Feed, Feed, QAfterFilterCondition> categoryLessThan(
-    String value, {
+  QueryBuilder<Feed, Feed, QAfterFilterCondition> createdAtLessThan(
+    DateTime value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'category',
+        property: r'createdAt',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<Feed, Feed, QAfterFilterCondition> categoryBetween(
-    String lower,
-    String upper, {
+  QueryBuilder<Feed, Feed, QAfterFilterCondition> createdAtBetween(
+    DateTime lower,
+    DateTime upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'category',
+        property: r'createdAt',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Feed, Feed, QAfterFilterCondition> categoryStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'category',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Feed, Feed, QAfterFilterCondition> categoryEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'category',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Feed, Feed, QAfterFilterCondition> categoryContains(String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'category',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Feed, Feed, QAfterFilterCondition> categoryMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'category',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Feed, Feed, QAfterFilterCondition> categoryIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'category',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Feed, Feed, QAfterFilterCondition> categoryIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'category',
-        value: '',
       ));
     });
   }
@@ -866,18 +805,86 @@ extension FeedQueryFilter on QueryBuilder<Feed, Feed, QFilterCondition> {
 
 extension FeedQueryObject on QueryBuilder<Feed, Feed, QFilterCondition> {}
 
-extension FeedQueryLinks on QueryBuilder<Feed, Feed, QFilterCondition> {}
-
-extension FeedQuerySortBy on QueryBuilder<Feed, Feed, QSortBy> {
-  QueryBuilder<Feed, Feed, QAfterSortBy> sortByCategory() {
+extension FeedQueryLinks on QueryBuilder<Feed, Feed, QFilterCondition> {
+  QueryBuilder<Feed, Feed, QAfterFilterCondition> folder(
+      FilterQuery<Folder> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'category', Sort.asc);
+      return query.link(q, r'folder');
     });
   }
 
-  QueryBuilder<Feed, Feed, QAfterSortBy> sortByCategoryDesc() {
+  QueryBuilder<Feed, Feed, QAfterFilterCondition> folderIsNull() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'category', Sort.desc);
+      return query.linkLength(r'folder', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Feed, Feed, QAfterFilterCondition> post(FilterQuery<Post> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'post');
+    });
+  }
+
+  QueryBuilder<Feed, Feed, QAfterFilterCondition> postLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'post', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Feed, Feed, QAfterFilterCondition> postIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'post', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Feed, Feed, QAfterFilterCondition> postIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'post', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Feed, Feed, QAfterFilterCondition> postLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'post', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Feed, Feed, QAfterFilterCondition> postLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'post', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Feed, Feed, QAfterFilterCondition> postLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'post', lower, includeLower, upper, includeUpper);
+    });
+  }
+}
+
+extension FeedQuerySortBy on QueryBuilder<Feed, Feed, QSortBy> {
+  QueryBuilder<Feed, Feed, QAfterSortBy> sortByCreatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Feed, Feed, QAfterSortBy> sortByCreatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdAt', Sort.desc);
     });
   }
 
@@ -943,15 +950,15 @@ extension FeedQuerySortBy on QueryBuilder<Feed, Feed, QSortBy> {
 }
 
 extension FeedQuerySortThenBy on QueryBuilder<Feed, Feed, QSortThenBy> {
-  QueryBuilder<Feed, Feed, QAfterSortBy> thenByCategory() {
+  QueryBuilder<Feed, Feed, QAfterSortBy> thenByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'category', Sort.asc);
+      return query.addSortBy(r'createdAt', Sort.asc);
     });
   }
 
-  QueryBuilder<Feed, Feed, QAfterSortBy> thenByCategoryDesc() {
+  QueryBuilder<Feed, Feed, QAfterSortBy> thenByCreatedAtDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'category', Sort.desc);
+      return query.addSortBy(r'createdAt', Sort.desc);
     });
   }
 
@@ -1029,10 +1036,9 @@ extension FeedQuerySortThenBy on QueryBuilder<Feed, Feed, QSortThenBy> {
 }
 
 extension FeedQueryWhereDistinct on QueryBuilder<Feed, Feed, QDistinct> {
-  QueryBuilder<Feed, Feed, QDistinct> distinctByCategory(
-      {bool caseSensitive = true}) {
+  QueryBuilder<Feed, Feed, QDistinct> distinctByCreatedAt() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'category', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'createdAt');
     });
   }
 
@@ -1077,9 +1083,9 @@ extension FeedQueryProperty on QueryBuilder<Feed, Feed, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Feed, String, QQueryOperations> categoryProperty() {
+  QueryBuilder<Feed, DateTime, QQueryOperations> createdAtProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'category');
+      return query.addPropertyName(r'createdAt');
     });
   }
 

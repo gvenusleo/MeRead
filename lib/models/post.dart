@@ -7,7 +7,6 @@ part 'post.g.dart';
 @collection
 class Post {
   Id? id = Isar.autoIncrement;
-  final feed = IsarLink<Feed>();
   String title; // 标题
   String link; // 链接
   String content; // 内容
@@ -15,6 +14,8 @@ class Post {
   bool read; // 是否已读
   bool favorite; // 是否已收藏
   bool fullText; // 是否已经有全文
+  DateTime createdAt; // 创建时间
+  final feed = IsarLink<Feed>();
 
   Post({
     this.id,
@@ -25,5 +26,6 @@ class Post {
     required this.read,
     required this.favorite,
     required this.fullText,
+    required this.createdAt,
   });
 }

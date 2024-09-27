@@ -35,16 +35,7 @@ class PostController extends GetxController {
       final document = html_parser.parse(response.data.toString());
       if (document.documentElement == null) return;
       final mainElement = readabilityMainElement(document.documentElement!);
-      post.value = Post(
-        id: post.value.id,
-        title: post.value.title,
-        link: post.value.link,
-        content: mainElement.outerHtml,
-        pubDate: post.value.pubDate,
-        read: post.value.read,
-        favorite: post.value.favorite,
-        fullText: true,
-      )..feed.value = post.value.feed.value;
+      post.value.content = mainElement.outerHtml;
       fullTexting.value = false;
       IsarHelper.putPost(post.value);
     } catch (e) {
@@ -58,16 +49,7 @@ class PostController extends GetxController {
   }
 
   void changeFavorite() {
-    post.value = Post(
-      id: post.value.id,
-      title: post.value.title,
-      link: post.value.link,
-      content: post.value.content,
-      pubDate: post.value.pubDate,
-      read: post.value.read,
-      favorite: !post.value.favorite,
-      fullText: post.value.fullText,
-    )..feed.value = post.value.feed.value;
+    post.value.favorite = !post.value.favorite;
     IsarHelper.putPost(post.value);
   }
 }

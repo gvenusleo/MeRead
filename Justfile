@@ -50,15 +50,13 @@ isar:
 apk:
     @echo "------------------------------"
     @echo "Building Android apk......"
-    @flutter build apk \
-     --dart-define AmapAndroidApiKey=$AmapAndroidApiKey
+    @flutter build apk
 
 # Build Android apks by splitting per abi
 apks:
     @echo "------------------------------"
     @echo "Building Android apks......"
-    @flutter build apk --split-per-abi \
-     --dart-define AmapAndroidApiKey=$AmapAndroidApiKey
+    @flutter build apk --split-per-abi
 
 # Share apks with dufs
 share: apks

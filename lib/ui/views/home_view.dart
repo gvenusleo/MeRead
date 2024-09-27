@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:meread/helpers/isar_helper.dart';
 import 'package:meread/helpers/prefs_helper.dart';
 import 'package:meread/models/feed.dart';
+import 'package:meread/models/folder.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/ui/viewmodels/home_controller.dart';
 import 'package:meread/ui/widgets/post_card.dart';
@@ -73,33 +74,13 @@ class _HomeViewState extends State<HomeView> {
                 const PopupMenuDivider(height: 0),
                 /* 全文搜索 */
                 PopupMenuItem(
-                  child: SearchAnchor(
-                    isFullScreen: true,
-                    searchController: c.searchController,
-                    viewBackgroundColor: Theme.of(context).colorScheme.surface,
-                    viewSurfaceTintColor: Theme.of(context).colorScheme.surface,
-                    builder: (context, controller) {
-                      return Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.search_outlined, size: 20),
-                          const SizedBox(width: 10),
-                          Text('fullTextSearch'.tr),
-                        ],
-                      );
-                    },
-                    suggestionsBuilder:
-                        (BuildContext context, SearchController controller) {
-                      List<Post> results =
-                          IsarHelper.getPostsByText(controller.text);
-                      return results
-                          .map((e) => Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 4),
-                                child: PostCard(post: e),
-                              ))
-                          .toList();
-                    },
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.search_outlined, size: 20),
+                      const SizedBox(width: 10),
+                      Text('fullTextSearch'.tr),
+                    ],
                   ),
                 ),
                 /* 添加订阅源 */
@@ -167,7 +148,6 @@ class _HomeViewState extends State<HomeView> {
                         final Post post = c.postList[index];
                         post.read = !post.read;
                         IsarHelper.putPost(post);
-                        c.getUnreadCount();
                         await handler(false);
                       },
                     ),
@@ -177,7 +157,6 @@ class _HomeViewState extends State<HomeView> {
                       Get.toNamed('/post', arguments: c.postList[index])!
                           .then((_) {
                         c.getPosts();
-                        c.getUnreadCount();
                       });
                     },
                     child: PostCard(post: c.postList[index]),
@@ -210,7 +189,7 @@ class _HomeViewState extends State<HomeView> {
                     visualDensity: VisualDensity.compact,
                   ),
                 ),
-                for (String category in c.feedsGroupByCategory.keys)
+                for (Folder folder in c.folder.toList())
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 12),
                     child: ExpansionTile(
@@ -223,15 +202,15 @@ class _HomeViewState extends State<HomeView> {
                       visualDensity: VisualDensity.compact,
                       title: GestureDetector(
                         onTap: () {
-                          c.focusCategory(category);
+                          c.focusFolder(folder);
                         },
                         child: Text(
-                            '$category (${c.getCategoryUnreadCount(category)})'),
+                            '${folder.name} (${folder.feeds.expand((f) => f.post.where((p) => !p.read)).length})'),
                       ),
                       children: [
                         Column(
                           children: [
-                            for (Feed feed in c.feedsGroupByCategory[category])
+                            for (Feed feed in folder.feeds.toList())
                               ListTile(
                                 dense: true,
                                 title: Text(
@@ -239,23 +218,20 @@ class _HomeViewState extends State<HomeView> {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                                trailing: Text(c.unreadCount[feed].toString()),
+                                trailing: Text(feed.post
+                                    .where((p) => !p.read)
+                                    .length
+                                    .toString()),
                                 tileColor: Theme.of(context)
                                     .colorScheme
                                     .secondaryContainer
                                     .withAlpha(80),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(feed ==
-                                            c.feedsGroupByCategory[category]
-                                                .first
-                                        ? 24
-                                        : 0),
-                                    bottom: Radius.circular(feed ==
-                                            c.feedsGroupByCategory[category]
-                                                .last
-                                        ? 24
-                                        : 0),
+                                    top: Radius.circular(
+                                        feed == folder.feeds.first ? 24 : 0),
+                                    bottom: Radius.circular(
+                                        feed == folder.feeds.last ? 24 : 0),
                                   ),
                                 ),
                                 onTap: () {

@@ -8,15 +8,15 @@ class EditFeedCntroller extends GetxController {
   RxInt openType = 0.obs;
   final titleController = TextEditingController();
   final categoryController = TextEditingController();
-  Feed? feed;
+  late Feed feed;
 
-  // 初始化订阅源
-  void initFeed(Feed value) {
-    fullText.value = value.fullText;
-    openType.value = value.openType;
-    titleController.text = value.title;
-    categoryController.text = value.category;
-    feed = value;
+  // 初始化 Feed
+  void initFeed(Feed feed) {
+    fullText.value = feed.fullText;
+    openType.value = feed.openType;
+    titleController.text = feed.title;
+    categoryController.text = feed.folder.value?.name ?? '';
+    feed = feed;
   }
 
   // 更新 fullText
@@ -31,25 +31,19 @@ class EditFeedCntroller extends GetxController {
 
   // 保存 Feed
   Future<void> saveFeed() async {
-    final newFeed = Feed(
-      id: feed?.id,
-      title: titleController.text,
-      url: feed?.url ?? '',
-      description: feed?.description ?? '',
-      category: categoryController.text,
-      fullText: fullText.value,
-      openType: openType.value,
-    );
-    IsarHelper.putFeed(newFeed);
+    feed.title = titleController.text;
+    feed.fullText = fullText.value;
+    feed.openType = openType.value;
+    IsarHelper.putFeed(feed);
     Get.back();
   }
 
   // 删除 Feed
   Future<void> deleteFeed() async {
-    if (feed == null || feed?.id == null) {
+    if (feed.id == null) {
       Get.back();
     } else {
-      IsarHelper.deleteFeed(feed!);
+      IsarHelper.deleteFeed(feed);
       Get.back();
     }
   }

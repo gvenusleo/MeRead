@@ -22,33 +22,38 @@ const PostSchema = CollectionSchema(
       name: r'content',
       type: IsarType.string,
     ),
-    r'favorite': PropertySchema(
+    r'createdAt': PropertySchema(
       id: 1,
+      name: r'createdAt',
+      type: IsarType.dateTime,
+    ),
+    r'favorite': PropertySchema(
+      id: 2,
       name: r'favorite',
       type: IsarType.bool,
     ),
     r'fullText': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'fullText',
       type: IsarType.bool,
     ),
     r'link': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'link',
       type: IsarType.string,
     ),
     r'pubDate': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'pubDate',
       type: IsarType.dateTime,
     ),
     r'read': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'read',
       type: IsarType.bool,
     ),
     r'title': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'title',
       type: IsarType.string,
     )
@@ -93,12 +98,13 @@ void _postSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.content);
-  writer.writeBool(offsets[1], object.favorite);
-  writer.writeBool(offsets[2], object.fullText);
-  writer.writeString(offsets[3], object.link);
-  writer.writeDateTime(offsets[4], object.pubDate);
-  writer.writeBool(offsets[5], object.read);
-  writer.writeString(offsets[6], object.title);
+  writer.writeDateTime(offsets[1], object.createdAt);
+  writer.writeBool(offsets[2], object.favorite);
+  writer.writeBool(offsets[3], object.fullText);
+  writer.writeString(offsets[4], object.link);
+  writer.writeDateTime(offsets[5], object.pubDate);
+  writer.writeBool(offsets[6], object.read);
+  writer.writeString(offsets[7], object.title);
 }
 
 Post _postDeserialize(
@@ -109,13 +115,14 @@ Post _postDeserialize(
 ) {
   final object = Post(
     content: reader.readString(offsets[0]),
-    favorite: reader.readBool(offsets[1]),
-    fullText: reader.readBool(offsets[2]),
+    createdAt: reader.readDateTime(offsets[1]),
+    favorite: reader.readBool(offsets[2]),
+    fullText: reader.readBool(offsets[3]),
     id: id,
-    link: reader.readString(offsets[3]),
-    pubDate: reader.readDateTime(offsets[4]),
-    read: reader.readBool(offsets[5]),
-    title: reader.readString(offsets[6]),
+    link: reader.readString(offsets[4]),
+    pubDate: reader.readDateTime(offsets[5]),
+    read: reader.readBool(offsets[6]),
+    title: reader.readString(offsets[7]),
   );
   return object;
 }
@@ -130,16 +137,18 @@ P _postDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readBool(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 2:
       return (reader.readBool(offset)) as P;
     case 3:
-      return (reader.readString(offset)) as P;
-    case 4:
-      return (reader.readDateTime(offset)) as P;
-    case 5:
       return (reader.readBool(offset)) as P;
+    case 4:
+      return (reader.readString(offset)) as P;
+    case 5:
+      return (reader.readDateTime(offset)) as P;
     case 6:
+      return (reader.readBool(offset)) as P;
+    case 7:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -359,6 +368,59 @@ extension PostQueryFilter on QueryBuilder<Post, Post, QFilterCondition> {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'content',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Post, Post, QAfterFilterCondition> createdAtEqualTo(
+      DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'createdAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Post, Post, QAfterFilterCondition> createdAtGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'createdAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Post, Post, QAfterFilterCondition> createdAtLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'createdAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Post, Post, QAfterFilterCondition> createdAtBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'createdAt',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -797,6 +859,18 @@ extension PostQuerySortBy on QueryBuilder<Post, Post, QSortBy> {
     });
   }
 
+  QueryBuilder<Post, Post, QAfterSortBy> sortByCreatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Post, Post, QAfterSortBy> sortByCreatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdAt', Sort.desc);
+    });
+  }
+
   QueryBuilder<Post, Post, QAfterSortBy> sortByFavorite() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'favorite', Sort.asc);
@@ -880,6 +954,18 @@ extension PostQuerySortThenBy on QueryBuilder<Post, Post, QSortThenBy> {
   QueryBuilder<Post, Post, QAfterSortBy> thenByContentDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'content', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Post, Post, QAfterSortBy> thenByCreatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Post, Post, QAfterSortBy> thenByCreatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdAt', Sort.desc);
     });
   }
 
@@ -976,6 +1062,12 @@ extension PostQueryWhereDistinct on QueryBuilder<Post, Post, QDistinct> {
     });
   }
 
+  QueryBuilder<Post, Post, QDistinct> distinctByCreatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'createdAt');
+    });
+  }
+
   QueryBuilder<Post, Post, QDistinct> distinctByFavorite() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'favorite');
@@ -1025,6 +1117,12 @@ extension PostQueryProperty on QueryBuilder<Post, Post, QQueryProperty> {
   QueryBuilder<Post, String, QQueryOperations> contentProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'content');
+    });
+  }
+
+  QueryBuilder<Post, DateTime, QQueryOperations> createdAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'createdAt');
     });
   }
 

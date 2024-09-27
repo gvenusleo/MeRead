@@ -5,14 +5,14 @@ import 'package:get/get.dart';
 import 'package:meread/helpers/dio_helper.dart';
 import 'package:meread/helpers/log_helper.dart';
 import 'package:meread/models/feed.dart';
+import 'package:meread/models/folder.dart';
 
 class FeedHelper {
   static Future<Feed?> parse(
-    String url, [
-    String? categoryName,
+    String url, {
+    Folder? folder,
     String? feedTitle,
-  ]) async {
-    categoryName ??= 'defaultCategory'.tr;
+  }) async {
     try {
       final response = await DioHelper.get(url);
       final postXmlString = response.data;
@@ -23,9 +23,9 @@ class FeedHelper {
           title: feedTitle ?? '',
           url: url,
           description: rssFeed.description ?? '',
-          category: categoryName,
           fullText: false,
           openType: 0,
+          createdAt: DateTime.now(),
         );
       } catch (e) {
         final AtomFeed atomFeed = AtomFeed.parse(postXmlString);
@@ -33,9 +33,9 @@ class FeedHelper {
           title: atomFeed.title ?? '',
           url: url,
           description: atomFeed.subtitle ?? '',
-          category: categoryName,
           fullText: false,
           openType: 0,
+          createdAt: DateTime.now(),
         );
       }
     } catch (e) {

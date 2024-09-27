@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:meread/helpers/isar_helper.dart';
+import 'package:meread/helpers/log_helper.dart';
 import 'package:meread/helpers/post_helper.dart';
 import 'package:meread/models/feed.dart';
+import 'package:meread/models/folder.dart';
 import 'package:meread/models/post.dart';
 
 class HomeController extends GetxController {
-  // 订阅源列表，按分类分组
-  RxMap feedsGroupByCategory = <String, List<Feed>>{}.obs;
-  // 每个订阅源未读 Post 数量
-  RxMap<Feed, int> unreadCount = <Feed, int>{}.obs;
+  // 订阅源分类列表
+  RxList<Folder> folder = <Folder>[].obs;
   // 当前查看的订阅源
   RxList<Feed> feeds = <Feed>[].obs;
   // 文章列表
@@ -21,56 +21,36 @@ class HomeController extends GetxController {
   // AppBar 标题
   RxString appBarTitle = 'MeRead'.tr.obs;
 
-  // 搜索控制器
-  final searchController = SearchController();
-
   @override
   void onInit() {
     super.onInit();
+    getFolders();
     getFeeds();
     getPosts();
-    getUnreadCount();
+    Stream<void> folderChange = IsarHelper.isar.folders.watchLazy();
+    folderChange.listen((_) {
+      LogHelper.i('[Isar]: Folder DB changed');
+      getFolders();
+      getFeeds();
+      getPosts();
+    });
+  }
+
+  // 获取订阅源分类
+  void getFolders() {
+    folder.value = IsarHelper.getFolders();
   }
 
   // 获取订阅源
   void getFeeds() {
-    feeds.value = IsarHelper.getFeeds();
-    final Map<String, List<Feed>> result = {};
-    for (final Feed feed in feeds) {
-      if (result.containsKey(feed.category)) {
-        result[feed.category]!.add(feed);
-      } else {
-        result[feed.category] = [feed];
-      }
-    }
-    feedsGroupByCategory.value = result;
+    feeds.value =
+        folder.toList().expand((folder) => folder.feeds.toList()).toList();
     appBarTitle.value = 'MeRead'.tr;
-  }
-
-  // 获取未读数量
-  void getUnreadCount() {
-    final List<Post> posts = IsarHelper.getPosts();
-    final Map<Feed, int> result = {};
-    for (final Feed feed in feeds) {
-      final int count =
-          posts.where((p) => p.feed.value?.id == feed.id && !p.read).length;
-      result[feed] = count;
-    }
-    unreadCount.value = result;
-  }
-
-  // 获取分类总未读数量
-  int getCategoryUnreadCount(String category) {
-    int result = 0;
-    feedsGroupByCategory[category]?.forEach((feed) {
-      result += unreadCount[feed] ?? 0;
-    });
-    return result;
   }
 
   // 获取 Post
   void getPosts() {
-    postList.value = IsarHelper.getPostsByFeeds(feeds);
+    postList.value = feeds.toList().expand((f) => f.post.toList()).toList();
   }
 
   // 刷新订阅源
@@ -105,11 +85,7 @@ class HomeController extends GetxController {
 
   // 定位到全部订阅源
   void focusAllFeeds() {
-    List<Feed> tem = [];
-    feedsGroupByCategory.forEach((key, value) {
-      tem.addAll(value);
-    });
-    feeds.value = tem;
+    feeds.value = IsarHelper.getFeeds();
     getPosts();
     onlyUnread.value = false;
     onlyFavorite.value = false;
@@ -118,12 +94,12 @@ class HomeController extends GetxController {
   }
 
   // 定位到指定分类
-  void focusCategory(String category) {
-    feeds.value = feedsGroupByCategory[category] ?? '';
+  void focusFolder(Folder folder) {
+    feeds.value = folder.feeds.toList();
     getPosts();
     onlyUnread.value = false;
     onlyFavorite.value = false;
-    appBarTitle.value = category;
+    appBarTitle.value = folder.name;
     Get.back();
   }
 
@@ -145,7 +121,8 @@ class HomeController extends GetxController {
     } else {
       onlyUnread.value = true;
       onlyFavorite.value = false;
-      postList.value = (IsarHelper.getPostsByFeeds(feeds))
+      postList.value = (feeds.toList().expand((feed) => feed.post.toList()))
+          .toList()
           .where((p) => p.read == false)
           .toList();
     }
@@ -159,8 +136,10 @@ class HomeController extends GetxController {
     } else {
       onlyFavorite.value = true;
       onlyUnread.value = false;
-      postList.value =
-          (IsarHelper.getPostsByFeeds(feeds)).where((p) => p.favorite).toList();
+      postList.value = (feeds.toList().expand((feed) => feed.post.toList()))
+          .toList()
+          .where((p) => p.favorite)
+          .toList();
     }
   }
 
@@ -186,7 +165,6 @@ class HomeController extends GetxController {
     Get.toNamed('/addFeed')?.then((_) {
       getFeeds();
       getPosts();
-      getUnreadCount();
     });
   }
 
@@ -195,7 +173,6 @@ class HomeController extends GetxController {
     Get.toNamed('/setting')?.then((_) {
       getFeeds();
       getPosts();
-      getUnreadCount();
     });
   }
 
@@ -204,7 +181,6 @@ class HomeController extends GetxController {
     Get.toNamed('/editFeed', arguments: value)?.then((_) {
       getFeeds();
       getPosts();
-      getUnreadCount();
     });
   }
 }

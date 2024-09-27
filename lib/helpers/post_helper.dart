@@ -65,6 +65,7 @@ class PostHelper {
       read: false,
       favorite: false,
       fullText: feed.fullText,
+      createdAt: DateTime.now(),
     );
     post.feed.value = feed;
     IsarHelper.putPost(post);
@@ -84,6 +85,7 @@ class PostHelper {
       read: false,
       favorite: false,
       fullText: feed.fullText,
+      createdAt: DateTime.now(),
     );
     post.feed.value = feed;
     IsarHelper.putPost(post);
