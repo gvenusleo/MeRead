@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:meread/helpers/isar_helper.dart';
 import 'package:meread/helpers/prefs_helper.dart';
 import 'package:meread/models/feed.dart';
-import 'package:meread/models/folder.dart';
 import 'package:meread/models/post.dart';
 import 'package:meread/ui/viewmodels/home_controller.dart';
 import 'package:meread/ui/widgets/post_card.dart';
@@ -189,61 +188,42 @@ class _HomeViewState extends State<HomeView> {
                     visualDensity: VisualDensity.compact,
                   ),
                 ),
-                for (Folder folder in c.folder.toList())
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 12),
-                    child: ExpansionTile(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      collapsedShape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                      visualDensity: VisualDensity.compact,
-                      title: GestureDetector(
-                        onTap: () {
-                          c.focusFolder(folder);
-                        },
-                        child: Text(
-                            '${folder.name} (${folder.feeds.expand((f) => f.post.where((p) => !p.read)).length})'),
-                      ),
-                      children: [
-                        Column(
-                          children: [
-                            for (Feed feed in folder.feeds.toList())
-                              ListTile(
-                                dense: true,
-                                title: Text(
-                                  feed.title,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                trailing: Text(feed.post
-                                    .where((p) => !p.read)
-                                    .length
-                                    .toString()),
-                                tileColor: Theme.of(context)
-                                    .colorScheme
-                                    .secondaryContainer
-                                    .withAlpha(80),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(
-                                        feed == folder.feeds.first ? 24 : 0),
-                                    bottom: Radius.circular(
-                                        feed == folder.feeds.last ? 24 : 0),
-                                  ),
-                                ),
-                                onTap: () {
-                                  c.focusFeed(feed);
-                                },
-                                onLongPress: () => c.toEditFeed(feed),
-                              ),
-                          ],
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Column(
+                    children: [
+                      for (Feed feed in c.feeds)
+                        ListTile(
+                          dense: true,
+                          title: Text(
+                            feed.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          trailing: Text(feed.post
+                              .where((p) => !p.read)
+                              .length
+                              .toString()),
+                          tileColor: Theme.of(context)
+                              .colorScheme
+                              .secondaryContainer
+                              .withAlpha(80),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(
+                                  feed == c.feeds.first ? 24 : 0),
+                              bottom: Radius.circular(
+                                  feed == c.feeds.last ? 24 : 0),
+                            ),
+                          ),
+                          onTap: () {
+                            c.focusFeed(feed);
+                          },
+                          onLongPress: () => c.toEditFeed(feed),
                         ),
-                      ],
-                    ),
+                    ],
                   ),
+                ),
               ],
             ),
           ),

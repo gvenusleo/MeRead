@@ -43,8 +43,7 @@ class HomeController extends GetxController {
 
   // 获取订阅源
   void getFeeds() {
-    feeds.value =
-        folder.toList().expand((folder) => folder.feeds.toList()).toList();
+    feeds.value = IsarHelper.getFeeds();
     appBarTitle.value = 'MeRead'.tr;
   }
 
